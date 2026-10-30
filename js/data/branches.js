@@ -1,5 +1,5 @@
-/** v0.02202 轉職分支樹（Lv5／10／15 里程碑）— 數值喺 game.js 嘅 updateBranches */
-const GAME_VERSION = 'v0.02210';
+/** v0.02211 轉職分支樹（Lv5／10／15）— 含媽媽 */
+const GAME_VERSION = 'v0.02211';
 const BRANCH_LEVELS = [5, 10, 15];
 
 /**
@@ -39,7 +39,27 @@ const BRANCHES = [
   { id: '2.22', char: 'dad', tier: 2, req: '2.2', icon: '🏰', name: '2.22 家庭堡壘', move: '堡壘',
     desc: '每個陣地有防護罩：隊友喺入面每秒回血，敵人入嚟減速 50%' },
 
-  // 媽媽：今次唔轉職（之後版本再加）
+  // ——— 媽媽：暖湯／紅龍 ———
+  { id: '3.1', char: 'mom', tier: 0, icon: '🍲', name: '3.1 暖湯局', move: '煲湯',
+    desc: '走暖湯線：冷靜脈衝冷卻 −25%、治療 +40%。新招「煲湯」：每 3 秒為身邊隊友補一啖湯' },
+  { id: '3.2', char: 'mom', tier: 0, icon: '🐲', name: '3.2 紅龍怒', move: '龍焰',
+    desc: '走紅龍線：怒火範圍＋傷 +40%。新招「龍焰」：每 2.4 秒向近敵噴火錐（唔傷隊友）' },
+  { id: '3.11', char: 'mom', tier: 1, req: '3.1', icon: '🍱', name: '3.11 全家飯桌', move: '開飯',
+    desc: '每 6 秒全隊大補一輪，短暫移速 +20%' },
+  { id: '3.12', char: 'mom', tier: 1, req: '3.1', icon: '💊', name: '3.12 補品快遞', move: '補品',
+    desc: '每 4 秒派出補品波追隊友，接到回血＋護盾' },
+  { id: '3.13', char: 'mom', tier: 1, req: '3.2', icon: '📢', name: '3.13 連環吼', move: '連吼',
+    desc: '怒火變三連吼：短時間內爆三次範圍傷' },
+  { id: '3.14', char: 'mom', tier: 1, req: '3.2', icon: '🧷', name: '3.14 衣架風暴', move: '衣架雨',
+    desc: '每 2.8 秒向四周甩 8 支衣架彈（連鎖）' },
+  { id: '3.21', char: 'mom', tier: 2, req: '3.1', icon: '✨', name: '3.21 神仙湯', move: '仙湯',
+    desc: '煲湯升級：大範圍治療＋短暫無敵；大招改仙湯爆發' },
+  { id: '3.22', char: 'mom', tier: 2, req: '3.1', icon: '🛡️', name: '3.22 廚房結界', move: '結界',
+    desc: '身邊常駐廚房結界：入面隊友回血，敵人減速＋輕傷' },
+  { id: '3.23', char: 'mom', tier: 2, req: '3.2', icon: '🔥', name: '3.23 巨龍化', move: '巨龍',
+    desc: '變身巨龍感：體型＋火環常駐，怒火傷再 +50%，受傷 −15%' },
+  { id: '3.24', char: 'mom', tier: 2, req: '3.2', icon: '🐉', name: '3.24 雙龍陣', move: '雙龍',
+    desc: '龍焰變雙向噴射；大招改雙龍息大範圍（唔傷隊友）' },
 ];
 
 function getBranch(id) { return BRANCHES.find((b) => b.id === id); }

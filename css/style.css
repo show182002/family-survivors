@@ -324,8 +324,18 @@ html, body {
   text-align: left; transition: border-color .1s, transform .1s;
 }
 .upgrade-card:hover, .upgrade-card.focused {
-  border-color: #ffe566; transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(255,229,102,.25);
+  border-color: #ffe566; transform: translateY(-6px) scale(1.04);
+  box-shadow:
+    0 0 0 4px #ffe566,
+    0 0 0 8px rgba(255,229,102,.35),
+    0 10px 28px rgba(255,229,102,.45),
+    0 0 40px rgba(255,200,60,.35);
+  background: #2a2038;
+  z-index: 2;
+}
+.upgrade-card.focused {
+  outline: 3px solid #fff3a0;
+  outline-offset: 2px;
 }
 .upgrade-card .u-icon { font-size: 36px; text-align: center; margin-bottom: 8px; }
 .upgrade-card .u-name { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; text-align: center; }
@@ -738,8 +748,19 @@ html, body {
   }
   #overlay-levelup .upgrade-card:hover,
   #overlay-levelup .upgrade-card.focused {
-    transform: none;
-    box-shadow: 0 0 0 2px rgba(255,229,102,.35);
+    transform: scale(1.06);
+    border-color: #ffe566;
+    border-width: 4px;
+    box-shadow:
+      0 0 0 4px #ffe566,
+      0 0 0 8px rgba(255,229,102,.5),
+      0 0 24px rgba(255,200,60,.55);
+    background: #322848;
+    z-index: 3;
+  }
+  #overlay-levelup .upgrade-card.focused {
+    outline: 3px solid #fff8c0;
+    outline-offset: 1px;
   }
   #overlay-levelup .upgrade-card .u-icon { font-size: 22px; margin-bottom: 2px; }
   #overlay-levelup .upgrade-card .u-name {
@@ -819,3 +840,13 @@ html, body {
   #overlay-levelup .upgrade-card,
   #overlay-levelup .branch-card { padding: 6px 5px; }
 }
+
+/* AI teammate thin chip */
+.hp-chip.hp-ai {
+  min-width: 110px;
+  opacity: 0.92;
+  border: 1px dashed rgba(255,229,102,.45);
+  padding: 2px 6px;
+  font-size: 11px;
+}
+.hp-chip.hp-ai .hp-bar-wrap { height: 7px; }

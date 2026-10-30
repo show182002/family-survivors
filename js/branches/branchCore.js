@@ -12,6 +12,8 @@ function firstOpenTier(p, upTo) {
 function ultLabel(p) {
   if (p.charId === 'dad' && p.branch[0] === '2.1') return p.carry ? '擲' : '托';
   if (p.charId === 'dad' && p.branch[0] === '2.2') return '陣';
+  if (p.charId === 'mom' && p.branch[0] === '3.1') return hasB(p, '3.21') ? '湯' : '湯';
+  if (p.charId === 'mom' && p.branch[0] === '3.2') return hasB(p, '3.24') ? '龍' : '怒';
   return '招';
 }
 function branchPath(p) {
@@ -26,7 +28,7 @@ function openBranchPick(p) {
   mode = 'levelup';
   if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
-  const who = (p.slot === 0 ? '1P' : '2P');
+  const who = p.ai ? ('AI·' + p.name) : (p.slot === 0 ? '1P' : (p.slot === 1 ? '2P' : 'P' + (p.slot + 1)));
   const lv = BRANCH_LEVELS[currentPick.tier];
   if (el.levelupTitle) el.levelupTitle.textContent = '職 · ' + who + ' Lv' + lv;
   if (el.levelupSub) el.levelupSub.textContent = pendingChoices.length > 1 ? '揀' : '職';
@@ -54,6 +56,12 @@ function applyBranch(p, b) {
   if (b.id === '1.2') { p.mount = 'dragon'; p.bSpeed = 1.35; p.bDmg = 1.35; }
   if (b.id === '2.1') { p.ultCd = 0; p.ultMax = 10; }
   if (b.id === '2.2') { p.ultCd = 0; p.ultMax = 4; }
+  if (b.id === '3.1') { p.ultCd = 0; }
+  if (b.id === '3.2') { p.ultCd = 0; }
+  // 暖湯被動：治療／冷靜強化
+  if (b.id === '3.1') { p.bHeal = 1.4; }
+  if (b.id === '3.2') { p.bDmg = Math.max(p.bDmg || 1, 1.4); }
+  if (b.id === '3.23') { p.bDmg = Math.max(p.bDmg || 1, 1.5); p.bSpeed = Math.max(p.bSpeed || 1, 1.1); }
   banner((p.slot === 0 ? '1P ' : '2P ') + p.name + ' 轉職：' + b.icon + ' ' + b.name, p.color, 2.6);
   addFx(p.x, p.y, 'burst', 140, p.color);
   addFx(p.x, p.y, 'ring', 180, '#ffe566');
@@ -99,9 +107,11 @@ function updateBranches(dt) {
     const L = brScale();
     if (p.charId === 'daughter') updateDaughterBr(p, dt, tick, L);
     else if (p.charId === 'dad') updateDadBr(p, dt, tick, L);
+    else if (p.charId === 'mom') updateMomBr(p, dt, tick, L);
   }
   updateMinis(dt);
   updateTrails(dt);
   updateStructures(dt);
   updateBalls(dt);
+  if (typeof updateMomTonics === 'function') updateMomTonics(dt);
 }
