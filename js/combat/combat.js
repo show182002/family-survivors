@@ -375,6 +375,24 @@ function tryUlt(slot) {
     for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'ring', R * (0.35 + i * 0.06), '#a5f3fc');
     addFloat(p.x, p.y - 80, '滑板！！', '#22d3ee', true);
     shake(12);
+  } else if (u.type === 'goldfish_tide') {
+    const area = (mods.area || 1) * 2.3;
+    const dmg = u.damage * mods.projDamage * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { forceChill: true, knock: 120 });
+    const n = (u.count || 16) * 2;
+    for (let i = 0; i < n; i++) {
+      const ang = (Math.PI * 2 * i) / n;
+      spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+        damage: 11 * mods.projDamage * ULT_DMG,
+        pierce: 2 + mods.pierce, chain: mods.chain,
+        speed: 380, life: 1.4, size: 9,
+        color: '#7dd3fc', frost: true,
+      });
+    }
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'ring', R * (0.3 + i * 0.06), '#7dd3fc');
+    addFloat(p.x, p.y - 80, '海嘯！！', '#7dd3fc', true);
+    shake(12);
   }
 
 }

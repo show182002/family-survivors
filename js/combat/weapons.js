@@ -347,6 +347,38 @@ function updateWeapons(dt) {
         addFloat(p.x, p.y - 40, '汪！', '#e8963a', false);
       }
 
+    } else if (w.type === 'bubble_splash') {
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        let dx = p.facing, dy = 0;
+        if (target) { dx = target.x - p.x; dy = target.y - p.y; }
+        const count = 1 + mods.extraProjectiles;
+        const pierce = (w.pierce || 0) + mods.pierce + (eff.bonusPierce || 0);
+        const chain = mods.chain + (eff.bonusChain || 0);
+        for (let i = 0; i < count; i++) {
+          const spread = (i - (count - 1) / 2) * 0.2;
+          const ang = Math.atan2(dy, dx) + spread;
+          spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+            damage: w.baseDamage * mods.projDamage,
+            pierce, chain,
+            speed: w.speed,
+            life: w.range / w.speed,
+            size: w.size + 2,
+            color: eff.alwaysChill ? '#88ddff' : (w.color || '#7dd3fc'),
+            frost: true,
+          });
+        }
+      }
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.splashTick * cdMul;
+        const rr = w.splashRadius * area;
+        damageEnemiesInRadius(p.x, p.y, rr, w.splashDamage * mods.projDamage, p, { forceChill: true });
+        if (fxFull()) addFx(p.x, p.y, 'ring', rr * 0.4, '#7dd3fc');
+      }
+
     }
   }
 }
