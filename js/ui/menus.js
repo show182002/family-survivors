@@ -117,8 +117,17 @@ function paintBigSlot(player, cursorIdx) {
           cctx.fillStyle = '#12101a';
           cctx.fillRect(x, y, 8, 8);
         }
-    // larger stand-in portrait
-    drawSprite(cctx, c.sprite, 96, 168, 8, false);
+    // 選角卡：媽媽大、女兒細（同戰鬥比例感）
+    const ps = c.id === 'mom' ? 9.5 : (c.id === 'daughter' ? 6.2 : 8);
+    // 優先用 ArtChars idle 向下
+    let painted = false;
+    if (window.ArtChars) {
+      const st = { dir: 'down', flipX: false, walkT: 0, moving: false };
+      if (c.id === 'daughter' && ArtChars.drawDaughter) { ArtChars.drawDaughter(cctx, 96, 170, st, 4.2); painted = true; }
+      else if (c.id === 'mom' && ArtChars.drawMom) { ArtChars.drawMom(cctx, 96, 170, st, 5.2); painted = true; }
+      else if (c.id === 'dad' && ArtChars.drawDad) { ArtChars.drawDad(cctx, 96, 170, st, 5); painted = true; }
+    }
+    if (!painted) drawSprite(cctx, c.sprite, 96, 168, ps, false);
   }
 
   const name = slot.querySelector('.name');

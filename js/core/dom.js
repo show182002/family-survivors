@@ -17,6 +17,7 @@ const el = {
   levelLabel: document.getElementById('level-label'),
   hpP1: document.getElementById('hp-p1'),
   hpP2: document.getElementById('hp-p2'),
+  hpP3: document.getElementById('hp-p3'),
   levelup: document.getElementById('overlay-levelup'),
   levelupTitle: document.getElementById('levelup-title'),
   levelupSub: document.getElementById('levelup-sub'),

@@ -13,16 +13,22 @@ function updateHud() {
   refreshUltButtons();
   layoutUltButtons();
 
-  run.players.forEach((p, i) => {
-    const chip = i === 0 ? el.hpP1 : el.hpP2;
+  const chips = [el.hpP1, el.hpP2, el.hpP3];
+  chips.forEach((chip, i) => {
+    if (!chip) return;
+    const p = run.players[i];
+    if (!p) { chip.classList.add('hidden'); return; }
+    chip.classList.remove('hidden');
+    if (p.ai) chip.classList.add('hp-ai'); else chip.classList.remove('hp-ai');
     const c = getChar(p.charId);
     const pct = Math.max(0, p.hp / p.maxHp) * 100;
     if (!chip._main || chip._slot !== i) {
       chip.innerHTML = '<div class="hp-main"></div><div class="hp-skills"></div>';
       chip._main = chip.firstChild; chip._skills = chip.lastChild; chip._slot = i; chip._sig = '';
     }
+    const label = p.ai ? ('AI·' + c.name) : (i === 0 ? '1P' : (i === 1 ? '2P' : '3P'));
     chip._main.innerHTML =
-      `<div class="hp-name" style="color:${c.color}">${i === 0 ? '1P' : '2P'}${p.dead ? '💀' : ''}</div>` +
+      `<div class="hp-name" style="color:${c.color}">${label}${p.dead ? '💀' : (p.caged ? '🔒' : '')}</div>` +
       `<div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${c.color}"></div></div>`;
     chip._skills.innerHTML = '';
     chip._sig = '';
@@ -57,6 +63,7 @@ function buildAutoButtons() {
   if (!box || !run) return;
   box.innerHTML = '';
   run.players.forEach((p) => {
+    if (p.ai) return;
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'fx-chip auto-chip';
@@ -94,6 +101,7 @@ function refreshUltButtons() {
   run.players.forEach((p, i) => {
     const b = btns[i];
     if (!b) return;
+    if (p.ai) { b.classList.add('hidden'); return; }
     b.classList.remove('hidden'); // player slot exists; visibility = .press-show
     const ready = p.ultCd <= 0 && !p.dead && !p.carriedBy && !p.ball;
     if (ready) {
