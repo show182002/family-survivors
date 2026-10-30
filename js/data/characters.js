@@ -212,42 +212,7 @@ const CHARACTERS = [
       poison: true,
     },
   },
-  {
-    id: 'brother',
-    name: '哥哥',
-    role: '彈幕 · 手掣',
-    kit: '手掣連射 · 電玩風格穿透彈',
-    ultName: '最終關卡',
-    ultDesc: '全方向彈幕風暴（電玩爆炸）',
-    color: '#a78bfa',
-    accent: '#ddd6fe',
-    body: '#6d28d9',
-    head: '#f5d0b0',
-    sprite: 'brother',
-    maxHp: 105,
-    speed: 175,
-    pickupRadius: 88,
-    baseTags: ['投射', '連鎖', '爆炸'],
-    startSkills: ['bro_pad'],
-    weapon: {
-      type: 'pierce_shot',
-      baseDamage: 8,
-      cooldown: 0.42,
-      speed: 460,
-      pierce: 1,
-      range: 540,
-      size: 6,
-      color: '#c4b5fd',
-    },
-    ult: {
-      cooldown: 16,
-      type: 'brother_storm',
-      damage: 12,
-      count: 20,
-      pierce: 3,
-      speed: 500,
-    },
-  },
+
 ];
 
 function getChar(id) {
