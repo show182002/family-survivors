@@ -1,4 +1,4 @@
-/** 一家倖存 · 直機硬閘「請打橫」＋全螢幕掣（Fullscreen API） */
+/** 一家倖存 · 直機硬閘「請打橫」＋全螢幕掣（Fullscreen API · iOS Safari 優先） */
 'use strict';
 
 (function () {
@@ -88,39 +88,48 @@
     var node = document.documentElement;
     return !!(
       (node && (node.requestFullscreen || node.webkitRequestFullscreen || node.webkitRequestFullScreen)) ||
-      document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen
+      document.fullscreenEnabled ||
+      document.webkitFullscreenEnabled
     );
   }
 
+  /** 喺同一個 user gesture 入面同步發起；唔用 setTimeout（Safari 會丟 activation） */
   function requestFsOn(node) {
     if (!node) return Promise.reject(new Error('no el'));
-    var opts = { navigationUI: 'hide' };
-    function call(fn, withOpts) {
+    var fn = null;
+    var kind = '';
+    if (typeof node.requestFullscreen === 'function') {
+      fn = node.requestFullscreen; kind = 'std';
+    } else if (typeof node.webkitRequestFullscreen === 'function') {
+      fn = node.webkitRequestFullscreen; kind = 'webkit';
+    } else if (typeof node.webkitRequestFullScreen === 'function') {
+      fn = node.webkitRequestFullScreen; kind = 'webkitOld';
+    } else {
+      return Promise.reject(new Error('no fullscreen API'));
+    }
+
+    function invoke(withOpts) {
       try {
-        if (withOpts) {
-          var r = fn.call(node, opts);
-          return (r && typeof r.then === 'function') ? r : Promise.resolve(r);
+        var r;
+        if (withOpts && kind === 'std') r = fn.call(node, { navigationUI: 'hide' });
+        else if (withOpts && kind === 'webkit') {
+          // Safari：有啲版本唔收 options，有啲收
+          try { r = fn.call(node, Element.ALLOW_KEYBOARD_INPUT); }
+          catch (_) { r = fn.call(node); }
+        } else {
+          r = fn.call(node);
         }
-        var r2 = fn.call(node);
-        return (r2 && typeof r2.then === 'function') ? r2 : Promise.resolve(r2);
+        return (r && typeof r.then === 'function') ? r : Promise.resolve(r);
       } catch (err) {
         return Promise.reject(err);
       }
     }
-    if (typeof node.requestFullscreen === 'function') {
-      return call(node.requestFullscreen, true).catch(function () {
-        return call(node.requestFullscreen, false);
-      });
+
+    // 先試 navigationUI hide（桌面／iPad），失敗即無 options 再試——同一 gesture 微任務鏈
+    if (kind === 'std') {
+      return invoke(true).catch(function () { return invoke(false); });
     }
-    if (typeof node.webkitRequestFullscreen === 'function') {
-      return call(node.webkitRequestFullscreen, true).catch(function () {
-        return call(node.webkitRequestFullscreen, false);
-      });
-    }
-    if (typeof node.webkitRequestFullScreen === 'function') {
-      return call(node.webkitRequestFullScreen, false);
-    }
-    return Promise.reject(new Error('no fullscreen API'));
+    return invoke(false);
   }
 
   function exitFs() {
@@ -153,13 +162,14 @@
     var list = [document.documentElement];
     var gameScreen = document.getElementById('screen-game');
     var canvas = document.getElementById('game');
-    // 全域 el（dom.js）若已就緒，優先用同一引用
     try {
       if (typeof el !== 'undefined' && el) {
         if (el.game) gameScreen = el.game;
         if (el.canvas) canvas = el.canvas;
       }
     } catch (_) {}
+    // body 有時比 html 更穩（部分 WebKit）
+    if (document.body && list.indexOf(document.body) < 0) list.push(document.body);
     if (gameScreen && list.indexOf(gameScreen) < 0) list.push(gameScreen);
     if (canvas && list.indexOf(canvas) < 0) list.push(canvas);
     return list;
@@ -174,29 +184,37 @@
     if (now - lastFsToggleAt < 450) return;
     lastFsToggleAt = now;
 
-    if (!hasFullscreenApi()) { showFsFailTip(); return; }
-
     if (isFullscreen()) {
-      exitFs().then(function () { onFsChange(); }).catch(function () { showFsFailTip(); });
+      exitFs().then(function () { onFsChange(); }).catch(function () { onFsChange(); });
       return;
     }
 
+    if (!hasFullscreenApi()) { showFsFailTip(); return; }
+
     var targets = fsTargets();
-    function tryNext(i) {
-      if (i >= targets.length) { showFsFailTip(); return; }
-      requestFsOn(targets[i])
-        .then(function () {
-          tryLockLandscape();
-          onFsChange();
-          // 部分 WebKit 入去後先 settle
-          setTimeout(function () {
-            if (!isFullscreen()) tryNext(i + 1);
-            else onFsChange();
-          }, 120);
-        })
-        .catch(function () { tryNext(i + 1); });
+    // 關鍵：第一下一定同步 call requestFullscreen（保留 iOS Safari user gesture）
+    var first = targets[0];
+    var started = null;
+    try {
+      started = requestFsOn(first);
+    } catch (err) {
+      started = Promise.reject(err);
     }
-    tryNext(0);
+
+    function chain(i, p) {
+      return p.then(function () {
+        tryLockLandscape();
+        onFsChange();
+        // 成功就完；若 promise resolve 但實際未入 FS，喺微任務內試下一個（仍盡量貼住 gesture）
+        if (isFullscreen()) return;
+        if (i + 1 >= targets.length) { showFsFailTip(); return; }
+        return chain(i + 1, requestFsOn(targets[i + 1]));
+      }).catch(function () {
+        if (i + 1 >= targets.length) { showFsFailTip(); return; }
+        return chain(i + 1, requestFsOn(targets[i + 1]));
+      });
+    }
+    chain(0, started);
   }
   window.toggleFullscreen = toggleFullscreen;
 
@@ -208,7 +226,7 @@
     return false;
   }
 
-  // F／F11：桌面快捷鍵（打字中唔觸發）；F11 多數瀏覽器會自己全螢幕，我哋再 sync
+  // F／F11：桌面快捷鍵（打字中唔觸發）
   window.addEventListener('keydown', function (e) {
     if (!e) return;
     if (isTypingTarget(e.target)) return;
@@ -221,29 +239,19 @@
       e.preventDefault();
       toggleFullscreen(e);
     } else if (isF11) {
-      // 唔攔截系統 F11；稍後 sync 掣字同 layout
       setTimeout(onFsChange, 50);
       setTimeout(onFsChange, 200);
     }
   }, true);
 
   if (fsBtn) {
-    if (hasFullscreenApi()) {
-      fsBtn.style.display = 'block';
-    } else {
-      // 仍然顯示，撳完出「用 Safari 開啟」提示（WhatsApp 等）
-      fsBtn.style.display = 'block';
-    }
+    fsBtn.style.display = 'block';
+    // 阻遊戲 stick 搶 touch；全螢幕一定走 click（iOS Safari user activation 最穩）
+    fsBtn.addEventListener('touchstart', function (e) { e.stopPropagation(); }, { passive: true });
+    fsBtn.addEventListener('touchend', function (e) { e.stopPropagation(); }, { passive: true });
     fsBtn.addEventListener('click', function (e) {
       toggleFullscreen(e);
     });
-    fsBtn.addEventListener('touchend', function (e) {
-      // preventDefault 抑止後續 click，避免雙觸發；仍喺 user gesture 入面
-      try { e.preventDefault(); } catch (_) {}
-      try { e.stopPropagation(); } catch (_) {}
-      toggleFullscreen(e);
-    }, { passive: false });
-    fsBtn.addEventListener('touchstart', function (e) { e.stopPropagation(); }, { passive: true });
   }
   syncFsBtnLabel();
 

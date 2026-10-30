@@ -8,10 +8,10 @@ Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairw
 **爸爸＋女兒**（媽媽仍可選，但今版唔擴充媽媽轉職設計）。
 
 ## v0.02206 更新（今次）
-- 「全」掣：Fullscreen API（`navigationUI: 'hide'`）＋ webkit 前綴；失敗 fallback 遊戲容器／canvas
-- 修 onFsChange 對 `el` 嘅依賴；入／出全螢幕後 fitCanvas／layout
-- 桌面 **F** 掣切換全螢幕（打字中唔觸發）；F11 後 sync layout
-- WhatsApp 等唔支援時提示「用 Safari 開啟」
+- 「全」掣：Fullscreen API（`navigationUI: 'hide'`）＋ webkit；同步發起以保住 iOS Safari user gesture（WhatsApp 開出真 Safari 亦適用）
+- 失敗先 fallback `body`／遊戲容器／canvas；仍敗先出提示「再撳／用 Safari 開」
+- 修 onFsChange 對未定義 `el` 嘅依賴；入／出後 fitCanvas／layoutUltButtons
+- 桌面 **F** 切換全螢幕（打字中唔觸發）；F11 後 sync layout
 
 ## v0.02205 更新
 
