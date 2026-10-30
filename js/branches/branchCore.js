@@ -10,9 +10,9 @@ function firstOpenTier(p, upTo) {
   return -1;
 }
 function ultLabel(p) {
-  if (p.charId === 'dad' && p.branch[0] === '2.1') return p.carry ? '擲人' : '托人';
-  if (p.charId === 'dad' && p.branch[0] === '2.2') return '擺陣地';
-  return '大招';
+  if (p.charId === 'dad' && p.branch[0] === '2.1') return p.carry ? '擲' : '托';
+  if (p.charId === 'dad' && p.branch[0] === '2.2') return '陣';
+  return '招';
 }
 function branchPath(p) {
   const ids = [0, 1, 2].map((t) => p.branch[t]).filter(Boolean);
@@ -28,7 +28,7 @@ function openBranchPick(p) {
   el.levelup.classList.remove('hidden');
   const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
   if (el.levelupTitle) el.levelupTitle.textContent = '⭐ ' + who + '　Lv' + BRANCH_LEVELS[currentPick.tier] + ' 轉職！';
-  if (el.levelupSub) el.levelupSub.textContent = pendingChoices.length > 1 ? '二揀一 · 揀咗就改變玩法（滑鼠停喺卡上面睇詳情）' : '確認轉職（撳卡或 Space）';
+  if (el.levelupSub) el.levelupSub.textContent = pendingChoices.length > 1 ? '二揀一' : '轉職';
   renderBranchCards(p);
 }
 function renderBranchCards(p) {
