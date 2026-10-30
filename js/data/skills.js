@@ -151,35 +151,6 @@ const SKILLS = [
 { id: 'nb_split', char: 'neighbor', name: '左右拖鞋', icon: '👟', tags: ['投射'], max: 4,
     desc: '每級多 1 隻拖鞋', mods(p) { p.skillMods.extraProjectiles += 1; } },
 
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-,
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
   // ——— 金魚：泡泡／水花 ———
   { id: 'gf_bubble', char: 'goldfish', name: '泡泡芯', icon: '🫧', tags: ['投射', '冰凍'], max: 5,
     desc: '泡泡傷 +15%、緩速機率＋／級', mods(p) { p.skillMods.projDamage *= 1.15; p.skillMods.chillChance += 0.25; } },
