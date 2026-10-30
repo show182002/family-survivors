@@ -252,43 +252,8 @@ const CHARACTERS = [
       count: 12,
       radius: 90,
     },
-  },
-  {
-    id: 'cousin',
-    name: '表哥',
-    role: '滑板 · 塗鴉',
-    kit: '滑板衝刺撞怪 · 噴漆彈',
-    ultName: '滑板風暴',
-    ultDesc: '高速衝刺＋環形噴漆爆',
-    color: '#22d3ee',
-    accent: '#a5f3fc',
-    body: '#0891b2',
-    head: '#f5d0b0',
-    sprite: 'cousin',
-    maxHp: 108,
-    speed: 200,
-    pickupRadius: 90,
-    baseTags: ['近戰', '投射', '範圍'],
-    startSkills: ['cu_skate'],
-    weapon: {
-      type: 'skate_spray',
-      baseDamage: 15,
-      cooldown: 1.0,
-      dash: 130,
-      radius: 60,
-      sprayCd: 0.7,
-      sprayDamage: 9,
-      spraySpeed: 440,
-      color: '#22d3ee',
-    },
-    ult: {
-      cooldown: 15,
-      type: 'cousin_storm',
-      damage: 55,
-      radius: 200,
-      dashes: 3,
-    },
-  },
+  }
+
 
 ];
 

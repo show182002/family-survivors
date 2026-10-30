@@ -173,27 +173,8 @@ const SKILLS = [
 { id: 'un_shield', char: 'uncle', name: '啤酒肚盾', icon: '🛡️', tags: ['護盾'], max: 5,
     desc: '週期護盾', act: { type: 'shield_all', cd: 10, amt: 18, color: '#fecaca' } },
 
-  // ——— 表哥：滑板／噴漆／潮 ———
-  { id: 'cu_skate', char: 'cousin', name: '滑板輪', icon: '🛹', tags: ['近戰', '範圍'], max: 5,
-    desc: '衝撞傷 +16%、範圍 +8%／級', mods(p) { p.skillMods.meleeDamage *= 1.16; p.skillMods.area *= 1.08; } },
-  { id: 'cu_spray', char: 'cousin', name: '噴漆罐', icon: '🎨', tags: ['投射'], max: 5,
-    desc: '噴漆傷 +16%／級', mods(p) { p.skillMods.projDamage *= 1.16; } },
-  { id: 'cu_trick', char: 'cousin', name: '板技', icon: '🌀', tags: ['近戰', '範圍'], max: 5,
-    desc: '週期板技震退', act: { type: 'nova', cd: 3.2, dmg: 18, r: 120, color: '#22d3ee', knock: 160, melee: true } },
-  { id: 'cu_tag', char: 'cousin', name: '塗鴉標記', icon: '✍️', tags: ['範圍'], max: 5,
-    desc: '敵位噴漆爆', act: { type: 'target_nova', cd: 3.4, dmg: 26, r: 95, color: '#a5f3fc' } },
-  { id: 'cu_soda', char: 'cousin', name: '汽水噴', icon: '🥤', tags: ['冰凍', '範圍'], max: 5,
-    desc: '汽水緩速', act: { type: 'nova', cd: 4.5, dmg: 10, r: 160, color: '#67e8f9', chill: true } },
-  { id: 'cu_earbuds', char: 'cousin', name: '耳機盾', icon: '🎧', tags: ['護盾'], max: 5,
-    desc: '週期護盾', act: { type: 'shield_all', cd: 10, amt: 15, color: '#a5f3fc' } },
-  { id: 'cu_chain', char: 'cousin', name: '塗鴉連鎖', icon: '🔗', tags: ['投射', '連鎖'], max: 5,
-    desc: '連鎖 +1、彈傷 +8%／級', mods(p) { p.skillMods.chain += 1; p.skillMods.projDamage *= 1.08; } },
-  { id: 'cu_crit', char: 'cousin', name: '帥爆', icon: '😎', tags: ['暴擊'], max: 5,
-    desc: '暴擊 +6%、暴擊傷 +12%／級', mods(p) { p.skillMods.critChance += 0.06; p.skillMods.critMul += 0.12; } },
-  { id: 'cu_drone', char: 'cousin', name: '自拍機', icon: '📱', tags: ['召喚', '投射'], max: 5,
-    desc: '召喚自拍機射擊', act: { type: 'summon', cd: 8, dur: 6.5, dmg: 9, rate: 0.5, icon: '📱', color: '#22d3ee' } },
-  { id: 'cu_split', char: 'cousin', name: '雙噴', icon: '✨', tags: ['投射'], max: 4,
-    desc: '每級多 1 道噴漆', mods(p) { p.skillMods.extraProjectiles += 1; } },
+
+
 
 ];
 
