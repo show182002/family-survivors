@@ -1,5 +1,5 @@
-/** v0.02200 轉職分支樹（Lv5／10／15 里程碑）— 數值喺 game.js 嘅 updateBranches */
-const GAME_VERSION = 'v0.02200';
+/** v0.02201 轉職分支樹（Lv5／10／15 里程碑）— 數值喺 game.js 嘅 updateBranches */
+const GAME_VERSION = 'v0.02201';
 const BRANCH_LEVELS = [5, 10, 15];
 
 /**
