@@ -22,6 +22,7 @@ function dadUlt(p) {
     if (typeof sfxUlt === 'function') sfxUlt();
     addFx(p.x, p.y, 'ring', 80, '#ffe566', bfx('2.1'));
     addFloat(p.x, p.y - 90, '托起！', '#ffe566', true);
+    if (typeof noteDadThrowReady === 'function') noteDadThrowReady(p);
   } else {
     if (p.ultCd > 0) return;
     placeStructure(p);
