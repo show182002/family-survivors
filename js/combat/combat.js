@@ -168,6 +168,9 @@ function tryUlt(slot) {
   if (p.charId === 'dad' && p.branch && p.branch[0]) { dadUlt(p); return; }
   if (p.charId === 'mom' && p.branch && p.branch[0] && typeof momUlt === 'function') { momUlt(p); return; }
   if (p.charId === 'grandpa' && p.branch && p.branch[0] && typeof grandpaUlt === 'function') { grandpaUlt(p); return; }
+  if (p.charId === 'baby' && p.branch && p.branch[0] && typeof babyUlt === 'function') { babyUlt(p); return; }
+  if (p.charId === 'goldfish' && p.branch && p.branch[0] && typeof goldfishUlt === 'function') { goldfishUlt(p); return; }
+  if (p.charId === 'neighbor' && p.branch && p.branch[0] && typeof neighborUlt === 'function') { neighborUlt(p); return; }
   if (p.ultCd > 0) return;
   const c = getChar(p.charId);
   const u = c.ult;

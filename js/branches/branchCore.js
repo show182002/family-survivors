@@ -16,6 +16,12 @@ function ultLabel(p) {
   if (p.charId === 'mom' && p.branch[0] === '3.2') return hasB(p, '3.24') ? '龍' : '怒';
   if (p.charId === 'grandpa' && p.branch[0] === '4.1') return hasB(p, '4.21') ? '殺' : (hasB(p, '4.22') ? '車' : '棋');
   if (p.charId === 'grandpa' && p.branch[0] === '4.2') return hasB(p, '4.24') ? '柔' : (hasB(p, '4.23') ? '境' : '氣');
+  if (p.charId === 'baby' && p.branch[0] === '5.1') return hasB(p, '5.21') ? '軍' : (hasB(p, '5.22') ? '雷' : '玩');
+  if (p.charId === 'baby' && p.branch[0] === '5.2') return hasB(p, '5.23') ? '哭' : (hasB(p, '5.24') ? '撫' : '哭');
+  if (p.charId === 'goldfish' && p.branch[0] === '6.1') return hasB(p, '6.21') ? '箱' : (hasB(p, '6.22') ? '珠' : '泡');
+  if (p.charId === 'goldfish' && p.branch[0] === '6.2') return hasB(p, '6.23') ? '嘯' : (hasB(p, '6.24') ? '鱗' : '流');
+  if (p.charId === 'neighbor' && p.branch[0] === '7.1') return hasB(p, '7.21') ? '風' : (hasB(p, '7.22') ? '金' : '拖');
+  if (p.charId === 'neighbor' && p.branch[0] === '7.2') return hasB(p, '7.23') ? '播' : (hasB(p, '7.24') ? '黑' : '卦');
   return '招';
 }
 function branchPath(p) {
@@ -67,6 +73,15 @@ function applyBranch(p, b) {
   if (b.id === '4.1') { p.ultCd = 0; p.bDmg = Math.max(p.bDmg || 1, 1.15); }
   if (b.id === '4.2') { p.ultCd = 0; }
   if (b.id === '4.23') { p.bSpeed = Math.max(p.bSpeed || 1, 1.08); }
+  if (b.id === '5.1') { p.ultCd = 0; p.bDmg = Math.max(p.bDmg || 1, 1.1); }
+  if (b.id === '5.2') { p.ultCd = 0; }
+  if (b.id === '5.21') { p.bDmg = Math.max(p.bDmg || 1, 1.2); }
+  if (b.id === '6.1') { p.ultCd = 0; }
+  if (b.id === '6.2') { p.ultCd = 0; p.bSpeed = Math.max(p.bSpeed || 1, 1.12); }
+  if (b.id === '6.24') { p.bDmg = Math.max(p.bDmg || 1, 1.35); }
+  if (b.id === '7.1') { p.ultCd = 0; p.bDmg = Math.max(p.bDmg || 1, 1.12); }
+  if (b.id === '7.2') { p.ultCd = 0; }
+  if (b.id === '7.24') { p.bDmg = Math.max(p.bDmg || 1, 1.15); }
   banner((p.slot === 0 ? '1P ' : '2P ') + p.name + ' 轉職：' + b.icon + ' ' + b.name, p.color, 2.6);
   addFx(p.x, p.y, 'burst', 140, p.color);
   addFx(p.x, p.y, 'ring', 180, '#ffe566');
@@ -116,6 +131,9 @@ function updateBranches(dt) {
     else if (p.charId === 'dad') updateDadBr(p, dt, tick, L);
     else if (p.charId === 'mom') updateMomBr(p, dt, tick, L);
     else if (p.charId === 'grandpa' && typeof updateGrandpaBr === 'function') updateGrandpaBr(p, dt, tick, L);
+    else if (p.charId === 'baby' && typeof updateBabyBr === 'function') updateBabyBr(p, dt, tick, L);
+    else if (p.charId === 'goldfish' && typeof updateGoldfishBr === 'function') updateGoldfishBr(p, dt, tick, L);
+    else if (p.charId === 'neighbor' && typeof updateNeighborBr === 'function') updateNeighborBr(p, dt, tick, L);
   }
   updateMinis(dt);
   updateTrails(dt);

@@ -1,5 +1,5 @@
-/** v0.02227 轉職分支樹（Lv5／10／15）— 含媽媽／阿公 */
-const GAME_VERSION = 'v0.02227';
+/** v0.02228 轉職分支樹（Lv5／10／15）— 含媽媽／阿公／寶寶／金魚／鄰居 */
+const GAME_VERSION = 'v0.02228';
 const BRANCH_LEVELS = [5, 10, 15];
 
 /**
@@ -82,6 +82,73 @@ const BRANCHES = [
     desc: '受傷再 −20%（累計更硬）、氣波更快更大；大招改太極化境護體＋爆發' },
   { id: '4.24', char: 'grandpa', tier: 2, req: '4.2', icon: '🪞', name: '4.24 以柔克剛', move: '反震',
     desc: '受傷時反震敵人；大招改以柔克剛：全隊護盾＋大範圍反震波' },
+,
+
+  // ——— 寶寶：玩具工房／哭王 ———
+  { id: '5.1', char: 'baby', tier: 0, icon: '🧸', name: '5.1 玩具工房', move: '丟玩具',
+    desc: '走玩具線：週期丟玩具炸彈。新招「丟玩具」：每 2.4 秒在身邊爆玩具' },
+  { id: '5.2', char: 'baby', tier: 0, icon: '😭', name: '5.2 哭王', move: '哭脈衝',
+    desc: '走哭王線：強化哭聲緩速。新招「哭脈衝」：每 2.3 秒大哭減速＋輕傷' },
+  { id: '5.11', char: 'baby', tier: 1, req: '5.1', icon: '🧱', name: '5.11 積木城', move: '積木',
+    desc: '玩具變 3 連爆、範圍更大；週期積木砸地' },
+  { id: '5.12', char: 'baby', tier: 1, req: '5.1', icon: '🏎️', name: '5.12 遙控車', move: '遙控車',
+    desc: '每 5.5 秒派出 2 輛遙控車追怪 8 秒' },
+  { id: '5.13', char: 'baby', tier: 1, req: '5.2', icon: '📢', name: '5.13 雙聲哭', move: '雙哭',
+    desc: '哭脈衝更快更大，減速更狠' },
+  { id: '5.14', char: 'baby', tier: 1, req: '5.2', icon: '🛏️', name: '5.14 搖籃震', move: '搖籃',
+    desc: '每 2.9 秒搖籃震：強擊退＋緩速' },
+  { id: '5.21', char: 'baby', tier: 2, req: '5.1', icon: '🎖️', name: '5.21 玩具大軍', move: '大軍',
+    desc: '大招改玩具大軍：毒爆＋召喚 8 隻玩具仔；被動週期補仔' },
+  { id: '5.22', char: 'baby', tier: 2, req: '5.1', icon: '💣', name: '5.22 尿布地雷', move: '地雷',
+    desc: '大招改尿布地雷場；被動週期埋毒雷' },
+  { id: '5.23', char: 'baby', tier: 2, req: '5.2', icon: '🌍', name: '5.23 世界哭', move: '世界哭',
+    desc: '大招改世界哭：全場強緩＋短暫暈眩' },
+  { id: '5.24', char: 'baby', tier: 2, req: '5.2', icon: '🛡️', name: '5.24 安撫結界', move: '結界',
+    desc: '大招改安撫結界：治療＋護盾＋無敵；身邊常駐結界' },
+
+  // ——— 金魚：魚缸領域／急流 ———
+  { id: '6.1', char: 'goldfish', tier: 0, icon: '🫧', name: '6.1 魚缸領域', move: '泡泡彈',
+    desc: '走魚缸線：週期連發泡泡彈。新招「泡泡彈」：每 2.1 秒射 3 發帶緩速泡泡' },
+  { id: '6.2', char: 'goldfish', tier: 0, icon: '🌊', name: '6.2 急流', move: '水花衝',
+    desc: '走急流線：週期水花衝擊。新招「水花衝」：每 2.2 秒範圍擊退＋緩速' },
+  { id: '6.11', char: 'goldfish', tier: 1, req: '6.1', icon: '🛡️', name: '6.11 泡泡盾', move: '泡盾',
+    desc: '泡泡變 5 發、穿透＋；週期給自己泡泡護盾' },
+  { id: '6.12', char: 'goldfish', tier: 1, req: '6.1', icon: '🍱', name: '6.12 餵食時間', move: '餵食',
+    desc: '每 5.5 秒全隊回血＋派出 2 隻小魚幫手' },
+  { id: '6.13', char: 'goldfish', tier: 1, req: '6.2', icon: '🌪️', name: '6.13 龍捲水', move: '龍捲',
+    desc: '水花更大更快；週期在近敵位置放龍捲水' },
+  { id: '6.14', char: 'goldfish', tier: 1, req: '6.2', icon: '🐟', name: '6.14 魚群衝', move: '魚群',
+    desc: '每 3.2 秒向近敵噴出 6 條魚群彈' },
+  { id: '6.21', char: 'goldfish', tier: 2, req: '6.1', icon: '🐠', name: '6.21 水族箱', move: '水族',
+    desc: '大招改水族箱：大範圍緩速＋召喚 6 魚；被動週期補魚' },
+  { id: '6.22', char: 'goldfish', tier: 2, req: '6.1', icon: '⚪', name: '6.22 珍珠砲', move: '珍珠',
+    desc: '大招改珍珠砲：四周高傷穿透珍珠彈' },
+  { id: '6.23', char: 'goldfish', tier: 2, req: '6.2', icon: '🌊', name: '6.23 海嘯', move: '海嘯',
+    desc: '大招改海嘯：超大範圍擊退＋水彈雨' },
+  { id: '6.24', char: 'goldfish', tier: 2, req: '6.2', icon: '✨', name: '6.24 金鱗化', move: '金鱗',
+    desc: '大招改金鱗化：短暫無敵＋傷害提升＋身邊水環' },
+
+  // ——— 鄰居：飛拖鞋仙／八卦電台 ———
+  { id: '7.1', char: 'neighbor', tier: 0, icon: '🩴', name: '7.1 飛拖鞋仙', move: '飛拖鞋',
+    desc: '走拖鞋線：週期甩拖鞋彈。新招「飛拖鞋」：每 2 秒射向近敵' },
+  { id: '7.2', char: 'neighbor', tier: 0, icon: '📻', name: '7.2 八卦電台', move: '八卦波',
+    desc: '走八卦線：週期標記脈衝。新招「八卦波」：每 2.5 秒範圍標記＋輕傷' },
+  { id: '7.11', char: 'neighbor', tier: 1, req: '7.1', icon: '💥', name: '7.11 連環拖鞋', move: '連甩',
+    desc: '拖鞋變三連射、穿透＋傷害提升' },
+  { id: '7.12', char: 'neighbor', tier: 1, req: '7.1', icon: '💣', name: '7.12 拖鞋地雷', move: '地雷',
+    desc: '每 3.6 秒在近敵位置爆拖鞋地雷＋標記' },
+  { id: '7.13', char: 'neighbor', tier: 1, req: '7.2', icon: '📡', name: '7.13 標記擴散', move: '擴散',
+    desc: '八卦波更強；標記會擴散去附近怪' },
+  { id: '7.14', char: 'neighbor', tier: 1, req: '7.2', icon: '🕸️', name: '7.14 竊聽網', move: '竊聽',
+    desc: '身邊常駐竊聽網：近敵持續被標記＋微減速' },
+  { id: '7.21', char: 'neighbor', tier: 2, req: '7.1', icon: '🌪️', name: '7.21 拖鞋風暴', move: '風暴',
+    desc: '大招改拖鞋風暴：大範圍＋四周拖鞋雨' },
+  { id: '7.22', char: 'neighbor', tier: 2, req: '7.1', icon: '✨', name: '7.22 金拖鞋', move: '金拖',
+    desc: '大招改金拖鞋高傷穿透；被動優先射標記怪' },
+  { id: '7.23', char: 'neighbor', tier: 2, req: '7.2', icon: '📺', name: '7.23 全棟直播', move: '直播',
+    desc: '大招改全棟直播：幾乎全場標記＋拖鞋彈' },
+  { id: '7.24', char: 'neighbor', tier: 2, req: '7.2', icon: '🚫', name: '7.24 黑名單', move: '黑名單',
+    desc: '大招改黑名單：標記怪重創＋暈；被動持續削標記怪' },
 ];
 
 function getBranch(id) { return BRANCHES.find((b) => b.id === id); }
