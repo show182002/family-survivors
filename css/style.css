@@ -7,7 +7,7 @@ html, body {
   font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
   overflow: hidden;
   user-select: none;
-  touch-action: none;
+  touch-action: manipulation; /* select 可撳／碌；戰鬥畫面另設 none */
   -webkit-user-select: none;
 }
 .hidden { display: none !important; }
@@ -15,7 +15,11 @@ html, body {
 
 /* —— 街機選角 —— */
 #screen-select {
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: flex-start; justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding: max(12px, env(safe-area-inset-top)) 0 max(16px, env(safe-area-inset-bottom));
   background:
     radial-gradient(ellipse at 50% 0%, #2a1848 0%, transparent 55%),
     repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.15) 3px, rgba(0,0,0,.15) 6px),
@@ -23,6 +27,7 @@ html, body {
 }
 .arcade-frame {
   width: min(1100px, 96vw);
+  margin: 0 auto;
   padding: 28px 32px 36px;
   border: 6px solid #e8c84a;
   box-shadow: 0 0 0 4px #5a3a10, 0 0 40px rgba(232,200,74,.25), inset 0 0 60px rgba(0,0,0,.4);
@@ -62,6 +67,8 @@ html, body {
   padding: 10px 8px 12px;
   transition: transform .08s, border-color .08s, box-shadow .08s;
   text-align: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .char-card .portrait {
   width: 96px; height: 96px; margin: 0 auto 8px;
@@ -102,6 +109,12 @@ html, body {
   padding: 14px 48px; cursor: pointer;
   color: #1a1008; background: linear-gradient(180deg, #ffe566, #e8a820);
   border: 4px solid #fff3a0; box-shadow: 0 4px 0 #8b5a10, 0 6px 16px rgba(0,0,0,.4);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#btn-start {
+  min-height: 48px;
+  touch-action: manipulation;
 }
 .btn-arcade:disabled { opacity: .35; cursor: not-allowed; filter: grayscale(.5); }
 .btn-arcade:not(:disabled):hover { filter: brightness(1.08); }
@@ -425,3 +438,10 @@ html, body {
   pointer-events: none;
 }
 .ver-hud { bottom: max(8px, env(safe-area-inset-bottom)); }
+
+
+/* —— v0.02201 選角：直機可撳可碌（唔縮排版）；戰鬥先迫打橫 —— */
+#screen-select .char-card,
+#screen-select .btn-arcade {
+  pointer-events: auto;
+}

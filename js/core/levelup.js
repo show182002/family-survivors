@@ -59,6 +59,7 @@ function openNextPick() {
     el.levelup.classList.add('hidden');
     if (mode !== 'play') {
       mode = 'play';
+      if (typeof updateRotateGate === 'function') updateRotateGate();
       lastTs = 0;
       cancelAnimationFrame(animId);
       animId = requestAnimationFrame(frame);
@@ -81,6 +82,7 @@ function openNextPick() {
   }
   upgradeFocus = 0;
   mode = 'levelup';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
   const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
   if (el.levelupTitle) el.levelupTitle.textContent = who + '　選技';

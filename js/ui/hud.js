@@ -37,6 +37,7 @@ function updateHud() {
 
 function endRun(win) {
   mode = 'end';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   cancelAnimationFrame(animId);
   el.end.classList.remove('hidden');
   el.endTitle.textContent = win ? '勝利！生存 5 分鐘' : '全滅…';

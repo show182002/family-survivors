@@ -24,6 +24,7 @@ function openBranchPick(p) {
   pendingChoices = branchOptions(p, currentPick.tier);
   upgradeFocus = 0;
   mode = 'levelup';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
   const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
   if (el.levelupTitle) el.levelupTitle.textContent = '⭐ ' + who + '　Lv' + BRANCH_LEVELS[currentPick.tier] + ' 轉職！';
