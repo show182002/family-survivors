@@ -173,6 +173,7 @@ function tryUlt(slot) {
   const mods = sm(p);
   const eff = te(p);
   p.ultCd = u.cooldown;
+  p.ultMax = u.cooldown;
   p.flash = 0.55;
   if (typeof sfxUlt === 'function') sfxUlt();
   // v0.02205：大招傷害 ×3、FX／體感誇張（割草）
