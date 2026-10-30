@@ -58,6 +58,7 @@ function buildSelectCards() {
   bindConfirmButtons();
   bindCarouselSwipes();
   bindSelectSticks();
+  bindSelectZoomModality();
   applyMobileSelectHints();
   refreshSelectUI();
 }
@@ -149,6 +150,23 @@ function paintBigSlot(player, cursorIdx) {
   slot.classList.toggle('picked-p1', player === 1 && myPick === c.id);
   slot.classList.toggle('picked-p2', player === 2 && myPick === c.id);
   slot.classList.toggle('taken', otherPick === c.id && myPick !== c.id);
+}
+
+/** v0.02205：選角輸入模態決定預設 zoom（touch→×3、keyboard／mouse→×1） */
+function bindSelectZoomModality() {
+  const root = document.getElementById('screen-select');
+  if (!root || root.dataset.zoomModalityBound === '1') return;
+  root.dataset.zoomModalityBound = '1';
+  const note = (kind) => {
+    if (typeof applySelectZoomModality === 'function') applySelectZoomModality(kind);
+  };
+  root.addEventListener('touchstart', () => note('touch'), { passive: true, capture: true });
+  root.addEventListener('pointerdown', (e) => {
+    if (!e) return;
+    if (e.pointerType === 'touch') note('touch');
+    else if (e.pointerType === 'mouse' || e.pointerType === 'pen') note('kbd');
+  }, { capture: true });
+  root.addEventListener('mousedown', () => note('kbd'), { capture: true });
 }
 
 /** iOS 有時 click 唔穩：touchend／pointerup 一齊綁，preventDefault 避免雙觸發 */
@@ -354,6 +372,7 @@ function confirmP2() {
 
 function onKeyDown(e) {
   if (mode === 'select') {
+    if (typeof applySelectZoomModality === 'function') applySelectZoomModality('kbd');
     if (e.code === 'KeyA' || e.code === 'KeyW') { shiftCursor(1, -1); }
     if (e.code === 'KeyD' || e.code === 'KeyS') { shiftCursor(1, 1); }
     if (e.code === 'Space') confirmP1();
