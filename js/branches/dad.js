@@ -6,7 +6,10 @@ function dadUlt(p) {
   if (p.branch[0] === '2.1') {
     if (p.carry) { throwCarried(p); return; }
     if (p.ultCd > 0) return;
-    const ally = run.players.find((a) => a !== p && !a.dead && !a.ball);
+    const ally = run.players.find((a) => a !== p && !a.dead && !a.ball && !a.caged);
+    if (!ally && run.players.some((a) => a !== p && a.caged && !a.dead)) {
+      addFloat(p.x, p.y - 60, '要先打爆籠', '#ffcc66', true); return;
+    }
     if (ally) {
       if (Math.hypot(ally.x - p.x, ally.y - p.y) > 200) { addFloat(p.x, p.y - 60, '行近隊友先托到！', '#ffcc66', true); return; }
       p.carry = { who: ally };
@@ -109,6 +112,7 @@ function updateBalls(dt) {
           addFx(e.x, e.y, 'burst', 50, '#ffcc66', bfx('2.1'));
         }
       }
+      if (typeof damageCagesInRadius === 'function') damageCagesInRadius(b.x, b.y, 48, 120 * L, dad);
     }
     if (b.who) { b.who.x = b.x; b.who.y = b.y; }
     if (b.t >= b.life) {
@@ -200,7 +204,12 @@ function updateStructures(dt) {
     if (hasB(p, '2.22')) {
       for (const a of run.players) {
         if (a.dead || a._fortT === run.time) continue;
-        if ((a.x - s.x) ** 2 + (a.y - s.y) ** 2 < 170 * 170) { a._fortT = run.time; a.hp = Math.min(a.maxHp, a.hp + 6 * dt); }
+        if ((a.x - s.x) ** 2 + (a.y - s.y) ** 2 < 170 * 170) {
+          a._fortT = run.time;
+          // 籠塔多一點堡壘回血
+          const rate = a.caged ? 10 : 6;
+          a.hp = Math.min(a.maxHp, a.hp + rate * dt);
+        }
       }
     }
   }
@@ -232,6 +241,16 @@ function netSegments() {
     const mine = run.structs.filter((s) => s.owner === p.slot);
     for (let i = 0; i < mine.length - 1; i++) out.push({ a: mine[i], b: mine[i + 1], owner: p.slot });
     if (mine.length > 2) out.push({ a: mine[mine.length - 1], b: mine[0], owner: p.slot });
+    // 籠＝電網額外節點（陣地 220 內）
+    const cages = typeof livingCages === 'function' ? livingCages() : (run.cages || []);
+    for (const c of cages) {
+      let best = null, bestD = 220 * 220;
+      for (const s of mine) {
+        const d = (s.x - c.x) ** 2 + (s.y - c.y) ** 2;
+        if (d < bestD) { bestD = d; best = s; }
+      }
+      if (best) out.push({ a: best, b: { x: c.x, y: c.y }, owner: p.slot });
+    }
   }
   return out;
 }

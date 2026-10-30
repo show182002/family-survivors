@@ -62,7 +62,20 @@ function updateMinis(dt) {
       const h = p.hist[Math.min(p.hist.length - 1, m.line * 9)] || p;
       m.x += (h.x - m.x) * Math.min(1, dt * 12); m.y += (h.y - m.y) * Math.min(1, dt * 12);
     } else {
-      const tg = nearestEnemyTo(m.x, m.y, 420);
+      // 有籠：優先打籠 260 內怪（守塔）
+      let tg = null;
+      const cages = typeof livingCages === 'function' ? livingCages() : (run.cages || []);
+      if (cages.length) {
+        let best = Infinity;
+        for (const e of run.enemies) {
+          if (e.hp <= 0) continue;
+          for (const c of cages) {
+            const d2 = (e.x - c.x) ** 2 + (e.y - c.y) ** 2;
+            if (d2 < 260 * 260 && d2 < best) { best = d2; tg = e; }
+          }
+        }
+      }
+      if (!tg) tg = nearestEnemyTo(m.x, m.y, 420);
       let gx = p.x, gy = p.y;
       if (tg && Math.hypot(tg.x - p.x, tg.y - p.y) < 520) { gx = tg.x; gy = tg.y; }
       const dx = gx - m.x, dy = gy - m.y, d = Math.hypot(dx, dy) || 1;
@@ -87,6 +100,7 @@ function updateTrails(dt) {
   if (run.trailTick > 0 || !run.trails.length) return;
   run.trailTick = 0.3;
   const L = brScale();
+  const cages = typeof livingCages === 'function' ? livingCages() : (run.cages || []);
   for (const e of run.enemies) {
     if (e.hp <= 0) continue;
     for (const t of run.trails) {
@@ -94,6 +108,20 @@ function updateTrails(dt) {
         hurtEnemy(e, 14 * L, run.players[t.owner]);
         break;
       }
+    }
+  }
+  // 彩虹軌近籠：籠周圍小範圍 bonus tick
+  for (const t of run.trails) {
+    for (const c of cages) {
+      if ((t.x - c.x) ** 2 + (t.y - c.y) ** 2 > 100 * 100) continue;
+      const owner = run.players[t.owner];
+      for (const e of run.enemies) {
+        if (e.hp <= 0) continue;
+        if ((e.x - c.x) ** 2 + (e.y - c.y) ** 2 < (70 + e.r) ** 2) {
+          hurtEnemy(e, 8 * L, owner);
+        }
+      }
+      break;
     }
   }
 }

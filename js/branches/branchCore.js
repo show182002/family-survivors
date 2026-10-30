@@ -79,6 +79,8 @@ function coneDamage(p, x, y, ang, half, r, dmg, opts) {
     while (da < -Math.PI) da += Math.PI * 2;
     if (Math.abs(da) <= half || d < 30) hurtEnemy(e, dmg, p, Object.assign({ fx: x, fy: y }, opts));
   }
+  // 龍息／錐形亦傷籠鎖
+  if (typeof damageCagesInRadius === 'function') damageCagesInRadius(x, y, r * 0.55, dmg * 0.7, p);
 }
 function nearestN(x, y, maxD, n) {
   const out = [];
