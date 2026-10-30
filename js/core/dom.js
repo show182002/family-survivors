@@ -32,6 +32,7 @@ const el = {
   btnToSelect: document.getElementById('btn-to-select'),
   fxBtns: document.querySelectorAll('[data-fx]'),
   hudFx: document.getElementById('hud-fx'),
+  hudZoom: document.getElementById('hud-zoom'),
   btnUltP1: document.getElementById('btn-ult-p1'),
   btnUltP2: document.getElementById('btn-ult-p2'),
 };
@@ -94,3 +95,16 @@ if (el.hudFx) {
   });
 }
 refreshFxButtons();
+
+function refreshZoomButton() {
+  if (!el.hudZoom) return;
+  el.hudZoom.textContent = typeof zoomLabel === 'function' ? zoomLabel() : '1';
+  el.hudZoom.title = '倍 ' + (typeof getViewZoom === 'function' ? getViewZoom() : 1);
+}
+if (el.hudZoom) {
+  el.hudZoom.addEventListener('click', () => {
+    if (typeof cycleViewZoom === 'function') cycleViewZoom();
+    el.hudZoom.blur();
+  });
+}
+refreshZoomButton();

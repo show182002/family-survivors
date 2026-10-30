@@ -7,21 +7,26 @@ function arcSafe(x, y, r, a0, a1) { ctx.arc(x, y, r > 0 ? r : 0, a0, a1); }
 // ——— Draw ———
 function draw() {
   const cam = run.cams;
+  const z = typeof getViewZoom === 'function' ? getViewZoom() : 1;
+  const vw = typeof viewW === 'function' ? viewW() : STAGE_W;
+  const vh = typeof viewH === 'function' ? viewH() : STAGE_H;
   let ox = 0, oy = 0;
   if (screenShake > 0 && fxFull()) {
     ox = (Math.random() - 0.5) * screenShake * 2;
     oy = (Math.random() - 0.5) * screenShake * 2;
   }
-  ctx.setTransform(1, 0, 0, 1, ox, oy);
+  // clear in screen space, then camera-zoom world (sticks stay unscaled)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = '#0c1010';
   ctx.fillRect(-10, -10, STAGE_W + 20, STAGE_H + 20);
+  ctx.setTransform(z, 0, 0, z, ox, oy);
 
   const tile = 48;
   const x0 = Math.floor(cam.x / tile) * tile;
   const y0 = Math.floor(cam.y / tile) * tile;
-  for (let y = y0; y < cam.y + STAGE_H + tile; y += tile) {
-    for (let x = x0; x < cam.x + STAGE_W + tile; x += tile) {
+  for (let y = y0; y < cam.y + vh + tile; y += tile) {
+    for (let x = x0; x < cam.x + vw + tile; x += tile) {
       const gx = x - cam.x, gy = y - cam.y;
       const checker = ((x / tile) + (y / tile)) & 1;
       ctx.fillStyle = checker ? '#1a3a28' : '#163424';

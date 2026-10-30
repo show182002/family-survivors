@@ -12,6 +12,8 @@ const MAX_ENEMIES = 320;
 const XP_BASE = 9.5;
 const XP_GROW = 1.325;
 const FX_KEY = 'family-survivors-fx';
+const ZOOM_KEY = 'family-survivors-zoom';
+const ZOOM_STEPS = [1, 1.5, 2];
 
 // ——— FX settings (Full / Simple / Off) ———
 let fxMode = localStorage.getItem(FX_KEY) || 'full';
@@ -19,6 +21,32 @@ function setFxMode(mode) {
   fxMode = mode;
   localStorage.setItem(FX_KEY, mode);
   refreshFxButtons();
+}
+
+// ——— v0.02203 畫面倍率（相機 zoom；搖桿／招掣唔跟住放大）———
+function parseZoom(v) {
+  const n = parseFloat(v);
+  if (n === 1.5 || n === 2 || n === 1) return n;
+  return 1;
+}
+let viewZoom = parseZoom(localStorage.getItem(ZOOM_KEY));
+function getViewZoom() { return viewZoom || 1; }
+function viewW() { return STAGE_W / getViewZoom(); }
+function viewH() { return STAGE_H / getViewZoom(); }
+function zoomLabel(z) {
+  z = z || getViewZoom();
+  if (z === 1.5) return '1½';
+  if (z === 2) return '2';
+  return '1';
+}
+function setViewZoom(z) {
+  viewZoom = parseZoom(z);
+  localStorage.setItem(ZOOM_KEY, String(viewZoom));
+  if (typeof refreshZoomButton === 'function') refreshZoomButton();
+}
+function cycleViewZoom() {
+  const i = ZOOM_STEPS.indexOf(getViewZoom());
+  setViewZoom(ZOOM_STEPS[(i < 0 ? 0 : i + 1) % ZOOM_STEPS.length]);
 }
 function fxOn() { return fxMode !== 'off'; }
 // 每技能特效開關 / 自動升級 / 技能次序（localStorage）

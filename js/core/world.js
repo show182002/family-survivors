@@ -43,10 +43,12 @@ function updateFx(dt) {
 
 function updateCamera(dt) {
   const f = cameraFocus();
-  const tx = f.x - STAGE_W / 2;
-  const ty = f.y - STAGE_H / 2;
+  const vw = typeof viewW === 'function' ? viewW() : STAGE_W;
+  const vh = typeof viewH === 'function' ? viewH() : STAGE_H;
+  const tx = f.x - vw / 2;
+  const ty = f.y - vh / 2;
   run.cams.x += (tx - run.cams.x) * Math.min(1, 6 * dt);
   run.cams.y += (ty - run.cams.y) * Math.min(1, 6 * dt);
-  run.cams.x = clamp(run.cams.x, 0, MAP_W - STAGE_W);
-  run.cams.y = clamp(run.cams.y, 0, MAP_H - STAGE_H);
+  run.cams.x = clamp(run.cams.x, 0, Math.max(0, MAP_W - vw));
+  run.cams.y = clamp(run.cams.y, 0, Math.max(0, MAP_H - vh));
 }
