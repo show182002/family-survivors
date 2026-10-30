@@ -140,6 +140,20 @@ const SPRITES = {
     '...KF.FK...',
     '...KK.KK...',
   ],
+  cousin: [
+    '....KKKK....',
+    '...KHHHHK...',
+    '..KHSSSSHK..',
+    '..KSWSSWSK..',
+    '..KSSSSSSK..',
+    '...KSSSK...',
+    '...KVVVVK...',
+    '..KVYYYYVK..',
+    '..KVYYYYVK..',
+    '...KVVVK...',
+    '...KV.VK...',
+    '...KK.KK...',
+  ],
   // 小怪：史萊姆
   slime: [
     '..KKKK..',
