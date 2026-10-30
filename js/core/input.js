@@ -61,6 +61,7 @@ function setStickFromTouch(stick, cx, cy) {
 
 function clearStick(stick) {
   stick.id = null; stick.active = false; stick.dx = 0; stick.dy = 0;
+  syncTouchControlsVisibility();
 }
 
 function touchIgnoredTarget(target) {
@@ -84,6 +85,7 @@ function onStickDown(clientX, clientY, pointerId, target) {
     const def = defaultStickBase(s);
     s.ox = def.x; s.oy = def.y;
     setStickFromTouch(s, p.x, p.y);
+    syncTouchControlsVisibility();
     return;
   }
   if (stick.id != null && stick.id !== pointerId) return;
@@ -91,6 +93,7 @@ function onStickDown(clientX, clientY, pointerId, target) {
   const def = defaultStickBase(stick);
   stick.ox = def.x; stick.oy = def.y;
   setStickFromTouch(stick, p.x, p.y);
+  syncTouchControlsVisibility();
 }
 
 function onStickMove(clientX, clientY, pointerId) {
@@ -160,12 +163,14 @@ function playerMoveAxis(slot) {
 
 function drawVirtualSticks(g) {
   if (typeof mode !== 'undefined' && mode !== 'play') return;
+  // v0.02203：撳住先畫搖桿；放開／鍵盤桌面唔浮住
   const showP2 = run && run.players && run.players.length > 1;
   function drawOne(stick, label, color) {
+    if (!stick.active) return;
     const def = defaultStickBase(stick);
     const m = def.m;
-    const baseX = stick.active ? stick.ox : def.x;
-    const baseY = stick.active ? stick.oy : def.y;
+    const baseX = stick.ox;
+    const baseY = stick.oy;
     g.beginPath();
     g.arc(baseX, baseY, m.radius, 0, Math.PI * 2);
     g.fillStyle = 'rgba(0,0,0,0.32)';
@@ -173,11 +178,11 @@ function drawVirtualSticks(g) {
     g.strokeStyle = color;
     g.lineWidth = 4;
     g.stroke();
-    const kx = stick.active ? stick.ox + stick.dx * m.knobMax : baseX;
-    const ky = stick.active ? stick.oy + stick.dy * m.knobMax : baseY;
+    const kx = stick.ox + stick.dx * m.knobMax;
+    const ky = stick.oy + stick.dy * m.knobMax;
     g.beginPath();
     g.arc(kx, ky, m.knobR, 0, Math.PI * 2);
-    g.fillStyle = stick.active ? color : 'rgba(255,255,255,0.25)';
+    g.fillStyle = color;
     g.fill();
     g.fillStyle = 'rgba(255,255,240,0.85)';
     g.font = '600 22px sans-serif';
@@ -185,9 +190,26 @@ function drawVirtualSticks(g) {
     g.fillText(label, baseX, baseY - m.radius - 12);
     g.textAlign = 'left';
   }
-  drawOne(sticks.p1, 'P1', 'rgba(100,220,160,0.9)');
-  if (showP2) drawOne(sticks.p2, 'P2', 'rgba(100,160,255,0.9)');
+  drawOne(sticks.p1, '1', 'rgba(100,220,160,0.9)');
+  if (showP2) drawOne(sticks.p2, '2', 'rgba(100,160,255,0.9)');
 }
+
+/** 招掣跟住 stick：撳該側先顯示 */
+function syncTouchControlsVisibility() {
+  if (typeof mode !== 'undefined' && mode !== 'play') {
+    if (typeof el !== 'undefined') {
+      if (el.btnUltP1) el.btnUltP1.classList.remove('press-show');
+      if (el.btnUltP2) el.btnUltP2.classList.remove('press-show');
+    }
+    return;
+  }
+  if (typeof el === 'undefined' || !el) return;
+  const n = (run && run.players) ? run.players.length : 0;
+  if (el.btnUltP1) el.btnUltP1.classList.toggle('press-show', !!(sticks.p1.active && n >= 1));
+  if (el.btnUltP2) el.btnUltP2.classList.toggle('press-show', !!(sticks.p2.active && n > 1));
+  if (typeof layoutUltButtons === 'function') layoutUltButtons();
+}
+window.syncTouchControlsVisibility = syncTouchControlsVisibility;
 
 // defer bind until DOM ready (dom.js loads before this — el exists)
 document.addEventListener('DOMContentLoaded', () => {

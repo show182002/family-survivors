@@ -85,7 +85,7 @@ function openNextPick() {
   if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
   const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
-  if (el.levelupTitle) el.levelupTitle.textContent = who + '　選技';
+  if (el.levelupTitle) el.levelupTitle.textContent = who + '　選';
   if (el.levelupSub) {
     el.levelupSub.textContent = '剩餘點數：' + currentPick.pointsLeft + '　（每級 ' + POINTS_PER_LEVEL + ' 點）';
   }

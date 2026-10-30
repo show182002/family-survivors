@@ -30,6 +30,7 @@
     var show = !!(inBattle && isPortraitGated());
     if (rotateModal) rotateModal.style.display = show ? 'flex' : 'none';
     if (typeof fitCanvas === 'function') fitCanvas();
+    if (typeof layoutUltButtons === 'function') layoutUltButtons();
   }
   window.updateRotateGate = updateRotateGate;
 
@@ -47,7 +48,7 @@
   }
   function syncFsBtnLabel() {
     if (!fsBtn) return;
-    fsBtn.textContent = isFullscreen() ? '退出' : '全螢幕';
+    fsBtn.textContent = isFullscreen() ? '退' : '全';
   }
   function showFsFailTip() {
     if (!fsFailTip) return;

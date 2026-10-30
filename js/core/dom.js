@@ -69,6 +69,7 @@ function fitCanvas() {
     el.game.style.justifyContent = 'center';
   }
   ctx.imageSmoothingEnabled = false;
+  if (typeof layoutUltButtons === 'function') layoutUltButtons();
 }
 window.addEventListener('resize', fitCanvas);
 window.addEventListener('orientationchange', fitCanvas);
@@ -79,8 +80,8 @@ function refreshFxButtons() {
     b.classList.toggle('on', b.dataset.fx === fxMode);
   });
   if (el.hudFx) {
-    const label = { full: '特效：完整', simple: '特效：簡約', off: '特效：關閉' };
-    el.hudFx.textContent = label[fxMode] || '特效';
+    const label = { full: '效', simple: '簡', off: '無' };
+    el.hudFx.textContent = label[fxMode] || '效';
   }
 }
 el.fxBtns.forEach((b) => {
