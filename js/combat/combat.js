@@ -335,6 +335,18 @@ function tryUlt(slot) {
     addFx(p.x, p.y, 'ring', R, '#fed7aa');
     addFloat(p.x, p.y - 80, '警報！！', '#fb923c', true);
     shake(12);
+  } else if (u.type === 'cat_nine') {
+    const area = (mods.area || 1) * 2.2;
+    const dmg = u.damage * mods.meleeDamage * ULT_DMG;
+    const R = u.radius * area;
+    p.invuln = Math.max(p.invuln, u.invuln || 1.5);
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: 160 });
+    for (let i = 0; i < ULT_FX; i++) {
+      addFx(p.x, p.y, 'burst', 70 + i * 20, '#fbbf24');
+      addFx(p.x, p.y, 'ring', R * (0.3 + i * 0.06), '#fde68a');
+    }
+    addFloat(p.x, p.y - 80, '九命！！', '#fbbf24', true);
+    shake(12);
   }
 }
 

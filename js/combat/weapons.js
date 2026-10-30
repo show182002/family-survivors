@@ -227,6 +227,41 @@ function updateWeapons(dt) {
         }
       }
 
+    } else if (w.type === 'cat_kit') {
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        if (target) {
+          const dx = target.x - p.x, dy = target.y - p.y;
+          const d = Math.hypot(dx, dy) || 1;
+          if (!p.caged) {
+            const leap = Math.min(w.leap || 100, d);
+            p.x += (dx / d) * leap;
+            p.y += (dy / d) * leap;
+            p.facing = dx >= 0 ? 1 : -1;
+          }
+          const dmg = w.baseDamage * mods.meleeDamage * (eff.meleeDamageMul || 1);
+          damageEnemiesInRadius(p.x, p.y, w.radius * area, dmg, p, { knock: 70 });
+          if (typeof damageCagesInRadius === 'function') damageCagesInRadius(p.x, p.y, w.radius * area, dmg, p);
+          addFx(p.x, p.y, 'slam', w.radius * 0.7, '#fbbf24');
+        }
+      }
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.ballCd * cdMul;
+        const target = nearestEnemy(p);
+        let dx = p.facing, dy = 0;
+        if (target) { dx = target.x - p.x; dy = target.y - p.y; }
+        const ang = Math.atan2(dy, dx);
+        spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+          damage: w.ballDamage * mods.projDamage,
+          pierce: mods.pierce, chain: mods.chain,
+          speed: w.ballSpeed, life: 1.2, size: 9,
+          color: '#fde68a', frost: !!eff.alwaysChill,
+        });
+      }
+
     }
   }
 }
