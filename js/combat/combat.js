@@ -167,6 +167,7 @@ function tryUlt(slot) {
   if (!p || p.dead || p.carriedBy || p.ball) return;
   if (p.charId === 'dad' && p.branch && p.branch[0]) { dadUlt(p); return; }
   if (p.charId === 'mom' && p.branch && p.branch[0] && typeof momUlt === 'function') { momUlt(p); return; }
+  if (p.charId === 'grandpa' && p.branch && p.branch[0] && typeof grandpaUlt === 'function') { grandpaUlt(p); return; }
   if (p.ultCd > 0) return;
   const c = getChar(p.charId);
   const u = c.ult;

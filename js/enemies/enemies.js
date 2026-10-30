@@ -162,6 +162,13 @@ function hurtPlayer(target, rawDmg, e) {
           let dmg = rawDmg * sm(target).damageTaken;
           if (target.carry && hasB(target, '2.12')) dmg *= 0.5;
           if (hasB(target, '1.21')) dmg *= 1.15;
+          // 阿公太極線減傷
+          if (typeof hasB === 'function' && target.branch && target.branch[0] === '4.2') {
+            dmg *= hasB(target, '4.23') ? 0.55 : 0.75;
+          }
+          if (typeof hasB === 'function' && hasB(target, '4.24') && e && e.hp > 0) {
+            hurtEnemy(e, Math.max(4, dmg * 0.55), target);
+          }
           if (target.shield > 0) {
             const abs = Math.min(target.shield, dmg);
             target.shield -= abs;

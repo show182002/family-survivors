@@ -141,6 +141,17 @@ function updateSkillActs(dt) {
   for (const s of run.summons) {
     s.t += dt; s.cd = (s.cd || 0) - dt;
     const owner = run.players[s.owner];
+    // 過河卒等：chase 向近敵緩慢推進
+    if (s.chase) {
+      const tg = nearestEnemyTo(s.x, s.y, 700);
+      if (tg) {
+        const dx = tg.x - s.x, dy = tg.y - s.y, d = Math.hypot(dx, dy) || 1;
+        s.x += dx / d * 140 * dt; s.y += dy / d * 140 * dt;
+      } else if (owner && !owner.dead) {
+        const dx = owner.x - s.x, dy = owner.y - s.y, d = Math.hypot(dx, dy) || 1;
+        if (d > 60) { s.x += dx / d * 90 * dt; s.y += dy / d * 90 * dt; }
+      }
+    }
     if (s.cd <= 0 && owner) {
       const tg = nearestEnemyTo(s.x, s.y, 650);
       if (tg) {

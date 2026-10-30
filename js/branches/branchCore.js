@@ -14,6 +14,8 @@ function ultLabel(p) {
   if (p.charId === 'dad' && p.branch[0] === '2.2') return '陣';
   if (p.charId === 'mom' && p.branch[0] === '3.1') return hasB(p, '3.21') ? '湯' : '湯';
   if (p.charId === 'mom' && p.branch[0] === '3.2') return hasB(p, '3.24') ? '龍' : '怒';
+  if (p.charId === 'grandpa' && p.branch[0] === '4.1') return hasB(p, '4.21') ? '殺' : (hasB(p, '4.22') ? '車' : '棋');
+  if (p.charId === 'grandpa' && p.branch[0] === '4.2') return hasB(p, '4.24') ? '柔' : (hasB(p, '4.23') ? '境' : '氣');
   return '招';
 }
 function branchPath(p) {
@@ -62,6 +64,9 @@ function applyBranch(p, b) {
   if (b.id === '3.1') { p.bHeal = 1.4; }
   if (b.id === '3.2') { p.bDmg = Math.max(p.bDmg || 1, 1.4); }
   if (b.id === '3.23') { p.bDmg = Math.max(p.bDmg || 1, 1.5); p.bSpeed = Math.max(p.bSpeed || 1, 1.1); }
+  if (b.id === '4.1') { p.ultCd = 0; p.bDmg = Math.max(p.bDmg || 1, 1.15); }
+  if (b.id === '4.2') { p.ultCd = 0; }
+  if (b.id === '4.23') { p.bSpeed = Math.max(p.bSpeed || 1, 1.08); }
   banner((p.slot === 0 ? '1P ' : '2P ') + p.name + ' 轉職：' + b.icon + ' ' + b.name, p.color, 2.6);
   addFx(p.x, p.y, 'burst', 140, p.color);
   addFx(p.x, p.y, 'ring', 180, '#ffe566');
@@ -110,6 +115,7 @@ function updateBranches(dt) {
     if (p.charId === 'daughter') updateDaughterBr(p, dt, tick, L);
     else if (p.charId === 'dad') updateDadBr(p, dt, tick, L);
     else if (p.charId === 'mom') updateMomBr(p, dt, tick, L);
+    else if (p.charId === 'grandpa' && typeof updateGrandpaBr === 'function') updateGrandpaBr(p, dt, tick, L);
   }
   updateMinis(dt);
   updateTrails(dt);
