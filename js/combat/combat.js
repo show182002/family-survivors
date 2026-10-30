@@ -362,7 +362,6 @@ function tryUlt(slot) {
     }
     addFloat(p.x, p.y - 80, '煙花！！', '#ef4444', true);
     shake(16);
-  }
   } else if (u.type === 'cousin_storm') {
     const area = (mods.area || 1) * 2.2;
     const dmg = u.damage * mods.meleeDamage * ULT_DMG;

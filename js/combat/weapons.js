@@ -327,6 +327,26 @@ function updateWeapons(dt) {
         }
       }
 
+    } else if (w.type === 'bark_pack') {
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.auraTick * cdMul;
+        const dmg = w.baseDamage * mods.meleeDamage;
+        damageEnemiesInRadius(p.x, p.y, w.auraRadius * area, dmg, p, { knock: 40 });
+        if (fxFull()) addFx(p.x, p.y, 'ring', w.auraRadius * area * 0.35, '#e8963a');
+      }
+      p.tSlam = (p.tSlam == null ? 0 : p.tSlam) - dt;
+      if (p.tSlam <= 0) {
+        p.tSlam = w.packCd * cdMul;
+        run.summons.push({
+          x: p.x + (Math.random() - 0.5) * 80, y: p.y + (Math.random() - 0.5) * 80,
+          t: 0, life: w.packDur, dmg: w.packDmg * mods.projDamage,
+          rate: w.packRate, cd: 0, owner: p.slot, icon: '🐶', color: '#e8963a',
+        });
+        addFx(p.x, p.y, 'burst', 50, '#ffd4a0');
+        addFloat(p.x, p.y - 40, '汪！', '#e8963a', false);
+      }
+
     }
   }
 }
