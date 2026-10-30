@@ -24,6 +24,7 @@ function frameStep(dt) {
   if (screenShake > 0) screenShake = Math.max(0, screenShake - dt * 30);
 
   updatePlayers(dt);
+  if (typeof updateUltTips === 'function') updateUltTips(dt);
   if (typeof updateCageAlly === 'function') updateCageAlly(dt);
   if (typeof updateAiUlt === 'function') updateAiUlt(dt);
   updateWeapons(dt);
@@ -80,6 +81,7 @@ function updatePlayers(dt) {
     if (p.dead) continue;
     if (p.invuln > 0) p.invuln -= dt;
     if (p.ultCd > 0) p.ultCd -= dt;
+    if (p.ultCd < 0) p.ultCd = 0;
     if (p.flash > 0) p.flash -= dt;
     if (p.shield > 0) p.shield = Math.max(0, p.shield - dt * 2);
 

@@ -151,11 +151,31 @@ function draw() {
         ctx.font = 'bold 14px sans-serif';
         ctx.fillText(p.name + (p.slot === 0 ? ' 1P' : ' 2P'), sx, sy - 84);
 
-        ctx.strokeStyle = p.ultCd <= 0 ? '#ffe566' : '#555';
-        ctx.lineWidth = 3;
+        // v0.02221：頭上細長大招 CD 條（手機都清楚）
+        const ubw = 56, ubh = 5;
+        const uy = sy - 92;
+        const uratio = (!p.ultMax || p.ultCd <= 0) ? 1 : Math.max(0, 1 - p.ultCd / p.ultMax);
+        const ready = p.ultCd <= 0;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(sx - ubw / 2 - 1, uy - 1, ubw + 2, ubh + 2);
+        ctx.fillStyle = '#222033';
+        ctx.fillRect(sx - ubw / 2, uy, ubw, ubh);
+        ctx.fillStyle = ready ? '#ffe566' : '#88aaff';
+        if (ready && p._ultReadyFlash > 0) {
+          ctx.globalAlpha = 0.55 + 0.45 * Math.abs(Math.sin((p._ultReadyFlash || 0) * 10));
+        }
+        ctx.fillRect(sx - ubw / 2, uy, ubw * uratio, ubh);
+        ctx.globalAlpha = 1;
+        if (ready) {
+          ctx.fillStyle = '#ffe566';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText('招', sx, uy - 2);
+        }
+        // 腳下細圈保留作輔助
+        ctx.strokeStyle = ready ? '#ffe566' : '#444';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        const ratio = p.ultCd <= 0 ? 1 : 1 - p.ultCd / p.ultMax;
-        arcSafe(sx, sy + 8, 14, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2);
+        arcSafe(sx, sy + 8, 12, -Math.PI / 2, -Math.PI / 2 + uratio * Math.PI * 2);
         ctx.stroke();
       },
     });
