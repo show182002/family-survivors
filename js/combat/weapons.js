@@ -104,7 +104,7 @@ function updateWeapons(dt) {
           x: p.x + (Math.random() - 0.5) * 100,
           y: p.y + (Math.random() - 0.5) * 100,
           t: 0, life: w.spiritDur, dmg: w.spiritDmg * mods.projDamage,
-          rate: w.spiritRate, acc: 0, owner: p.slot,
+          rate: w.spiritRate, cd: 0, owner: p.slot,
           icon: '👻', color: '#ffe08a',
         });
         addFx(p.x, p.y, 'burst', 60, '#ffe08a');

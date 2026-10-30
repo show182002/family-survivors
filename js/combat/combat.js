@@ -241,7 +241,7 @@ function tryUlt(slot) {
       run.summons.push({
         x: p.x + Math.cos(ang) * 70, y: p.y + Math.sin(ang) * 70,
         t: 0, life: u.spiritDur || 10, dmg: (u.spiritDmg || 12) * mods.projDamage * ULT_DMG / 2,
-        rate: u.spiritRate || 0.45, acc: 0, owner: p.slot,
+        rate: u.spiritRate || 0.45, cd: 0, owner: p.slot,
         icon: '👻', color: '#ffe08a',
       });
     }
