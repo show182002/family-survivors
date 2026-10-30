@@ -154,6 +154,79 @@ function updateWeapons(dt) {
         addFx(tx, ty, 'slam', tr * 0.7, '#ffaaee');
         addFloat(tx, ty - 30, '玩具！', '#7ec8ff', false);
       }
+
+    } else if (w.type === 'yarn_needle') {
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.yarnTick * cdMul;
+        const rr = w.yarnRadius * area;
+        damageEnemiesInRadius(p.x, p.y, rr, w.yarnDamage * mods.projDamage, p, { forceChill: true });
+        if (fxFull()) addFx(p.x, p.y, 'ring', rr * 0.4, '#f472b6');
+      }
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        let dx = p.facing, dy = 0;
+        if (target) { dx = target.x - p.x; dy = target.y - p.y; }
+        const count = 1 + mods.extraProjectiles;
+        const pierce = w.pierce + mods.pierce + (eff.bonusPierce || 0);
+        const chain = mods.chain + (eff.bonusChain || 0);
+        for (let i = 0; i < count; i++) {
+          const spread = (i - (count - 1) / 2) * 0.16;
+          const ang = Math.atan2(dy, dx) + spread;
+          spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+            damage: w.baseDamage * mods.projDamage,
+            pierce, chain,
+            speed: w.speed,
+            life: w.range / w.speed,
+            size: w.size + 2,
+            color: eff.alwaysChill ? '#88ddff' : (w.color || '#f9a8d4'),
+            frost: true,
+          });
+        }
+      }
+    } else if (w.type === 'gossip_slipper') {
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.markTick * cdMul;
+        const rr = w.markRadius * area;
+        const r2 = rr * rr;
+        let n = 0;
+        for (const e of run.enemies) {
+          if (e.hp <= 0) continue;
+          const dx = e.x - p.x, dy = e.y - p.y;
+          if (dx * dx + dy * dy <= r2) {
+            e.mark = Math.max(e.mark || 0, w.markDur || 4);
+            n++;
+          }
+        }
+        if (n && fxFull()) addFx(p.x, p.y, 'ring', rr * 0.4, '#fb923c');
+      }
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        let dx = p.facing, dy = 0;
+        if (target) { dx = target.x - p.x; dy = target.y - p.y; }
+        const count = 1 + mods.extraProjectiles;
+        const pierce = w.pierce + mods.pierce + (eff.bonusPierce || 0);
+        const chain = mods.chain + (eff.bonusChain || 0);
+        for (let i = 0; i < count; i++) {
+          const spread = (i - (count - 1) / 2) * 0.2;
+          const ang = Math.atan2(dy, dx) + spread;
+          spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+            damage: w.baseDamage * mods.projDamage,
+            pierce, chain,
+            speed: w.speed,
+            life: w.range / w.speed,
+            size: w.size + 2,
+            color: w.color || '#fb923c',
+            frost: !!eff.alwaysChill,
+          });
+        }
+      }
+
     }
   }
 }

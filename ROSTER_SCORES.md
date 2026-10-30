@@ -3,18 +3,20 @@
 Core (immortal — never cull):
 | id | name | score | note |
 |----|------|------:|------|
-| dad | 爸爸 | 8 | user floor; tank/structures strong |
-| daughter | 女兒 | 6 | user floor; mounts fun |
-| mom | 媽媽 | 4 | user floor; upgraded in loop |
+| dad | 爸爸 | 8 | user floor |
+| daughter | 女兒 | 6 | user floor |
+| mom | 媽媽 | 4→~5.5 | buffed HP/heal/rage/start soup |
 
-## Loop A — new pool (max 4, then 5th + cull)
+## Cull log
+| round | culled | score | why |
+|------:|--------|------:|-----|
+| A | grandma 嫲嫲 | 6.5 | heal/chill overlaps mom+baby |
+| B | brother 哥哥 | 7.0 | projectile kit overlaps daughter; neighbor marks better niche |
 
+## Active new (cap 4)
 | id | name | score | reason |
 |----|------|------:|------|
-| grandpa | 爺爺 | 7.5 | unique spirit summons + cane pulse; family vibe |
-| dog | 家狗 | 7.0 | bite-leap fantasy clear; simple ult bark |
-| baby | 寶寶 | 7.5 | cry chill + toy bombs; funny & distinct |
-| brother | 哥哥 | 7.0 | gamepad barrage; overlaps daughter a bit |
-| grandma | 嫲嫲 | TBD | yarn wrap + tea — may overlap mom |
-
-Cull rule: among **new only**, delete lowest after 5 exist.
+| grandpa | 爺爺 | 7.5 | spirit summons + cane |
+| dog | 家狗 | 7.0 | bite-leap unique melee |
+| baby | 寶寶 | 7.5 | cry + toy bombs |
+| neighbor | 鄰居 | 7.5 | gossip mark (1.5×) + slippers |

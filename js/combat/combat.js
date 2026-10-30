@@ -288,6 +288,53 @@ function tryUlt(slot) {
     for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 70 + i * 24, '#a78bfa');
     addFx(p.x, p.y, 'ring', 220, '#ddd6fe');
     shake(10);
+  } else if (u.type === 'grandma_blossom') {
+    const n = (u.count || 16) * 3;
+    const pierce = (u.pierce || 2) + mods.pierce + (eff.bonusPierce || 0);
+    const chain = mods.chain + (eff.bonusChain || 0);
+    for (let i = 0; i < n; i++) {
+      const ang = (Math.PI * 2 * i) / n;
+      spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+        damage: u.damage * mods.projDamage * ULT_DMG,
+        pierce, chain,
+        speed: (u.speed || 450) * 1.1,
+        life: 1.5, size: 7 * 2.5,
+        color: '#f9a8d4',
+        frost: true,
+      });
+    }
+    const R = (u.yarnRadius || 220) * (mods.area || 1) * 1.5;
+    damageEnemiesInRadius(p.x, p.y, R, 20 * mods.projDamage * ULT_DMG, p, { forceChill: true });
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'ring', R * (0.3 + i * 0.06), '#f472b6');
+    addFx(p.x, p.y, 'heal', 160, '#fbcfe8');
+    for (const ally of run.players) {
+      if (!ally.dead) applyHeal(p, ally, 20 * mods.healPower);
+    }
+    shake(10);
+  } else if (u.type === 'neighbor_alarm') {
+    const area = (mods.area || 1) * 2.3;
+    const R = u.radius * area;
+    const dmg = u.damage * mods.projDamage * ULT_DMG;
+    for (const e of run.enemies) {
+      if (e.hp <= 0) continue;
+      const dx = e.x - p.x, dy = e.y - p.y;
+      if (dx * dx + dy * dy <= R * R) e.mark = Math.max(e.mark || 0, u.markDur || 5);
+    }
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: 100 });
+    const n = u.count || 12;
+    for (let i = 0; i < n; i++) {
+      const ang = (Math.PI * 2 * i) / n;
+      spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+        damage: 14 * mods.projDamage * ULT_DMG,
+        pierce: 2 + mods.pierce, chain: mods.chain,
+        speed: 420, life: 1.4, size: 10,
+        color: '#fb923c',
+      });
+    }
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 80 + i * 22, '#fb923c');
+    addFx(p.x, p.y, 'ring', R, '#fed7aa');
+    addFloat(p.x, p.y - 80, '警報！！', '#fb923c', true);
+    shake(12);
   }
 }
 
