@@ -146,7 +146,7 @@ function updateWeapons(dt) {
         const target = nearestEnemy(p);
         const tx = target ? target.x : p.x + p.facing * 80;
         const ty = target ? target.y : p.y;
-        const dmg = w.tossDamage * mods.projDamage * (mods.explodeDamage || 1);
+        const dmg = w.tossDamage * mods.projDamage;
         const tr = w.tossRadius * area;
         damageEnemiesInRadius(tx, ty, tr, dmg, p, { shatter: true });
         if (typeof damageCagesInRadius === 'function') damageCagesInRadius(tx, ty, tr, dmg, p);
