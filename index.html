@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>一家倖存 · Family Survivors</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 街機選角 -->
+  <div id="screen-select" class="screen">
+    <div class="arcade-frame">
+      <h1 class="title-pixel">一家倖存</h1>
+      <div class="ver-title">v0.02100</div>
+      <p class="subtitle">生存 5:00 · 自動攻擊 · PoE 風格 TAG 升級 · 小招自動升級 · Lv5／10／15 轉職</p>
+
+      <div class="players-row">
+        <div class="player-panel" id="panel-p1">
+          <div class="panel-label">1P <span class="hint">WASD 移動游標 · Space 確認</span></div>
+          <div class="card-row" id="cards-p1"></div>
+          <div class="ready-tag" id="ready-p1">未選</div>
+        </div>
+        <div class="player-panel" id="panel-p2">
+          <div class="panel-label">2P <span class="hint">方向鍵移動 · Enter/Num0 確認（可選）</span></div>
+          <div class="card-row" id="cards-p2"></div>
+          <div class="ready-tag" id="ready-p2">未加入（按確認加入）</div>
+        </div>
+      </div>
+
+      <div class="select-footer">
+        <button id="btn-start" class="btn-arcade" disabled>開始戰鬥</button>
+        <p class="footer-note">1P 必選 · 2P 可選 · 角色唔重複 · 大招：1P＝H　2P＝Num0（普攻全自動）</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 遊戲中 -->
+  <div id="screen-game" class="screen hidden">
+    <canvas id="game"></canvas>
+    <div id="hud">
+      <div class="hud-left">
+        <div id="auto-btns" class="auto-btns"></div>
+        <div id="timer">5:00</div>
+        <div id="kill-count">擊殺 0</div>
+        <button type="button" id="hud-fx" class="fx-chip" title="循環切換特效">特效：完整</button>
+      </div>
+      <div class="hud-center">
+        <div id="xp-bar-wrap"><div id="xp-bar"></div></div>
+        <div id="level-label">Lv.1</div>
+      </div>
+      <div class="hud-right">
+        <div id="hp-p1" class="hp-chip"></div>
+        <div id="hp-p2" class="hp-chip hidden"></div>
+      </div>
+    </div>
+    <div id="ult-btns" class="ult-btns" aria-label="大招">
+      <button type="button" id="btn-ult-p1" class="ult-btn">大招</button>
+      <button type="button" id="btn-ult-p2" class="ult-btn hidden">大招</button>
+    </div>
+    <div id="ver-hud" class="ver-hud">v0.02100</div>
+    <div id="pause-hint">Esc 暫停／特效設定 · 1P WASD／H／大招掣 · 2P 方向鍵／Num0／大招掣 · 經驗共享 · 左上掣切換小招自動／手動</div>
+  </div>
+
+  <!-- 升級選技／轉職 -->
+  <div id="overlay-levelup" class="overlay hidden">
+    <div class="overlay-box wide">
+      <h2 id="levelup-title">選技</h2>
+      <p id="levelup-sub" class="levelup-sub">剩餘點數：3</p>
+      <p id="active-tags" class="active-tags"></p>
+      <div id="upgrade-choices" class="upgrade-row"></div>
+      <p class="pick-hint">按 1／2／3 或滑鼠揀 · 兩人分開選 · 轉職卡：滑鼠停喺卡上面睇詳情</p>
+    </div>
+  </div>
+
+  <!-- 暫停 + 特效設定 -->
+  <div id="overlay-pause" class="overlay hidden">
+    <div class="overlay-box wide">
+      <h2>暫停</h2>
+      <div class="fx-panel">
+        <div class="fx-label">畫面特效</div>
+        <div class="fx-row">
+          <button type="button" class="fx-btn" data-fx="full">完整</button>
+          <button type="button" class="fx-btn" data-fx="simple">簡約</button>
+          <button type="button" class="fx-btn" data-fx="off">關閉</button>
+        </div>
+        <p class="fx-note">完整＝彈道／震屏／傷害數字　簡約＝保留主要招式光環　關閉＝最少特效<br>設定會記住（本機）</p>
+      </div>
+      <div class="fx-label">技能次序 · 自動升級 · 每招特效</div>
+      <div id="pause-players" class="pause-players"></div>
+      <button class="btn-arcade" id="btn-resume">繼續</button>
+      <button class="btn-arcade btn-dim" id="btn-quit">返回選角</button>
+    </div>
+  </div>
+
+  <!-- 勝負 -->
+  <div id="overlay-end" class="overlay hidden">
+    <div class="overlay-box">
+      <h2 id="end-title">勝利</h2>
+      <p id="end-stats"></p>
+      <button class="btn-arcade" id="btn-again">再玩一次</button>
+      <button class="btn-arcade btn-dim" id="btn-to-select">返回選角</button>
+    </div>
+  </div>
+
+  <script src="js/data/sprites.js"></script>
+  <script src="js/data/characters.js"></script>
+  <script src="js/data/skills.js"></script>
+  <script src="js/data/upgrades.js"></script>
+  <script src="js/data/branches.js"></script>
+  <script src="js/core/config.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/input.js"></script>
+  <script src="js/ui/menus.js"></script>
+  <script src="js/core/player.js"></script>
+  <script src="js/core/fx.js"></script>
+  <script src="js/combat/combat.js"></script>
+  <script src="js/core/levelup.js"></script>
+  <script src="js/enemies/enemyTiers.js"></script>
+  <script src="js/enemies/enemies.js"></script>
+  <script src="js/core/loop.js"></script>
+  <script src="js/combat/weapons.js"></script>
+  <script src="js/core/world.js"></script>
+  <script src="js/ui/hud.js"></script>
+  <script src="js/render/draw.js"></script>
+  <script src="js/skills/skillEffects.js"></script>
+  <script src="js/enemies/spawnPatterns.js"></script>
+  <script src="js/render/drawExtras.js"></script>
+  <script src="js/ui/pause.js"></script>
+  <script src="js/branches/branchCore.js"></script>
+  <script src="js/branches/daughter.js"></script>
+  <script src="js/branches/dad.js"></script>
+  <script src="js/enemies/enemyAI.js"></script>
+  <script src="js/render/branchDraw.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #0a0a12;
+  color: #f5f0e0;
+  font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+.hidden { display: none !important; }
+.screen { width: 100%; height: 100%; position: absolute; inset: 0; }
+
+/* —— 街機選角 —— */
+#screen-select {
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, #2a1848 0%, transparent 55%),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.15) 3px, rgba(0,0,0,.15) 6px),
+    #12081c;
+}
+.arcade-frame {
+  width: min(1100px, 96vw);
+  padding: 28px 32px 36px;
+  border: 6px solid #e8c84a;
+  box-shadow: 0 0 0 4px #5a3a10, 0 0 40px rgba(232,200,74,.25), inset 0 0 60px rgba(0,0,0,.4);
+  background: linear-gradient(180deg, #1a1030 0%, #0e0a18 100%);
+  image-rendering: pixelated;
+}
+.title-pixel {
+  text-align: center;
+  font-size: clamp(36px, 6vw, 56px);
+  letter-spacing: 0.12em;
+  color: #ffe566;
+  text-shadow: 4px 4px 0 #8b4510, 0 0 20px rgba(255,200,50,.5);
+  margin-bottom: 6px;
+}
+.subtitle { text-align: center; color: #a898c0; margin-bottom: 28px; font-size: 15px; }
+
+.players-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.player-panel {
+  flex: 1; min-width: 280px;
+  background: rgba(0,0,0,.35);
+  border: 3px solid #4a3a6a;
+  padding: 14px;
+}
+.panel-label {
+  font-size: 18px; font-weight: 700; color: #fff;
+  margin-bottom: 12px;
+}
+.panel-label .hint { font-size: 12px; font-weight: 400; color: #8878a8; margin-left: 8px; }
+#panel-p1 .panel-label { color: #7ec8ff; }
+#panel-p2 .panel-label { color: #ff9ec8; }
+
+.card-row { display: flex; gap: 10px; justify-content: center; }
+.char-card {
+  width: 140px; cursor: pointer;
+  border: 4px solid #3a2a50;
+  background: #1a1228;
+  padding: 10px 8px 12px;
+  transition: transform .08s, border-color .08s, box-shadow .08s;
+  text-align: center;
+}
+.char-card .portrait {
+  width: 96px; height: 96px; margin: 0 auto 8px;
+  image-rendering: pixelated;
+  border: 3px solid #2a2038;
+  background: #0a0810;
+}
+.char-card .name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.char-card .role { font-size: 12px; color: #a898c0; margin-bottom: 6px; }
+.char-card .kit { font-size: 11px; color: #c8b8d8; line-height: 1.35; min-height: 36px; }
+.char-card.cursor-p1 {
+  border-color: #7ec8ff;
+  box-shadow: 0 0 0 2px #7ec8ff, 0 0 16px rgba(126,200,255,.45);
+  transform: scale(1.04);
+}
+.char-card.cursor-p2 {
+  border-color: #ff9ec8;
+  box-shadow: 0 0 0 2px #ff9ec8, 0 0 16px rgba(255,158,200,.45);
+  transform: scale(1.04);
+}
+.char-card.cursor-p1.cursor-p2 {
+  border-color: #ffe566;
+  box-shadow: 0 0 0 2px #7ec8ff, 0 0 0 5px #ff9ec8, 0 0 20px rgba(255,229,102,.4);
+}
+.char-card.picked-p1 { background: linear-gradient(180deg, #1a2840, #121820); }
+.char-card.picked-p2 { background: linear-gradient(180deg, #401a30, #201218); }
+.char-card.taken { opacity: .45; pointer-events: none; filter: grayscale(.6); }
+
+.ready-tag {
+  margin-top: 12px; text-align: center; font-size: 14px;
+  padding: 6px; background: rgba(0,0,0,.3); color: #a898c0;
+}
+.ready-tag.on { color: #7dff9a; font-weight: 700; }
+
+.select-footer { margin-top: 24px; text-align: center; }
+.btn-arcade {
+  font-size: 22px; font-weight: 800; letter-spacing: .08em;
+  padding: 14px 48px; cursor: pointer;
+  color: #1a1008; background: linear-gradient(180deg, #ffe566, #e8a820);
+  border: 4px solid #fff3a0; box-shadow: 0 4px 0 #8b5a10, 0 6px 16px rgba(0,0,0,.4);
+}
+.btn-arcade:disabled { opacity: .35; cursor: not-allowed; filter: grayscale(.5); }
+.btn-arcade:not(:disabled):hover { filter: brightness(1.08); }
+.btn-arcade:not(:disabled):active { transform: translateY(2px); box-shadow: 0 2px 0 #8b5a10; }
+.btn-dim { background: linear-gradient(180deg, #6a5a80, #3a3048); color: #eee; border-color: #8a7aa0; box-shadow: 0 4px 0 #201828; margin-top: 10px; }
+.footer-note { margin-top: 12px; font-size: 13px; color: #8878a8; }
+
+/* —— 遊戲 HUD —— */
+#screen-game { background: #000; }
+#game {
+  display: block; width: 100%; height: 100%;
+  image-rendering: pixelated;
+  cursor: crosshair;
+}
+#hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 12px 16px; pointer-events: none;
+  text-shadow: 2px 2px 0 #000;
+}
+.hud-left #timer { font-size: 36px; font-weight: 800; color: #ffe566; }
+.hud-left #kill-count { font-size: 14px; color: #ccc; }
+.hud-center { flex: 1; max-width: 360px; margin: 0 20px; text-align: center; }
+#xp-bar-wrap {
+  height: 14px; background: #1a1020; border: 3px solid #e8c84a;
+  box-shadow: 0 0 0 2px #000;
+}
+#xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #4af, #8ef); transition: width .15s; }
+#level-label { font-size: 14px; margin-top: 4px; color: #aef; }
+.hp-chip {
+  font-size: 15px; font-weight: 700; padding: 6px 12px;
+  background: rgba(0,0,0,.55); border: 2px solid #5a4a6a; margin-bottom: 6px;
+}
+#pause-hint {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  font-size: 12px; color: rgba(255,255,255,.45); pointer-events: none;
+}
+
+/* —— Overlay —— */
+.overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.72);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 20;
+}
+.overlay-box {
+  background: #161028; border: 5px solid #e8c84a;
+  padding: 28px 32px; text-align: center; max-width: 920px; width: 94vw;
+  box-shadow: 0 0 40px rgba(232,200,74,.3);
+}
+.overlay-box h2 { font-size: 32px; color: #ffe566; margin-bottom: 18px; }
+.upgrade-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.upgrade-card {
+  width: 200px; padding: 16px 12px; cursor: pointer;
+  background: #1e1830; border: 4px solid #6a5a90;
+  text-align: left; transition: border-color .1s, transform .1s;
+}
+.upgrade-card:hover, .upgrade-card.focused {
+  border-color: #ffe566; transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(255,229,102,.25);
+}
+.upgrade-card .u-icon { font-size: 36px; text-align: center; margin-bottom: 8px; }
+.upgrade-card .u-name { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px; text-align: center; }
+.upgrade-card .u-desc { font-size: 13px; color: #c8b8d8; line-height: 1.4; }
+#end-stats { color: #c8b8d8; margin-bottom: 20px; font-size: 16px; }
+
+/* —— TAG pills —— */
+.tag-pill {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 7px;
+  margin: 1px 2px;
+  border-radius: 4px;
+  background: #2a2040;
+  border: 1px solid #6a5a90;
+  color: #d8c8f0;
+}
+.tag-pill.new {
+  background: #3a2810;
+  border-color: #ffe566;
+  color: #ffe566;
+  font-weight: 700;
+}
+.tag-pill.dim { opacity: .55; }
+
+/* —— HP chips richer —— */
+.hp-chip {
+  min-width: 160px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.hp-name { font-weight: 800; font-size: 15px; }
+.hp-bar-wrap {
+  height: 10px; background: #1a1020; border: 2px solid #000;
+  margin: 4px 0; box-shadow: 0 0 0 1px #5a4a6a;
+}
+.hp-bar { height: 100%; transition: width .1s; }
+.hp-num { font-size: 13px; font-weight: 700; }
+.hp-ult { font-size: 12px; color: #ccc; }
+.hp-rules { font-size: 11px; color: #a898c0; margin-top: 2px; max-width: 200px; }
+
+/* —— FX controls —— */
+.fx-chip {
+  pointer-events: auto;
+  margin-top: 8px;
+  font-size: 12px; font-weight: 700;
+  padding: 4px 10px; cursor: pointer;
+  color: #ffe566; background: rgba(0,0,0,.65);
+  border: 2px solid #e8c84a;
+}
+.fx-chip:hover { filter: brightness(1.15); }
+.fx-panel {
+  margin-bottom: 18px;
+  padding: 14px;
+  background: rgba(0,0,0,.35);
+  border: 2px solid #4a3a6a;
+}
+.fx-label { font-size: 16px; font-weight: 700; color: #ffe566; margin-bottom: 10px; }
+.fx-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.fx-btn {
+  font-size: 16px; font-weight: 700;
+  padding: 10px 22px; cursor: pointer;
+  color: #ddd; background: #2a2040;
+  border: 3px solid #6a5a90;
+}
+.fx-btn.on {
+  color: #1a1008; background: linear-gradient(180deg, #ffe566, #e8a820);
+  border-color: #fff3a0;
+}
+.fx-note { margin-top: 10px; font-size: 12px; color: #a898c0; line-height: 1.45; }
+
+/* —— Level-up —— */
+.overlay-box.wide { max-width: 980px; }
+.levelup-sub { color: #ffe566; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.active-tags { font-size: 13px; color: #a898c0; margin-bottom: 14px; line-height: 1.4; }
+.pick-hint { margin-top: 14px; font-size: 12px; color: #8878a8; }
+.upgrade-card .u-tags { text-align: center; margin-bottom: 8px; min-height: 22px; }
+.upgrade-card .u-unlock {
+  margin-top: 8px; font-size: 12px; font-weight: 700;
+  color: #ffe566; text-align: center;
+}
+.upgrade-card { width: 210px; }
+#hud { z-index: 5; }
+#hud .fx-chip { text-shadow: none; }
+
+/* v3：HUD 技能等級 / 暫停設定 */
+.hp-skills { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; max-width: 260px; pointer-events: auto; }
+.hp-skills .hs { position: relative; font-size: 20px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.55); border: 1px solid #555; border-radius: 4px; cursor: help; }
+.hp-skills .hs b { position: absolute; right: -2px; bottom: -4px; font-size: 10px; color: #ffe566; background: #000; padding: 0 2px; border-radius: 3px; }
+.hp-skills .hs.max { border-color: #ffe566; }
+.hp-auto { font-size: 11px; color: #9fd; }
+.u-lv { font-size: 12px; color: #ffe566; }
+.pause-players { display: flex; gap: 18px; justify-content: center; margin: 8px 0 14px; text-align: left; }
+.pp-col { background: rgba(0,0,0,.35); padding: 10px; border-radius: 6px; min-width: 380px; }
+.pp-title { font-weight: bold; font-size: 18px; margin-bottom: 6px; }
+.pp-hint { font-size: 11px; color: #aaa; margin: 4px 0; }
+.pp-row { display: flex; align-items: center; gap: 6px; font-size: 14px; padding: 2px 0; }
+.pp-row.dim { opacity: .55; }
+.pp-n { width: 18px; color: #888; }
+.pp-ic { width: 24px; font-size: 18px; }
+.pp-name { flex: 1; }
+.pp-lv { width: 64px; color: #ffe566; font-size: 12px; }
+.pp-btn { background: #222; color: #ddd; border: 1px solid #555; border-radius: 3px; cursor: pointer; font-size: 12px; padding: 2px 6px; }
+.pp-btn.on { border-color: #ffe566; color: #ffe566; }
+#overlay-pause .overlay-box { max-height: 96vh; overflow-y: auto; }
+
+/* —— v0.0200 —— */
+.auto-btns { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.auto-chip { margin-top: 0; font-size: 14px; padding: 6px 12px; color: #7dff9a; border-color: #7dff9a; }
+.auto-chip.manual { color: #ffb066; border-color: #ffb066; }
+.ver-hud { position: absolute; right: 10px; bottom: 6px; font-size: 12px; color: #aaa; opacity: .8; pointer-events: none; z-index: 6; }
+.ver-title { color: #aaa; font-size: 14px; letter-spacing: 2px; margin-top: -6px; }
+.branch-card { min-width: 280px; border-color: #ffe566 !important; }
+.branch-card .b-icon { font-size: 84px; line-height: 1.1; }
+.branch-card .b-move { color: #ffe566; font-weight: 700; margin: 4px 0; }
+.branch-card .b-desc { font-size: 13px; }
+.branch-card .b-key { margin-top: 6px; color: #aaa; font-size: 12px; }
+.branch-row { background: rgba(255,229,102,.08); }
+
+/* —— v0.02100 大招觸控掣 —— */
+.ult-btns {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  z-index: 8;
+  pointer-events: none;
+}
+.ult-btn {
+  pointer-events: auto;
+  min-width: 108px;
+  min-height: 108px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 4px solid #ffe566;
+  background: radial-gradient(circle at 35% 30%, #5a4a20, #1a1020 70%);
+  color: #ffe566;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-shadow: 0 2px 0 #000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,.55), 0 8px 18px rgba(0,0,0,.45), inset 0 0 18px rgba(255,229,102,.15);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.ult-btn:active:not(:disabled) {
+  transform: scale(0.96);
+  filter: brightness(1.12);
+}
+.ult-btn:disabled,
+.ult-btn.cd {
+  opacity: 0.45;
+  border-color: #777;
+  color: #ccc;
+  cursor: not-allowed;
+  box-shadow: 0 0 0 3px rgba(0,0,0,.4);
+}
+.ult-btn .ult-cd {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
+}
+#pause-hint { bottom: 8px; z-index: 6; }
