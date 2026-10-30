@@ -72,7 +72,7 @@ function updateBalls(dt) {
     if (b.y < R.y0) { b.y = R.y0; b.vy = Math.abs(b.vy); bounced = true; }
     if (b.y > R.y1) { b.y = R.y1; b.vy = -Math.abs(b.vy); bounced = true; }
     b.x = clamp(b.x, 30, MAP_W - 30); b.y = clamp(b.y, 30, MAP_H - 30);
-    // v0.02209：擲人唔可以飛出而家畫面（相對爸爸／party 中點軸對齊盒）；削向外速度
+    // v0.02210：擲人唔可以飛過 STAGE 一屏盒（相對爸爸軸對齊）；削向外速度
     if (b.who && dad && !dad.dead) {
       const maxX = typeof partySepMaxX === 'function' ? partySepMaxX() : Math.max(80, STAGE_W - 72);
       const maxY = typeof partySepMaxY === 'function' ? partySepMaxY() : Math.max(80, STAGE_H - 72);

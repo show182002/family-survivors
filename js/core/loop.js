@@ -42,7 +42,7 @@ function frameStep(dt) {
 }
 
 
-/** v0.02209：雙人軸對齊限距 = 而家視野（唔出畫）。alive < 2 跳過。
+/** v0.02210：雙人軸對齊限距 = STAGE 一屏（唔跟 zoom）。alive < 2 跳過。
  * 有 mover+anchor → 只夾 mover；否則對稱對分超距。 */
 function enforcePartySeparation(mover, anchor) {
   if (!run || !run.players) return;
