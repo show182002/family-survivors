@@ -84,10 +84,10 @@ function openNextPick() {
   mode = 'levelup';
   if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
-  const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
-  if (el.levelupTitle) el.levelupTitle.textContent = who + '　選';
+  const who = (p.slot === 0 ? '1P' : '2P');
+  if (el.levelupTitle) el.levelupTitle.textContent = '選 · ' + who;
   if (el.levelupSub) {
-    el.levelupSub.textContent = '剩餘點數：' + currentPick.pointsLeft + '　（每級 ' + POINTS_PER_LEVEL + ' 點）';
+    el.levelupSub.textContent = '點' + currentPick.pointsLeft;
   }
   renderUpgradeCards(p);
 }
@@ -121,9 +121,8 @@ function renderUpgradeCards(p) {
     el.upgrades.appendChild(div);
   });
   if (el.activeTags) {
-    const rules = (p.activeRules || []).map((r) => r.name).join(' · ') || '尚無互動';
-    const tags = [...have].join(' · ');
-    el.activeTags.textContent = '現有 TAG：' + tags + '　｜　已啟動：' + rules;
+    const tags = [...have].join('·') || '—';
+    el.activeTags.textContent = 'TAG ' + tags;
   }
 }
 
@@ -157,7 +156,7 @@ function chooseUpgrade(i) {
     pendingChoices = pickUpgradeChoicesForPlayer(p, 3);
     upgradeFocus = 0;
     if (el.levelupSub) {
-      el.levelupSub.textContent = '剩餘點數：' + currentPick.pointsLeft + '　（每級 ' + POINTS_PER_LEVEL + ' 點）';
+      el.levelupSub.textContent = '點' + currentPick.pointsLeft;
     }
     renderUpgradeCards(p);
     return;
