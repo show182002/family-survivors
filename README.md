@@ -1,10 +1,4 @@
-# 一家倖存 · Family Survivors　**v0.02218**
-
-新角色池（循環）：爺爺／寶寶／鄰居／叔叔（已淘汰嫲嫲／哥哥／家貓／家狗）。核心爸媽女今輪未改。
-
-玩：https://show182002.github.io/family-survivors/
-
-# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02218**
+# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02228**
 
 Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairwise）。
 
