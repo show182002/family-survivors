@@ -362,7 +362,21 @@ function tryUlt(slot) {
     }
     addFloat(p.x, p.y - 80, '煙花！！', '#ef4444', true);
     shake(16);
+  } else if (u.type === 'cousin_storm') {
+    const area = (mods.area || 1) * 2.2;
+    const dmg = u.damage * mods.meleeDamage * ULT_DMG;
+    const R = u.radius * area;
+    p.invuln = Math.max(p.invuln || 0, 0.8);
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: 180 });
+    for (let i = 0; i < (u.dashes || 3); i++) {
+      const ang = (Math.PI * 2 * i) / (u.dashes || 3);
+      addFx(p.x + Math.cos(ang) * 60, p.y + Math.sin(ang) * 60, 'slam', 80, '#22d3ee');
+    }
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'ring', R * (0.35 + i * 0.06), '#a5f3fc');
+    addFloat(p.x, p.y - 80, '滑板！！', '#22d3ee', true);
+    shake(12);
   }
+
 }
 
 function applyHeal(source, ally, amount) {

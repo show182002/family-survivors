@@ -288,6 +288,45 @@ function updateWeapons(dt) {
         addFx(p.x, p.y, 'ring', w.smokeRadius * 0.4, '#94a3b8');
       }
 
+    } else if (w.type === 'skate_spray') {
+      p.tSlam = (p.tSlam == null ? 0 : p.tSlam) - dt;
+      if (p.tSlam <= 0) {
+        p.tSlam = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        if (target) {
+          const dx = target.x - p.x, dy = target.y - p.y;
+          const d = Math.hypot(dx, dy) || 1;
+          if (!p.caged) {
+            const dash = Math.min(w.dash || 120, d);
+            p.x += (dx / d) * dash;
+            p.y += (dy / d) * dash;
+            p.facing = dx >= 0 ? 1 : -1;
+          }
+          const dmg = w.baseDamage * mods.meleeDamage;
+          damageEnemiesInRadius(p.x, p.y, w.radius * area, dmg, p, { knock: 100 });
+          if (typeof damageCagesInRadius === 'function') damageCagesInRadius(p.x, p.y, w.radius * area, dmg, p);
+          addFx(p.x, p.y, 'slam', w.radius, '#22d3ee');
+        }
+      }
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.sprayCd * cdMul;
+        const target = nearestEnemy(p);
+        let dx = p.facing, dy = 0;
+        if (target) { dx = target.x - p.x; dy = target.y - p.y; }
+        const count = 1 + mods.extraProjectiles;
+        for (let i = 0; i < count; i++) {
+          const spread = (i - (count - 1) / 2) * 0.22;
+          const ang = Math.atan2(dy, dx) + spread;
+          spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+            damage: w.sprayDamage * mods.projDamage,
+            pierce: mods.pierce, chain: mods.chain,
+            speed: w.spraySpeed, life: 1.1, size: 7,
+            color: w.color || '#22d3ee',
+          });
+        }
+      }
+
     }
   }
 }

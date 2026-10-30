@@ -4,7 +4,7 @@ Core (immortal):
 | id | name | score | note |
 |----|------|------:|------|
 | dad | 爸爸 | 8 | user floor |
-| daughter | 女兒 | 6→~6.5 | HP/dmg/CD + start sparkle |
+| daughter | 女兒 | 6→~6.5 | HP/dmg/CD + sparkle start |
 | mom | 媽媽 | 4→~5.5 | HP/heal/rage/soup |
 
 ## Cull log
@@ -13,7 +13,8 @@ Core (immortal):
 | A | grandma 嫲嫲 | 6.5 | heal/chill overlap |
 | B | brother 哥哥 | 7.0 | projectile overlap daughter |
 | C | cat 家貓 | 6.9 | pounce overlap dog |
-| D | dog 家狗 | 7.0 | lowest after uncle joined |
+| D | dog 家狗 | 7.0 | lowest after uncle |
+| E | cousin 表哥 | 7.2 | dash kit overlaps; less unique than uncle |
 
 ## Active new (4)
 | id | name | score | reason |
