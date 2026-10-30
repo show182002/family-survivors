@@ -15,7 +15,7 @@ function startPattern(kind) {
     const R = 640;
     banner('⚠ 包圍！', '#ff6a6a', 1.6);
     addWarn('ring', 1.8, { x: f.x, y: f.y, r: R }, (d) => {
-      const n = Math.floor(16 * tierMul(run.time));
+      const n = Math.floor(48 * tierMul(run.time)); // ×3
       for (let i = 0; i < n; i++) {
         const a = (Math.PI * 2 * i) / n;
         spawnOneEnemy(false, { x: d.x + Math.cos(a) * d.r, y: d.y + Math.sin(a) * d.r, speedMul: 1.15 });
@@ -30,7 +30,7 @@ function startPattern(kind) {
       ? { horiz, dir, c: f.y + (Math.random() - 0.5) * 200, w: 300, cam: { x: cam.x, y: cam.y } }
       : { horiz, dir, c: f.x + (Math.random() - 0.5) * 300, w: 320, cam: { x: cam.x, y: cam.y } };
     addWarn('line', 2.0, d, (d) => {
-      const n = Math.floor(10 * tierMul(run.time));
+      const n = Math.floor(30 * tierMul(run.time)); // ×3
       const spd = 460 + min * 30;
       for (let i = 0; i < n; i++) {
         const off = (i / (n - 1) - 0.5) * d.w;
@@ -50,7 +50,7 @@ function startPattern(kind) {
     addWarn('corner', 1.8, { cx, cy }, (d) => {
       const x = run.cams.x + (d.cx ? STAGE_W + 40 : -40);
       const y = run.cams.y + (d.cy ? STAGE_H + 40 : -40);
-      const n = Math.floor(20 * tierMul(run.time));
+      const n = Math.floor(60 * tierMul(run.time)); // ×3
       for (let i = 0; i < n; i++) {
         spawnOneEnemy(false, { kind: i % 3 ? 'bat' : 'ghost', x: x + (Math.random() - 0.5) * 140, y: y + (Math.random() - 0.5) * 140, speedMul: 1.35 });
       }
@@ -58,14 +58,14 @@ function startPattern(kind) {
   } else if (kind === 'spiral') {
     banner('⚠ 螺旋陣！', '#cc88ff', 1.6);
     addWarn('spiral', 1.5, { x: f.x, y: f.y }, (d) => {
-      run.spiral = { x: d.x, y: d.y, n: 0, total: Math.floor(26 * tierMul(run.time)), acc: 0 };
+      run.spiral = { x: d.x, y: d.y, n: 0, total: Math.floor(78 * tierMul(run.time)), acc: 0 }; // ×3
     });
   } else if (kind === 'ambush') {
     banner('⚠ 伏兵！避開紅圈', '#ff4444', 1.4);
     const spots = [];
     for (const p of run.players) {
       if (p.dead) continue;
-      const k = Math.floor(3 * Math.sqrt(tierMul(run.time)));
+      const k = Math.floor(9 * Math.sqrt(tierMul(run.time))); // ×3 spots
       for (let i = 0; i < k; i++) {
         const a = Math.random() * Math.PI * 2, r = 150 + Math.random() * 120;
         spots.push({ x: p.x + Math.cos(a) * r, y: p.y + Math.sin(a) * r });
@@ -73,7 +73,7 @@ function startPattern(kind) {
     }
     addWarn('ambush', 1.4, { spots }, (d) => {
       for (const s of d.spots) {
-        for (let j = 0; j < 2; j++) spawnOneEnemy(false, { kind: 'ghost', x: s.x + (Math.random() - 0.5) * 30, y: s.y + (Math.random() - 0.5) * 30 });
+        for (let j = 0; j < 6; j++) spawnOneEnemy(false, { kind: 'ghost', x: s.x + (Math.random() - 0.5) * 30, y: s.y + (Math.random() - 0.5) * 30 }); // ×3
         addFx(s.x, s.y, 'burst', 50, '#aa44ff');
       }
     });
@@ -94,26 +94,46 @@ function updateEvents(dt) {
     const TXT = ['小怪出動', '射手怪出現！（慢彈，避得到）', '衝鋒怪＋分裂怪＋中 Boss！', '盾怪出現！（正面擋，要打側／背）', '精英混戰＋中 Boss！'];
     if (tier > 0) banner('第' + (tier + 1) + '階段 · ' + TXT[tier], '#ffcc44', 3);
   }
+  // v0.02205：多啲中 Boss；final boss 最後 1 分鐘（t>=240／5:00 局）
+  if (!run.elite0Done && t >= 60) {
+    run.elite0Done = true;
+    banner('⚠ 中 Boss！', '#ff9030', 2.4);
+    const f = cameraFocus();
+    addWarn('ambush', 2.6, { spots: [{ x: f.x + 380, y: f.y - 80 }], big: true }, (d) => {
+      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'elite', hpMul: 32, speedMul: 1.05 });
+    });
+  }
   if (!run.eliteDone && t >= 120) {
     run.eliteDone = true;
+    banner('⚠ 中 Boss！', '#ff9030', 2.4);
     const f = cameraFocus();
     addWarn('ambush', 3, { spots: [{ x: f.x + 420, y: f.y }], big: true }, (d) => {
       spawnOneEnemy(true, { x: d.spots[0].x, y: d.spots[0].y, boss: 'elite', hpMul: 45, speedMul: 1.1 });
     });
   }
-  if (!run.elite2Done && t >= 240) {
-    run.elite2Done = true;
+  if (!run.elite3Done && t >= 180) {
+    run.elite3Done = true;
+    banner('⚠ 雙中 Boss！', '#ff7030', 2.6);
     const f = cameraFocus();
-    addWarn('ambush', 3, { spots: [{ x: f.x - 420, y: f.y }], big: true }, (d) => {
-      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'elite', hpMul: 40, speedMul: 1.15 });
+    addWarn('ambush', 2.8, { spots: [{ x: f.x - 400, y: f.y }, { x: f.x + 400, y: f.y }], big: true }, (d) => {
+      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'elite', hpMul: 36, speedMul: 1.12 });
+      if (d.spots[1]) spawnOneEnemy(true, { kind: 'shield', x: d.spots[1].x, y: d.spots[1].y, boss: 'elite', hpMul: 38, speedMul: 0.95 });
     });
   }
-  if (!run.bossDone && t >= 270) {
-    run.bossDone = true;
-    banner('☠ 大魔王降臨！撐埋最後 30 秒！', '#dd66ff', 3.2);
+  if (!run.elite2Done && t >= 210) {
+    run.elite2Done = true;
+    banner('⚠ 中 Boss！', '#ff9030', 2.4);
     const f = cameraFocus();
-    addWarn('ambush', 3, { spots: [{ x: f.x, y: f.y - 380 }], big: true }, (d) => {
-      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'boss', hpMul: 140, speedMul: 0.8 });
+    addWarn('ambush', 3, { spots: [{ x: f.x - 420, y: f.y }], big: true }, (d) => {
+      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'elite', hpMul: 50, speedMul: 1.15 });
+    });
+  }
+  if (!run.bossDone && t >= 240) {
+    run.bossDone = true;
+    banner('☠ 最終大魔王！最後 1 分鐘！', '#dd66ff', 3.4);
+    const f = cameraFocus();
+    addWarn('ambush', 2.8, { spots: [{ x: f.x, y: f.y - 320 }], big: true }, (d) => {
+      spawnOneEnemy(true, { kind: 'brute', x: d.spots[0].x, y: d.spots[0].y, boss: 'boss', hpMul: 180, speedMul: 0.7 });
     });
   }
   for (const w of run.warns) {
@@ -146,21 +166,103 @@ function updateEvents(dt) {
 }
 
 function updateBoss(e, dt, alive) {
+  // ——— Final boss：跳高消失 → 地上圓形預兆 → 跌落砸地 ———
+  if (e.boss === 'boss') {
+    e._bossSkipMove = false;
+    if (!e.bossPhase) e.bossPhase = 'idle';
+    if (e.bossPhase === 'idle') {
+      e.tShoot -= dt;
+      e.jumpY = 0; e.hidden = false;
+      if (e.tShoot <= 0 && alive.length) {
+        e.bossPhase = 'rise';
+        e.phaseT = 0.55;
+        e.windup = 0.55;
+        addFloat(e.x, e.y - e.r, '跳！', '#dd66ff', true);
+        shake(8);
+      }
+      return;
+    }
+    if (e.bossPhase === 'rise') {
+      e._bossSkipMove = true;
+      e.phaseT -= dt;
+      e.windup = Math.max(0, e.phaseT);
+      e.jumpY = (1 - Math.max(0, e.phaseT) / 0.55) * 520;
+      if (e.phaseT <= 0) {
+        e.bossPhase = 'air';
+        e.phaseT = 1.35;
+        e.hidden = true;
+        e.jumpY = 800;
+        const tg = alive[Math.floor(Math.random() * alive.length)];
+        const ang = Math.random() * Math.PI * 2;
+        const dist = 40 + Math.random() * 120;
+        e.slamX = clamp(tg.x + Math.cos(ang) * dist, 80, MAP_W - 80);
+        e.slamY = clamp(tg.y + Math.sin(ang) * dist, 80, MAP_H - 80);
+        e.x = e.slamX; e.y = e.slamY;
+        banner('⚠ 落地！', '#ff44aa', 1.2);
+      }
+      return;
+    }
+    if (e.bossPhase === 'air') {
+      e._bossSkipMove = true;
+      e.hidden = true;
+      e.phaseT -= dt;
+      e.windup = Math.max(0.05, e.phaseT); // telegraph uses windup
+      e.teleK = 1 - Math.max(0, e.phaseT) / 1.35;
+      if (e.phaseT <= 0) {
+        e.bossPhase = 'fall';
+        e.phaseT = 0.28;
+        e.hidden = false;
+        e.jumpY = 420;
+      }
+      return;
+    }
+    if (e.bossPhase === 'fall') {
+      e._bossSkipMove = true;
+      e.phaseT -= dt;
+      const k = 1 - Math.max(0, e.phaseT) / 0.28;
+      e.jumpY = 420 * (1 - k);
+      e.hidden = false;
+      if (e.phaseT <= 0) {
+        e.bossPhase = 'idle';
+        e.jumpY = 0;
+        e.hidden = false;
+        e.tShoot = 3.2;
+        e.windup = 0;
+        const R = e.slamR || 280;
+        // 砸地傷害 + 彈幕 + 震屏
+        for (const p of alive) {
+          if (Math.hypot(p.x - e.x, p.y - e.y) < R + 18) hurtPlayer(p, e.damage * 1.8, e);
+        }
+        for (const en of run.enemies) {
+          // no friendly fire needed
+        }
+        for (let i = 0; i < 10; i++) {
+          addFx(e.x, e.y, 'slam', R * (0.4 + i * 0.08), '#c040ff');
+          addFx(e.x, e.y, 'ring', R * (0.35 + i * 0.07), i % 2 ? '#dd66ff' : '#fff');
+        }
+        addFx(e.x, e.y, 'dust', R, '#8866aa', { seed: Math.random() * 6, life: 0.9 });
+        addFx(e.x, e.y, 'burst', R, '#ff66cc');
+        shake(48);
+        const n = 24, off = Math.random();
+        for (let i = 0; i < n; i++) {
+          const a = off + (Math.PI * 2 * i) / n;
+          if (run.ebul.length < 220) run.ebul.push({ x: e.x, y: e.y - 40, vx: Math.cos(a) * 300, vy: Math.sin(a) * 300, life: 4, dmg: e.damage * 0.55, r: 12 });
+        }
+        e.minionCycle = (e.minionCycle || 0) + 1;
+        if (e.minionCycle % 2 === 0) startPattern('ring');
+      }
+      return;
+    }
+    return;
+  }
+
+  // ——— 中 Boss：衝刺（維持）———
   e.tShoot -= dt;
+  e._bossSkipMove = !!(e.dashT > 0 || e.windup > 0);
   if (e.windup > 0) {
     e.windup -= dt;
     if (e.windup <= 0) {
-      if (e.boss === 'boss') {
-        const n = 20, off = Math.random();
-        for (let i = 0; i < n; i++) {
-          const a = off + (Math.PI * 2 * i) / n;
-          if (run.ebul.length < 200) run.ebul.push({ x: e.x, y: e.y - 30, vx: Math.cos(a) * 260, vy: Math.sin(a) * 260, life: 4, dmg: e.damage * 0.6 });
-        }
-        e.minionCycle = (e.minionCycle || 0) + 1;
-        if (e.minionCycle % 3 === 0) startPattern('ring');
-      } else if (e.dashTo) {
-        e.dashT = 0.55;
-      }
+      if (e.dashTo) e.dashT = 0.55;
     }
   }
   if (e.dashT > 0 && e.dashTo) {
@@ -171,9 +273,9 @@ function updateBoss(e, dt, alive) {
     if (e.dashT <= 0) e.dashTo = null;
   }
   if (e.tShoot <= 0 && !(e.windup > 0)) {
-    e.tShoot = e.boss === 'boss' ? 3 : 3.6;
+    e.tShoot = 3.6;
     e.windup = 0.9;
-    if (e.boss === 'elite' && alive.length) {
+    if (alive.length) {
       const tg = alive[Math.floor(Math.random() * alive.length)];
       e.dashFrom = { x: e.x, y: e.y };
       const dx = tg.x - e.x, dy = tg.y - e.y, d = Math.hypot(dx, dy) || 1;

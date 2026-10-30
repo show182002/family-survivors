@@ -5,7 +5,7 @@ function spawnEnemies(dt) {
   const alive = run.enemies.filter((e) => e.hp > 0).length;
   const budget = enemyBudget(run.time);
   run.spawnAcc += dt;
-  const interval = Math.max(0.16, 1.0 - run.time / 340);
+  const interval = Math.max(0.055, (1.0 - run.time / 340) / 3); // v0.02205：出怪 ×3
   updateEvents(dt);
   while (run.spawnAcc >= interval && alive + 1 <= budget + 5) {
     run.spawnAcc -= interval;
@@ -57,9 +57,23 @@ function spawnOneEnemy(elite, o) {
   if (elite && tier >= 4 && !o.kind) { e.type = 'elite'; }
   e.maxHp = e.hp;
   if (o.hpMul) { e.hp *= o.hpMul; e.maxHp = e.hp; }
+  // v0.02205：普通小怪 ⅓×0.5、⅓×0.75、⅓正常（再乘 pattern 嘅 speedMul）
+  if (!elite && !o.boss) {
+    const roll = Math.random();
+    e.speed *= (roll < 1 / 3 ? 0.5 : roll < 2 / 3 ? 0.75 : 1);
+  }
   if (o.speedMul) e.speed *= o.speedMul;
   if (o.vx != null) { e.charge = true; e.vx = o.vx; e.vy = o.vy; e.life = o.life || 8; }
-  if (o.boss) { e.boss = o.boss; e.scale = o.boss === 'boss' ? 8 : 6; e.r = o.boss === 'boss' ? 60 : 44; e.tShoot = 3; e.damage *= 1.5; }
+  if (o.boss) {
+    e.boss = o.boss;
+    // final boss ~¼ 畫面（12px sprite ×40 ≈ 480 = STAGE_W/4）；中 Boss 略大
+    if (o.boss === 'boss') {
+      e.scale = 40; e.r = 200; e.tShoot = 2.4; e.damage *= 2;
+      e.bossPhase = 'idle'; e.jumpY = 0; e.hidden = false; e.slamR = 280;
+    } else {
+      e.scale = 8; e.r = 52; e.tShoot = 3; e.damage *= 1.5;
+    }
+  }
   run.enemies.push(e);
   return e;
 }
@@ -122,7 +136,10 @@ function updateEnemies(dt) {
       }
       continue;
     }
-    if (e.boss) updateBoss(e, dt, alivePlayers);
+    if (e.boss) {
+      updateBoss(e, dt, alivePlayers);
+      if (e._bossSkipMove || e.hidden) continue;
+    }
     if (target) {
       const dx = target.x - e.x, dy = target.y - e.y;
       const len = Math.hypot(dx, dy) || 1;

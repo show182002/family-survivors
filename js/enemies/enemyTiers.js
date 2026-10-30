@@ -7,7 +7,7 @@ function tierOf(t) { return Math.min(4, Math.floor(t / 60)); }
 function tierMul(t) { return Math.pow(1.5, tierOf(t)); }
 function enemyBudget(t) {
   const frac = (t % 60) / 60;
-  return Math.min(MAX_ENEMIES - 40, Math.floor(26 * tierMul(t) * (1 + 0.25 * frac)));
+  return Math.min(MAX_ENEMIES - 40, Math.floor(78 * tierMul(t) * (1 + 0.25 * frac))); // v0.02205：小怪預算 ×3
 }
 function enemyStats(t) {
   const tier = tierOf(t), frac = Math.min(1, (t - tier * 60) / 60);

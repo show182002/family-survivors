@@ -169,48 +169,63 @@ function tryUlt(slot) {
   const mods = sm(p);
   const eff = te(p);
   p.ultCd = u.cooldown;
-  p.flash = 0.35;
+  p.flash = 0.55;
+  // v0.02205：大招傷害 ×3、FX／體感誇張（割草）
+  const ULT_DMG = 3;
+  const ULT_FX = 10;
 
   if (u.type === 'dad_slam') {
-    const area = (mods.area || 1) * (eff.slamAreaMul || 1);
-    const dmg = u.damage * mods.meleeDamage * (eff.meleeDamageMul || 1);
-    damageEnemiesInRadius(p.x, p.y, u.radius * area, dmg, p);
+    const area = (mods.area || 1) * (eff.slamAreaMul || 1) * 2.5;
+    const dmg = u.damage * mods.meleeDamage * (eff.meleeDamageMul || 1) * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: 140 });
     p.invuln = Math.max(p.invuln, u.invuln);
-    addFx(p.x, p.y, 'slam', u.radius * area, '#4a8cff');
-    addFx(p.x, p.y, 'ring', u.radius * area * 0.7, '#9cf');
-    shake(10);
+    for (let i = 0; i < ULT_FX; i++) {
+      const ang = (Math.PI * 2 * i) / ULT_FX;
+      addFx(p.x + Math.cos(ang) * R * 0.35, p.y + Math.sin(ang) * R * 0.35, 'slam', R * (0.45 + 0.08 * i), '#4a8cff');
+      addFx(p.x, p.y, 'ring', R * (0.4 + i * 0.08), i % 2 ? '#9cf' : '#fff');
+      if (fxFull()) addFx(p.x + Math.cos(ang) * 40, p.y + Math.sin(ang) * 40, 'dust', 80, '#88aacc', { seed: Math.random() * 6, life: 0.7 });
+    }
+    addFx(p.x, p.y, 'burst', R, '#cce6ff');
+    shake(12 * Math.min(ULT_FX, 5));
   } else if (u.type === 'mom_dragon') {
     // ENEMIES ONLY
-    const area = (mods.area || 1) * (mods.fireRadius || 1);
-    const dmg = u.damage * mods.fireDamage;
-    damageEnemiesInRadius(p.x, p.y, u.radius * area, dmg, p, { forceBurn: true });
+    const area = (mods.area || 1) * (mods.fireRadius || 1) * 2.5;
+    const dmg = u.damage * mods.fireDamage * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { forceBurn: true, knock: 100 });
     for (const ally of run.players) {
       if (ally.dead) continue;
       const heal = u.heal * mods.healPower;
       applyHeal(p, ally, heal);
     }
-    addFx(p.x, p.y, 'fire_cone', u.radius * area, '#ff4422');
-    addFx(p.x, p.y, 'heal', 90, '#88ffaa');
-    shake(8);
+    for (let i = 0; i < ULT_FX; i++) {
+      addFx(p.x, p.y, 'fire_cone', R * (0.5 + i * 0.06), i % 2 ? '#ff4422' : '#ffaa33');
+      addFx(p.x, p.y, 'fire', R * (0.3 + i * 0.05), '#ff6622');
+    }
+    addFx(p.x, p.y, 'heal', 180, '#88ffaa');
+    addFx(p.x, p.y, 'burst', R, '#ff8866');
+    shake(10 * Math.min(ULT_FX, 5));
   } else if (u.type === 'daughter_storm') {
-    const n = u.count;
+    const n = u.count * 3; // 彈數 ×3（再加 size；唔×10 以免手機熔）
     const pierce = u.pierce + mods.pierce + (eff.bonusPierce || 0);
     const chain = mods.chain + (eff.bonusChain || 0);
     for (let i = 0; i < n; i++) {
       const ang = (Math.PI * 2 * i) / n;
       spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
-        damage: u.damage * mods.projDamage,
+        damage: u.damage * mods.projDamage * ULT_DMG,
         pierce,
         chain,
-        speed: u.speed,
-        life: 1.4,
-        size: 9,
+        speed: u.speed * 1.15,
+        life: 1.6,
+        size: 9 * 3,
         color: '#6dff9a',
         frost: !!eff.alwaysChill,
       });
     }
-    addFx(p.x, p.y, 'burst', 70, '#6dff9a');
-    shake(7);
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 70 + i * 28, '#6dff9a');
+    addFx(p.x, p.y, 'ring', 220, '#b6ffd0');
+    shake(9 * Math.min(ULT_FX, 5));
   }
 }
 
