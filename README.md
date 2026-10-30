@@ -1,4 +1,4 @@
-# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02205**
+# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02206**
 
 Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairwise）。
 
@@ -7,7 +7,13 @@ Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairw
 ## 今版主打
 **爸爸＋女兒**（媽媽仍可選，但今版唔擴充媽媽轉職設計）。
 
-## v0.02205 更新（今次）
+## v0.02206 更新（今次）
+- 「全」掣：Fullscreen API（`navigationUI: 'hide'`）＋ webkit 前綴；失敗 fallback 遊戲容器／canvas
+- 修 onFsChange 對 `el` 嘅依賴；入／出全螢幕後 fitCanvas／layout
+- 桌面 **F** 掣切換全螢幕（打字中唔觸發）；F11 後 sync layout
+- WhatsApp 等唔支援時提示「用 Safari 開啟」
+
+## v0.02205 更新
 
 - **大招割草**：傷害 ×3；FX／震屏／範圍誇張（約 ×10 體感）；爸爸擲人／起陣地大招一齊放大。
 - **小怪 ×3**：出怪預算／間隔／花樣數量約 ×3（上限約 500）；⅓ 移速 0.5、⅓ 0.75、⅓ 正常。
