@@ -6,33 +6,64 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta http-equiv="Cache-Control" content="no-cache" />
-  <title>一家倖存 · Family Survivors v0.02201</title>
-  <link rel="stylesheet" href="css/style.css?v=02201" />
+  <title>一家倖存 · Family Survivors v0.02202</title>
+  <link rel="stylesheet" href="css/style.css?v=02202" />
 </head>
 <body>
   <!-- 街機選角 -->
   <div id="screen-select" class="screen">
     <div class="arcade-frame">
       <h1 class="title-pixel">一家倖存</h1>
-      <div class="ver-title">v0.02201</div>
+      <div class="ver-title">v0.02202</div>
       <p class="subtitle">生存 5:00 · 自動攻擊 · PoE 風格 TAG 升級 · 小招自動升級 · Lv5／10／15 轉職</p>
 
-      <div class="players-row">
+      <div class="players-stack">
         <div class="player-panel" id="panel-p1">
-          <div class="panel-label">1P <span class="hint">WASD 移動游標 · Space 確認</span></div>
-          <div class="card-row" id="cards-p1"></div>
-          <div class="ready-tag" id="ready-p1">未選</div>
+          <div class="panel-label">1P <span class="hint">A／D 換角 · Space 確認</span></div>
+          <div class="carousel" id="carousel-p1" data-player="1">
+            <button type="button" class="carousel-chev" data-player="1" data-dir="-1" aria-label="上一個">◀</button>
+            <div class="carousel-stage" id="cards-p1"></div>
+            <button type="button" class="carousel-chev" data-player="1" data-dir="1" aria-label="下一個">▶</button>
+          </div>
+          <div class="carousel-meta">
+            <div class="ready-tag" id="ready-p1">未選</div>
+            <button type="button" class="btn-confirm" id="btn-confirm-p1">確認</button>
+          </div>
         </div>
         <div class="player-panel" id="panel-p2">
-          <div class="panel-label">2P <span class="hint">方向鍵移動 · Enter/Num0 確認（可選）</span></div>
-          <div class="card-row" id="cards-p2"></div>
-          <div class="ready-tag" id="ready-p2">未加入（按確認加入）</div>
+          <div class="panel-label">2P <span class="hint">←／→ 換角 · Enter／Num0 確認（可選）</span></div>
+          <div class="carousel" id="carousel-p2" data-player="2">
+            <button type="button" class="carousel-chev" data-player="2" data-dir="-1" aria-label="上一個">◀</button>
+            <div class="carousel-stage" id="cards-p2"></div>
+            <button type="button" class="carousel-chev" data-player="2" data-dir="1" aria-label="下一個">▶</button>
+          </div>
+          <div class="carousel-meta">
+            <div class="ready-tag" id="ready-p2">未加入（按確認加入）</div>
+            <button type="button" class="btn-confirm" id="btn-confirm-p2">加入／確認</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="select-sticks" class="select-sticks" aria-hidden="true">
+        <div class="select-stick" id="select-stick-p1" data-player="1">
+          <div class="select-stick-pad">
+            <div class="select-stick-base"></div>
+            <div class="select-stick-knob"></div>
+          </div>
+          <div class="select-stick-label">1P 左右換角</div>
+        </div>
+        <div class="select-stick" id="select-stick-p2" data-player="2">
+          <div class="select-stick-pad">
+            <div class="select-stick-base"></div>
+            <div class="select-stick-knob"></div>
+          </div>
+          <div class="select-stick-label">2P 左右換角</div>
         </div>
       </div>
 
       <div class="select-footer">
         <button id="btn-start" class="btn-arcade" disabled>開始戰鬥</button>
-        <p class="footer-note">1P 必選 · 2P 可選 · 角色唔重複 · 大招：1P＝H／掣　2P＝Num0／掣 · 手機請打橫 · 左／右搖桿</p>
+        <p class="footer-note">1P 必選 · 2P 可選 · 角色唔重複 · 大招：1P＝H／掣　2P＝Num0／掣 · 左右換角／搖桿 · 開打後請打橫</p>
       </div>
     </div>
   </div>
@@ -60,7 +91,7 @@
       <button type="button" id="btn-ult-p1" class="ult-btn">大招</button>
       <button type="button" id="btn-ult-p2" class="ult-btn hidden">大招</button>
     </div>
-    <div id="ver-hud" class="ver-hud">v0.02201</div>
+    <div id="ver-hud" class="ver-hud">v0.02202</div>
     <div id="pause-hint">Esc 暫停 · 1P WASD／左搖桿／H · 2P 方向鍵／右搖桿／Num0 · 大招掣 · 請打橫玩</div>
   </div>
 
@@ -115,40 +146,40 @@
     </div>
   </div>
 
-  <script src="js/characters/spriteUtil.js?v=02201"></script>
-  <script src="js/characters/daughter.js?v=02201"></script>
-  <script src="js/characters/dad.js?v=02201"></script>
-  <script src="js/data/sprites.js?v=02201"></script>
-  <script src="js/data/characters.js?v=02201"></script>
-  <script src="js/data/skills.js?v=02201"></script>
-  <script src="js/data/upgrades.js?v=02201"></script>
-  <script src="js/data/branches.js?v=02201"></script>
-  <script src="js/core/config.js?v=02201"></script>
-  <script src="js/core/dom.js?v=02201"></script>
-  <script src="js/core/trees.js?v=02201"></script>
-  <script src="js/core/input.js?v=02201"></script>
-  <script src="js/core/mobile.js?v=02201"></script>
-  <script src="js/ui/menus.js?v=02201"></script>
-  <script src="js/core/player.js?v=02201"></script>
-  <script src="js/core/fx.js?v=02201"></script>
-  <script src="js/combat/combat.js?v=02201"></script>
-  <script src="js/core/levelup.js?v=02201"></script>
-  <script src="js/enemies/enemyTiers.js?v=02201"></script>
-  <script src="js/enemies/enemies.js?v=02201"></script>
-  <script src="js/core/loop.js?v=02201"></script>
-  <script src="js/combat/weapons.js?v=02201"></script>
-  <script src="js/core/world.js?v=02201"></script>
-  <script src="js/ui/hud.js?v=02201"></script>
-  <script src="js/render/draw.js?v=02201"></script>
-  <script src="js/skills/skillEffects.js?v=02201"></script>
-  <script src="js/enemies/spawnPatterns.js?v=02201"></script>
-  <script src="js/render/drawExtras.js?v=02201"></script>
-  <script src="js/ui/pause.js?v=02201"></script>
-  <script src="js/branches/branchCore.js?v=02201"></script>
-  <script src="js/branches/daughter.js?v=02201"></script>
-  <script src="js/branches/dad.js?v=02201"></script>
-  <script src="js/enemies/enemyAI.js?v=02201"></script>
-  <script src="js/render/branchDraw.js?v=02201"></script>
-  <script src="js/main.js?v=02201"></script>
+  <script src="js/characters/spriteUtil.js?v=02202"></script>
+  <script src="js/characters/daughter.js?v=02202"></script>
+  <script src="js/characters/dad.js?v=02202"></script>
+  <script src="js/data/sprites.js?v=02202"></script>
+  <script src="js/data/characters.js?v=02202"></script>
+  <script src="js/data/skills.js?v=02202"></script>
+  <script src="js/data/upgrades.js?v=02202"></script>
+  <script src="js/data/branches.js?v=02202"></script>
+  <script src="js/core/config.js?v=02202"></script>
+  <script src="js/core/dom.js?v=02202"></script>
+  <script src="js/core/trees.js?v=02202"></script>
+  <script src="js/core/input.js?v=02202"></script>
+  <script src="js/core/mobile.js?v=02202"></script>
+  <script src="js/ui/menus.js?v=02202"></script>
+  <script src="js/core/player.js?v=02202"></script>
+  <script src="js/core/fx.js?v=02202"></script>
+  <script src="js/combat/combat.js?v=02202"></script>
+  <script src="js/core/levelup.js?v=02202"></script>
+  <script src="js/enemies/enemyTiers.js?v=02202"></script>
+  <script src="js/enemies/enemies.js?v=02202"></script>
+  <script src="js/core/loop.js?v=02202"></script>
+  <script src="js/combat/weapons.js?v=02202"></script>
+  <script src="js/core/world.js?v=02202"></script>
+  <script src="js/ui/hud.js?v=02202"></script>
+  <script src="js/render/draw.js?v=02202"></script>
+  <script src="js/skills/skillEffects.js?v=02202"></script>
+  <script src="js/enemies/spawnPatterns.js?v=02202"></script>
+  <script src="js/render/drawExtras.js?v=02202"></script>
+  <script src="js/ui/pause.js?v=02202"></script>
+  <script src="js/branches/branchCore.js?v=02202"></script>
+  <script src="js/branches/daughter.js?v=02202"></script>
+  <script src="js/branches/dad.js?v=02202"></script>
+  <script src="js/enemies/enemyAI.js?v=02202"></script>
+  <script src="js/render/branchDraw.js?v=02202"></script>
+  <script src="js/main.js?v=02202"></script>
 </body>
 </html>

@@ -44,64 +44,195 @@ html, body {
 }
 .subtitle { text-align: center; color: #a898c0; margin-bottom: 28px; font-size: 15px; }
 
-.players-row { display: flex; gap: 24px; flex-wrap: wrap; }
+/* —— v0.02202 單槽 carousel 選角（唔縮舊三卡排） —— */
+.players-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .player-panel {
-  flex: 1; min-width: 280px;
+  width: 100%;
   background: rgba(0,0,0,.35);
   border: 3px solid #4a3a6a;
-  padding: 14px;
+  padding: 12px 14px 14px;
 }
 .panel-label {
   font-size: 18px; font-weight: 700; color: #fff;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .panel-label .hint { font-size: 12px; font-weight: 400; color: #8878a8; margin-left: 8px; }
 #panel-p1 .panel-label { color: #7ec8ff; }
 #panel-p2 .panel-label { color: #ff9ec8; }
 
-.card-row { display: flex; gap: 10px; justify-content: center; }
-.char-card {
-  width: 140px; cursor: pointer;
+.carousel {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  justify-content: center;
+}
+.carousel-chev {
+  flex: 0 0 auto;
+  width: 52px;
+  min-width: 52px;
+  min-height: 120px;
+  align-self: center;
+  border: 3px solid #e8c84a;
+  border-radius: 12px;
+  background: rgba(0,0,0,.55);
+  color: #ffe566;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 0 #8b5a10;
+}
+.carousel-chev:active { transform: translateY(1px); filter: brightness(1.1); }
+#carousel-p1 .carousel-chev { border-color: #7ec8ff; color: #7ec8ff; box-shadow: 0 2px 0 #1a4060; }
+#carousel-p2 .carousel-chev { border-color: #ff9ec8; color: #ff9ec8; box-shadow: 0 2px 0 #602040; }
+
+.carousel-stage {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 420px;
+  touch-action: pan-y;
+}
+
+.char-slot {
+  width: 100%;
+  cursor: pointer;
   border: 4px solid #3a2a50;
   background: #1a1228;
-  padding: 10px 8px 12px;
+  padding: 14px 12px 12px;
   transition: transform .08s, border-color .08s, box-shadow .08s;
   text-align: center;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  border-radius: 8px;
 }
-.char-card .portrait {
-  width: 96px; height: 96px; margin: 0 auto 8px;
+.char-slot .portrait-lg {
+  width: min(192px, 48vw);
+  height: min(192px, 48vw);
+  max-width: 192px;
+  max-height: 192px;
+  margin: 0 auto 10px;
   image-rendering: pixelated;
   border: 3px solid #2a2038;
   background: #0a0810;
+  display: block;
 }
-.char-card .name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.char-card .role { font-size: 12px; color: #a898c0; margin-bottom: 6px; }
-.char-card .kit { font-size: 11px; color: #c8b8d8; line-height: 1.35; min-height: 36px; }
-.char-card.cursor-p1 {
+.char-slot .name { font-size: 26px; font-weight: 800; margin-bottom: 4px; letter-spacing: .04em; }
+.char-slot .role { font-size: 14px; color: #a898c0; margin-bottom: 8px; }
+.char-slot .kit { font-size: 13px; color: #c8b8d8; line-height: 1.4; min-height: 40px; }
+.char-slot .carousel-dots {
+  display: flex; gap: 8px; justify-content: center; margin-top: 10px;
+}
+.char-slot .carousel-dots .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #3a2a50; border: 2px solid #5a4a70;
+}
+.char-slot .carousel-dots .dot.on {
+  background: #ffe566; border-color: #fff3a0;
+}
+.char-slot.cursor-p1 {
   border-color: #7ec8ff;
-  box-shadow: 0 0 0 2px #7ec8ff, 0 0 16px rgba(126,200,255,.45);
-  transform: scale(1.04);
+  box-shadow: 0 0 0 2px #7ec8ff, 0 0 18px rgba(126,200,255,.45);
 }
-.char-card.cursor-p2 {
+.char-slot.cursor-p2 {
   border-color: #ff9ec8;
-  box-shadow: 0 0 0 2px #ff9ec8, 0 0 16px rgba(255,158,200,.45);
-  transform: scale(1.04);
+  box-shadow: 0 0 0 2px #ff9ec8, 0 0 18px rgba(255,158,200,.45);
 }
-.char-card.cursor-p1.cursor-p2 {
-  border-color: #ffe566;
-  box-shadow: 0 0 0 2px #7ec8ff, 0 0 0 5px #ff9ec8, 0 0 20px rgba(255,229,102,.4);
-}
-.char-card.picked-p1 { background: linear-gradient(180deg, #1a2840, #121820); }
-.char-card.picked-p2 { background: linear-gradient(180deg, #401a30, #201218); }
-.char-card.taken { opacity: .45; pointer-events: none; filter: grayscale(.6); }
+.char-slot.picked-p1 { background: linear-gradient(180deg, #1a2840, #121820); }
+.char-slot.picked-p2 { background: linear-gradient(180deg, #401a30, #201218); }
+.char-slot.taken { opacity: .45; filter: grayscale(.55); }
 
+.carousel-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 .ready-tag {
-  margin-top: 12px; text-align: center; font-size: 14px;
-  padding: 6px; background: rgba(0,0,0,.3); color: #a898c0;
+  flex: 1 1 140px;
+  text-align: center; font-size: 14px;
+  padding: 8px; background: rgba(0,0,0,.3); color: #a898c0;
+  border-radius: 6px;
 }
 .ready-tag.on { color: #7dff9a; font-weight: 700; }
+.btn-confirm {
+  flex: 0 0 auto;
+  min-height: 44px;
+  min-width: 110px;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 800;
+  border: 3px solid #e8c84a;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #3a2a10, #1a1408);
+  color: #ffe566;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-confirm.on {
+  background: linear-gradient(180deg, #1a4028, #0e2014);
+  border-color: #7dff9a;
+  color: #7dff9a;
+}
+.btn-confirm:active { filter: brightness(1.1); }
+
+/* 選角虛擬搖桿（觸控機顯示） */
+.select-sticks {
+  display: none;
+  gap: 16px;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 0 4px;
+}
+.select-sticks.on { display: flex; }
+.select-stick {
+  flex: 1;
+  max-width: 200px;
+  text-align: center;
+}
+.select-stick-pad {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 6px;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.select-stick-base {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(255,224,102,.45);
+  background: rgba(0,0,0,.4);
+  box-shadow: inset 0 0 20px rgba(0,0,0,.5);
+}
+.select-stick-knob {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 44px; height: 44px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(255,224,102,.85);
+  border: 3px solid #fff3a0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.45);
+  pointer-events: none;
+}
+#select-stick-p1 .select-stick-base { border-color: rgba(126,200,255,.55); }
+#select-stick-p1 .select-stick-knob { background: rgba(126,200,255,.9); border-color: #cfefff; }
+#select-stick-p2 .select-stick-base { border-color: rgba(255,158,200,.55); }
+#select-stick-p2 .select-stick-knob { background: rgba(255,158,200,.9); border-color: #ffd0e8; }
+.select-stick-label {
+  font-size: 12px;
+  color: #a898c0;
+}
 
 .select-footer { margin-top: 24px; text-align: center; }
 .btn-arcade {
@@ -440,8 +571,17 @@ html, body {
 .ver-hud { bottom: max(8px, env(safe-area-inset-bottom)); }
 
 
-/* —— v0.02201 選角：直機可撳可碌（唔縮排版）；戰鬥先迫打橫 —— */
-#screen-select .char-card,
+/* —— v0.02201／v0.02202 選角：直機可撳可碌；戰鬥先迫打橫 —— */
+#screen-select .char-slot,
+#screen-select .carousel-chev,
+#screen-select .btn-confirm,
 #screen-select .btn-arcade {
   pointer-events: auto;
+}
+#screen-select .select-sticks { pointer-events: auto; }
+@media (max-width: 520px) {
+  .arcade-frame { padding: 18px 12px 24px; border-width: 4px; }
+  .carousel-chev { width: 44px; min-width: 44px; min-height: 100px; font-size: 24px; }
+  .char-slot .name { font-size: 22px; }
+  .select-stick-pad { width: 96px; height: 96px; }
 }
