@@ -13,7 +13,7 @@ function nearestEnemy(p) {
 
 function updateWeapons(dt) {
   for (const p of run.players) {
-    if (p.dead) continue;
+    if (p.dead || p.caged) continue;
     const c = getChar(p.charId);
     const w = c.weapon;
     const mods = sm(p);
@@ -42,13 +42,13 @@ function updateWeapons(dt) {
     } else if (w.type === 'calm_rage') {
       p.tCalm -= dt;
       if (p.tCalm <= 0) {
-        p.tCalm = w.calmCooldown * cdMul;
+        p.tCalm = w.calmCooldown * cdMul * (p.branch && p.branch[0] === '3.1' ? 0.75 : 1);
         const r2 = (w.calmRadius * area) ** 2;
         for (const ally of run.players) {
           if (ally.dead) continue;
           const dx = ally.x - p.x, dy = ally.y - p.y;
           if (dx * dx + dy * dy <= r2) {
-            applyHeal(p, ally, w.calmHeal * mods.healPower);
+            applyHeal(p, ally, w.calmHeal * mods.healPower * (p.bHeal || 1));
           }
         }
         addFx(p.x, p.y, 'heal', w.calmRadius * area * 0.4, '#88ffcc');
@@ -57,7 +57,7 @@ function updateWeapons(dt) {
       if (p.tRage <= 0) {
         p.tRage = w.rageCooldown * cdMul;
         const rr = w.rageRadius * mods.fireRadius * area;
-        const dmg = w.rageDamage * mods.fireDamage;
+        const dmg = w.rageDamage * mods.fireDamage * (p.branch && p.branch[0] === '3.2' ? 1.4 : 1) * (hasB(p, '3.23') ? 1.5 : 1);
         // ENEMIES ONLY
         damageEnemiesInRadius(p.x, p.y, rr, dmg, p);
         addFx(p.x, p.y, 'fire_cone', rr, '#ff6644');
@@ -107,6 +107,7 @@ function updateProjectiles(dt) {
       if (dx * dx + dy * dy < (e.r + pr.size) ** 2) {
         const owner = run.players[pr.ownerSlot];
         hurtEnemy(e, pr.damage, owner, { forceChill: pr.frost, fx: pr.x - pr.vx * 0.1, fy: pr.y - pr.vy * 0.1 });
+        if (typeof damageCagesInRadius === 'function') damageCagesInRadius(pr.x, pr.y, pr.size + 28, pr.damage, owner);
         pr.hit.add(e);
         // chain
         if (pr.chain > 0) {

@@ -29,6 +29,7 @@ function spawnProjectile(owner, dx, dy, opts) {
 
 function damageEnemiesInRadius(x, y, r, dmg, source, opts) {
   opts = opts || {};
+  if (typeof damageCagesInRadius === 'function') damageCagesInRadius(x, y, r, dmg, source);
   const r2 = r * r;
   for (const e of run.enemies) {
     if (e.hp <= 0) continue;
@@ -165,6 +166,7 @@ function tryUlt(slot) {
   const p = run.players[slot];
   if (!p || p.dead || p.carriedBy || p.ball) return;
   if (p.charId === 'dad' && p.branch && p.branch[0]) { dadUlt(p); return; }
+  if (p.charId === 'mom' && p.branch && p.branch[0] && typeof momUlt === 'function') { momUlt(p); return; }
   if (p.ultCd > 0) return;
   const c = getChar(p.charId);
   const u = c.ult;

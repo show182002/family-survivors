@@ -27,10 +27,15 @@ function drawEnemyMark(e, sx, sy) {
   if (e.stun > 0) { ctx.font = '20px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('💫', sx, sy - 52); }
   if (e.mark > 0) { ctx.font = '18px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('🎯', sx + 18, sy - 48); }
 }
+function charArtScale(p) {
+  if (p.charId === 'daughter') return (window.ArtChars && ArtChars.DAUGHTER_SCALE) || 2.2;
+  if (p.charId === 'mom') return (window.ArtChars && ArtChars.MOM_SCALE) || 3.4;
+  return 3;
+}
 function drawArtPlayer(p, sx, sy, scaleMul) {
   if (!p.art) p.art = { dir: 'down', flipX: false, walkT: 0, moving: false };
-  // sync flip from facing when idle side view missing
-  const scale = 3 * (scaleMul || 1);
+  let scale = charArtScale(p) * (scaleMul || 1);
+  if (hasB(p, '3.23')) scale *= 1.25; // 巨龍化
   if (window.ArtChars) {
     if (p.charId === 'daughter' && ArtChars.drawDaughter) {
       ArtChars.drawDaughter(ctx, sx, sy, p.art, scale);
@@ -38,6 +43,10 @@ function drawArtPlayer(p, sx, sy, scaleMul) {
     }
     if (p.charId === 'dad' && ArtChars.drawDad) {
       ArtChars.drawDad(ctx, sx, sy, p.art, scale);
+      return true;
+    }
+    if (p.charId === 'mom' && ArtChars.drawMom) {
+      ArtChars.drawMom(ctx, sx, sy, p.art, scale);
       return true;
     }
   }
@@ -138,4 +147,5 @@ function drawBranchWorld(cam) {
     ctx.font = '42px sans-serif';
     ctx.fillText('🧸', b.x - cam.x, b.y - cam.y);
   }
+  if (typeof drawMomTonics === 'function') drawMomTonics(cam);
 }

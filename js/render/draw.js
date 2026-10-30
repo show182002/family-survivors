@@ -102,6 +102,7 @@ function draw() {
   }
 
   drawExtras(cam);
+  if (typeof drawCages === 'function') drawCages(cam);
 
   // trees + players Y-sorted (art-demo depth)
   const playerDrawList = [];
