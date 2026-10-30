@@ -151,30 +151,68 @@ const SKILLS = [
 { id: 'nb_split', char: 'neighbor', name: '左右拖鞋', icon: '👟', tags: ['投射'], max: 4,
     desc: '每級多 1 隻拖鞋', mods(p) { p.skillMods.extraProjectiles += 1; } },
 
-  // ——— 叔叔：炮仗／煙花／燒烤 ———
-{ id: 'un_firecracker', char: 'uncle', name: '炮仗芯', icon: '🧨', tags: ['爆炸', '火焰'], max: 5,
-    desc: '爆炸傷 +18%、範圍 +8%／級', mods(p) { p.skillMods.explodeDamage *= 1.18; p.skillMods.explodeRadius *= 1.08; p.skillMods.fireDamage *= 1.1; } },
-{ id: 'un_grill', char: 'uncle', name: '露台燒烤', icon: '🍖', tags: ['火焰', '燃燒', '範圍'], max: 5,
-    desc: '腳下燒烤區', act: { type: 'zone', at: 'self', cd: 5, dur: 3.2, r: 95, dmg: 8, tick: 0.4, color: '#ef4444', burn: true } },
-{ id: 'un_mahjong', char: 'uncle', name: '麻將砲', icon: '🀄', tags: ['投射', '爆炸'], max: 5,
-    desc: '擲麻將爆炸', act: { type: 'target_nova', cd: 3.2, dmg: 30, r: 100, color: '#fecaca' } },
-{ id: 'un_beer', char: 'uncle', name: '冰啤酒', icon: '🍺', tags: ['冰凍', '範圍'], max: 5,
-    desc: '噴啤酒緩速', act: { type: 'nova', cd: 5, dmg: 12, r: 170, color: '#fbbf24', chill: true } },
-{ id: 'un_smoke', char: 'uncle', name: '抽煙圈', icon: '💨', tags: ['毒', '範圍'], max: 5,
-    desc: '煙圈毒霧', act: { type: 'zone', at: 'enemy', cd: 5, dur: 3, r: 100, dmg: 6, tick: 0.45, color: '#94a3b8', poison: true } },
-{ id: 'un_redpacket', char: 'uncle', name: '利是炸彈', icon: '🧧', tags: ['爆炸', '範圍'], max: 5,
-    desc: '利是爆炸；擊殺爆＋／級', mods(p) { p.skillMods.explodeOnKill = true; p.skillMods.explodeDamage *= 1.12; } },
-{ id: 'un_fan', char: 'uncle', name: '葵扇', icon: '🪭', tags: ['範圍'], max: 5,
-    desc: '扇風擊退', act: { type: 'nova', cd: 3.2, dmg: 15, r: 115, color: '#fecaca', knock: 180, melee: true } },
-{ id: 'un_tough', char: 'uncle', name: '大隻佬', icon: '💪', tags: ['護甲'], max: 5,
-    desc: '生命 +28、受傷 −5%／級', mods(p) { p.skillMods.maxHpBonus += 28; p.skillMods.damageTaken *= 0.95; } },
-{ id: 'un_spark', char: 'uncle', name: '火星連鎖', icon: '✨', tags: ['火焰', '連鎖'], max: 5,
-    desc: '燃燒＋連鎖感；火焰傷 +12%／級', mods(p) { p.skillMods.burnChance += 0.25; p.skillMods.fireDamage *= 1.12; p.skillMods.chain += 1; } },
-{ id: 'un_shield', char: 'uncle', name: '啤酒肚盾', icon: '🛡️', tags: ['護盾'], max: 5,
-    desc: '週期護盾', act: { type: 'shield_all', cd: 10, amt: 18, color: '#fecaca' } },
 
 
 
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+,
+
+  // ——— 表哥：滑板／塗鴉 ———
+  { id: 'co_board', char: 'cousin', name: '滑板芯', icon: '🛹', tags: ['近戰'], max: 5,
+    desc: '衝撞傷 +16%、冷卻 −5%／級', mods(p) { p.skillMods.meleeDamage *= 1.16; p.skillMods.cooldown *= 0.95; } },
+  { id: 'co_spray', char: 'cousin', name: '噴漆彈', icon: '🎨', tags: ['投射'], max: 5,
+    desc: '噴漆傷 +15%／級', mods(p) { p.skillMods.projDamage *= 1.15; } },
+  { id: 'co_grind', char: 'cousin', name: '磨牙軌', icon: '⚡', tags: ['近戰', '範圍'], max: 5,
+    desc: '滑過震波', act: { type: 'nova', cd: 3.0, dmg: 18, r: 100, color: '#22d3ee', knock: 110, melee: true } },
+  { id: 'co_tag', char: 'cousin', name: '塗鴉標記', icon: '✍️', tags: ['範圍'], max: 5,
+    desc: '噴字緩速區', act: { type: 'zone', at: 'enemy', cd: 4.8, dur: 3, r: 95, dmg: 6, tick: 0.45, color: '#a5f3fc' } },
+  { id: 'co_kick', char: 'cousin', name: '板翻踢', icon: '🦶', tags: ['近戰', '爆炸'], max: 5,
+    desc: '板翻爆擊', act: { type: 'target_nova', cd: 3.5, dmg: 28, r: 90, color: '#22d3ee' } },
+  { id: 'co_crit', char: 'cousin', name: '街頭直覺', icon: '🕶️', tags: ['暴擊'], max: 5,
+    desc: '暴擊 +6%、暴擊傷 +14%／級', mods(p) { p.skillMods.critChance += 0.06; p.skillMods.critMul += 0.14; } },
+  { id: 'co_orbit', char: 'cousin', name: '旋轉板', icon: '🌀', tags: ['投射', '範圍'], max: 5,
+    desc: '滑板圍身轉', act: { type: 'orbit', count: 1, perLv: 1, dmg: 12, r: 95, size: 18, spin: 3.3, icon: '🛹' } },
+  { id: 'co_energy', char: 'cousin', name: '能量飲', icon: '🥤', tags: [], max: 5,
+    desc: '移速 +9%、生命 +16／級', mods(p) { p.skillMods.moveSpeed *= 1.09; p.skillMods.maxHpBonus += 16; } },
+  { id: 'co_crew', char: 'cousin', name: '滑板隊', icon: '👥', tags: ['召喚', '投射'], max: 5,
+    desc: '召喚滑板仔幫手', act: { type: 'summon', cd: 9, dur: 6, dmg: 10, rate: 0.5, icon: '🛹', color: '#22d3ee' } },
+  { id: 'co_shield', char: 'cousin', name: '護膝護肘', icon: '🛡️', tags: ['護甲', '護盾'], max: 5,
+    desc: '受傷 −6%；週期小盾', mods(p) { p.skillMods.damageTaken *= 0.94; },
+    act: { type: 'shield_all', cd: 11, amt: 14, color: '#a5f3fc' } },
+
+
+  // ——— 金魚：泡泡／水花 ———
+  { id: 'gf_bubble', char: 'goldfish', name: '泡泡芯', icon: '🫧', tags: ['投射', '冰凍'], max: 5,
+    desc: '泡泡傷 +15%、緩速機率＋／級', mods(p) { p.skillMods.projDamage *= 1.15; p.skillMods.chillChance += 0.25; } },
+  { id: 'gf_splash', char: 'goldfish', name: '水花', icon: '💦', tags: ['範圍', '冰凍'], max: 5,
+    desc: '週期水花緩速', act: { type: 'nova', cd: 3.5, dmg: 14, r: 140, color: '#7dd3fc', chill: true } },
+  { id: 'gf_fin', char: 'goldfish', name: '甩尾', icon: '🐟', tags: ['近戰', '範圍'], max: 5,
+    desc: '甩尾擊退', act: { type: 'nova', cd: 2.8, dmg: 16, r: 95, color: '#f97316', knock: 150, melee: true } },
+  { id: 'gf_pearl', char: 'goldfish', name: '珍珠彈', icon: '⚪', tags: ['投射', '穿透'], max: 5,
+    desc: '穿透 +1、彈傷 +10%／級', mods(p) { p.skillMods.pierce += 1; p.skillMods.projDamage *= 1.1; } },
+  { id: 'gf_algae', char: 'goldfish', name: '水藻纏', icon: '🌿', tags: ['毒', '範圍'], max: 5,
+    desc: '水藻毒區', act: { type: 'zone', at: 'enemy', cd: 5, dur: 3.2, r: 95, dmg: 6, tick: 0.45, color: '#86efac', poison: true } },
+  { id: 'gf_bowl', char: 'goldfish', name: '魚缸罩', icon: '🔮', tags: ['護盾'], max: 5,
+    desc: '全隊魚缸護盾', act: { type: 'shield_all', cd: 9, amt: 17, color: '#7dd3fc' } },
+  { id: 'gf_feed', char: 'goldfish', name: '魚糧雨', icon: '🍪', tags: ['爆炸', '範圍'], max: 5,
+    desc: '魚糧爆炸', act: { type: 'target_nova', cd: 3.3, dmg: 26, r: 95, color: '#fdba74' } },
+  { id: 'gf_school', char: 'goldfish', name: '魚群', icon: '🐠', tags: ['召喚', '投射'], max: 5,
+    desc: '召喚小魚射擊', act: { type: 'summon', cd: 8, dur: 7, dmg: 9, rate: 0.5, icon: '🐠', color: '#f97316' } },
+  { id: 'gf_crit', char: 'goldfish', name: '閃鱗', icon: '✨', tags: ['暴擊'], max: 5,
+    desc: '暴擊 +6%、暴擊傷 +12%／級', mods(p) { p.skillMods.critChance += 0.06; p.skillMods.critMul += 0.12; } },
+  { id: 'gf_split', char: 'goldfish', name: '雙泡', icon: '🔵', tags: ['投射'], max: 4,
+    desc: '每級多 1 泡', mods(p) { p.skillMods.extraProjectiles += 1; } },
 
 ];
 
