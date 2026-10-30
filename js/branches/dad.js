@@ -72,17 +72,20 @@ function updateBalls(dt) {
     if (b.y < R.y0) { b.y = R.y0; b.vy = Math.abs(b.vy); bounced = true; }
     if (b.y > R.y1) { b.y = R.y1; b.vy = -Math.abs(b.vy); bounced = true; }
     b.x = clamp(b.x, 30, MAP_W - 30); b.y = clamp(b.y, 30, MAP_H - 30);
-    // v0.02208：擲人唔可以飛過雙人最遠距離；爸爸做錨，削去向外徑向速度
+    // v0.02209：擲人唔可以飛出而家畫面（相對爸爸／party 中點軸對齊盒）；削向外速度
     if (b.who && dad && !dad.dead) {
-      const max = (typeof MAX_PARTY_SEPARATION === 'number') ? MAX_PARTY_SEPARATION : 280;
+      const maxX = typeof partySepMaxX === 'function' ? partySepMaxX() : Math.max(80, STAGE_W - 72);
+      const maxY = typeof partySepMaxY === 'function' ? partySepMaxY() : Math.max(80, STAGE_H - 72);
       const rdx = b.x - dad.x, rdy = b.y - dad.y;
-      const rd = Math.hypot(rdx, rdy) || 1;
-      if (rd > max) {
-        const ux = rdx / rd, uy = rdy / rd;
-        b.x = dad.x + ux * max;
-        b.y = dad.y + uy * max;
-        const radial = b.vx * ux + b.vy * uy;
-        if (radial > 0) { b.vx -= ux * radial; b.vy -= uy * radial; }
+      if (Math.abs(rdx) > maxX) {
+        const sx = Math.sign(rdx) || 1;
+        b.x = dad.x + sx * maxX;
+        if (b.vx * sx > 0) b.vx = 0;
+      }
+      if (Math.abs(rdy) > maxY) {
+        const sy = Math.sign(rdy) || 1;
+        b.y = dad.y + sy * maxY;
+        if (b.vy * sy > 0) b.vy = 0;
       }
     }
     if (bounced) {

@@ -9,9 +9,18 @@ const WIN_TIME = 300;
 const SPRITE_SCALE = 4;
 const POINTS_PER_LEVEL = 2;
 const MAX_ENEMIES = 1000; // v0.02207：相對 02205 再 ×2
-// v0.02208：雙人最遠距離（世界單位）。×3 鏡頭視野高 ≈ STAGE_H/3 ≈ 272，
-// 280 ≈ 一屏高／約 STAGE_H 嘅 34%；鏡頭跟中點時兩人大致都睇到。單人局唔生效。
-const MAX_PARTY_SEPARATION = 280;
+// v0.02209：雙人限距 = 而家鏡頭視野（唔出畫），唔係固定短 leash。
+// 鏡頭跟 party 中點 → 兩人 |dx|≤viewW−2m、|dy|≤viewH−2m 就兩邊都喺畫面內。
+// 每幀跟 viewW()/viewH()（zoom ×1/1½/2/3）重算；軸對齊所以 ultrawide 可以左右散開約一屏闊。
+const PARTY_ONSCREEN_MARGIN = 36; // ~chibi／半身唔被裁
+function partySepMaxX() {
+  const vw = typeof viewW === 'function' ? viewW() : STAGE_W;
+  return Math.max(80, vw - 2 * PARTY_ONSCREEN_MARGIN);
+}
+function partySepMaxY() {
+  const vh = typeof viewH === 'function' ? viewH() : STAGE_H;
+  return Math.max(80, vh - 2 * PARTY_ONSCREEN_MARGIN);
+}
 const XP_BASE = 9.5;
 const XP_GROW = 1.325;
 const FX_KEY = 'family-survivors-fx';
