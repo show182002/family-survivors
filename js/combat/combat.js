@@ -231,6 +231,63 @@ function tryUlt(slot) {
     for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 70 + i * 28, '#6dff9a');
     addFx(p.x, p.y, 'ring', 220, '#b6ffd0');
     shake(9 * Math.min(ULT_FX, 5));
+  } else if (u.type === 'grandpa_army') {
+    const area = (mods.area || 1) * 2.2;
+    const dmg = u.damage * mods.meleeDamage * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: 120, forceChill: true });
+    for (let i = 0; i < (u.summons || 4); i++) {
+      const ang = (Math.PI * 2 * i) / (u.summons || 4);
+      run.summons.push({
+        x: p.x + Math.cos(ang) * 70, y: p.y + Math.sin(ang) * 70,
+        t: 0, life: u.spiritDur || 10, dmg: (u.spiritDmg || 12) * mods.projDamage * ULT_DMG / 2,
+        rate: u.spiritRate || 0.45, acc: 0, owner: p.slot,
+        icon: '👻', color: '#ffe08a',
+      });
+    }
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 80 + i * 20, '#c9a227');
+    addFx(p.x, p.y, 'ring', R, '#ffe08a');
+    shake(11);
+  } else if (u.type === 'dog_bark') {
+    const area = (mods.area || 1) * 2.4;
+    const dmg = u.damage * mods.meleeDamage * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { knock: u.knock || 280 });
+    for (let i = 0; i < ULT_FX; i++) {
+      addFx(p.x, p.y, 'ring', R * (0.35 + i * 0.07), i % 2 ? '#e8963a' : '#fff');
+      addFx(p.x, p.y, 'slam', R * 0.4, '#ffcc66');
+    }
+    addFloat(p.x, p.y - 80, '汪！！', '#e8963a', true);
+    shake(14);
+  } else if (u.type === 'baby_nuke') {
+    const area = (mods.area || 1) * 2.5;
+    const dmg = u.damage * mods.projDamage * ULT_DMG;
+    const R = u.radius * area;
+    damageEnemiesInRadius(p.x, p.y, R, dmg, p, { forceChill: true, forcePoison: true, knock: 90 });
+    for (let i = 0; i < ULT_FX; i++) {
+      addFx(p.x, p.y, 'burst', R * (0.4 + i * 0.06), i % 2 ? '#7ec8ff' : '#88ff66');
+      addFx(p.x, p.y, 'fire', R * 0.3, '#aaff88');
+    }
+    addFloat(p.x, p.y - 80, '尿布！！', '#7ec8ff', true);
+    shake(13);
+  } else if (u.type === 'brother_storm') {
+    const n = (u.count || 16) * 3;
+    const pierce = (u.pierce || 2) + mods.pierce + (eff.bonusPierce || 0);
+    const chain = mods.chain + (eff.bonusChain || 0);
+    for (let i = 0; i < n; i++) {
+      const ang = (Math.PI * 2 * i) / n;
+      spawnProjectile(p, Math.cos(ang), Math.sin(ang), {
+        damage: u.damage * mods.projDamage * ULT_DMG,
+        pierce, chain,
+        speed: (u.speed || 480) * 1.1,
+        life: 1.5, size: 8 * 2.5,
+        color: '#a78bfa',
+        frost: !!eff.alwaysChill,
+      });
+    }
+    for (let i = 0; i < ULT_FX; i++) addFx(p.x, p.y, 'burst', 70 + i * 24, '#a78bfa');
+    addFx(p.x, p.y, 'ring', 220, '#ddd6fe');
+    shake(10);
   }
 }
 

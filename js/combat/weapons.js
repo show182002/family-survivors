@@ -84,10 +84,75 @@ function updateWeapons(dt) {
             speed: w.speed,
             life: w.range / w.speed,
             size: w.size + 2,
-            color: eff.alwaysChill ? '#88ddff' : '#9dffb0',
+            color: eff.alwaysChill ? '#88ddff' : (w.color || '#9dffb0'),
             frost: !!eff.alwaysChill,
           });
         }
+      }
+    } else if (w.type === 'spirit_pulse') {
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.auraTick * cdMul;
+        const dmg = w.baseDamage * mods.meleeDamage * (eff.meleeDamageMul || 1);
+        damageEnemiesInRadius(p.x, p.y, w.auraRadius * area, dmg, p);
+        if (fxFull()) addFx(p.x, p.y, 'aura', w.auraRadius * area * 0.35, '#c9a227');
+      }
+      p.tSlam = (p.tSlam == null ? 0 : p.tSlam) - dt;
+      if (p.tSlam <= 0) {
+        p.tSlam = w.spiritCd * cdMul;
+        run.summons.push({
+          x: p.x + (Math.random() - 0.5) * 100,
+          y: p.y + (Math.random() - 0.5) * 100,
+          t: 0, life: w.spiritDur, dmg: w.spiritDmg * mods.projDamage,
+          rate: w.spiritRate, acc: 0, owner: p.slot,
+          icon: '👻', color: '#ffe08a',
+        });
+        addFx(p.x, p.y, 'burst', 60, '#ffe08a');
+        addFloat(p.x, p.y - 50, '祖先！', '#ffe08a', false);
+      }
+    } else if (w.type === 'bite_dash') {
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        if (target) {
+          const dx = target.x - p.x, dy = target.y - p.y;
+          const d = Math.hypot(dx, dy) || 1;
+          if (!p.caged) {
+            const leap = Math.min(w.leap || 90, d);
+            p.x += (dx / d) * leap;
+            p.y += (dy / d) * leap;
+            p.facing = dx >= 0 ? 1 : -1;
+          }
+          const dmg = w.baseDamage * mods.meleeDamage * (eff.meleeDamageMul || 1);
+          damageEnemiesInRadius(p.x, p.y, w.radius * area, dmg, p, { knock: 90 });
+          if (typeof damageCagesInRadius === 'function') damageCagesInRadius(p.x, p.y, w.radius * area, dmg, p);
+          addFx(p.x, p.y, 'slam', w.radius * area * 0.7, '#e8963a');
+          addFx(p.x, p.y, 'spark', 24, '#ffd4a0');
+        }
+      }
+    } else if (w.type === 'cry_toss') {
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.cryTick * cdMul;
+        const rr = w.cryRadius * area;
+        const dmg = w.cryDamage * mods.projDamage;
+        damageEnemiesInRadius(p.x, p.y, rr, dmg, p, { forceChill: true });
+        if (fxFull()) addFx(p.x, p.y, 'ring', rr * 0.45, '#7ec8ff');
+      }
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        const tx = target ? target.x : p.x + p.facing * 80;
+        const ty = target ? target.y : p.y;
+        const dmg = w.tossDamage * mods.projDamage * (mods.explodeDamage || 1);
+        const tr = w.tossRadius * area;
+        damageEnemiesInRadius(tx, ty, tr, dmg, p, { shatter: true });
+        if (typeof damageCagesInRadius === 'function') damageCagesInRadius(tx, ty, tr, dmg, p);
+        addFx(tx, ty, 'burst', tr, '#7ec8ff');
+        addFx(tx, ty, 'slam', tr * 0.7, '#ffaaee');
+        addFloat(tx, ty - 30, '玩具！', '#7ec8ff', false);
       }
     }
   }

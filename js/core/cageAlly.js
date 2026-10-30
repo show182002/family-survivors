@@ -8,7 +8,7 @@ const CAGE_TOWER_HP_MUL = 10;
 const CAGE_REGEN_FRAC = 0.015; // ~1.5% maxHp / 秒（好少）
 
 function missingRosterChars() {
-  const roster = ['dad', 'mom', 'daughter'];
+  const roster = (typeof CHARACTERS !== 'undefined' ? CHARACTERS : []).map((c) => c.id);
   const have = new Set((run.players || []).map((p) => p.charId));
   return roster.filter((id) => !have.has(id));
 }
