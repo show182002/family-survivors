@@ -26,9 +26,9 @@ html, body {
     #12081c;
 }
 .arcade-frame {
-  width: min(1100px, 96vw);
+  width: min(900px, 96vw);
   margin: 0 auto;
-  padding: 28px 32px 36px;
+  padding: 16px 18px 20px;
   border: 6px solid #e8c84a;
   box-shadow: 0 0 0 4px #5a3a10, 0 0 40px rgba(232,200,74,.25), inset 0 0 60px rgba(0,0,0,.4);
   background: linear-gradient(180deg, #1a1030 0%, #0e0a18 100%);
@@ -36,29 +36,29 @@ html, body {
 }
 .title-pixel {
   text-align: center;
-  font-size: clamp(36px, 6vw, 56px);
+  font-size: clamp(28px, 5vw, 44px);
   letter-spacing: 0.12em;
   color: #ffe566;
   text-shadow: 4px 4px 0 #8b4510, 0 0 20px rgba(255,200,50,.5);
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
-.subtitle { text-align: center; color: #a898c0; margin-bottom: 28px; font-size: 15px; }
+.subtitle { text-align: center; color: #a898c0; margin-bottom: 12px; font-size: 13px; }
 
-/* —— v0.02202 單槽 carousel 選角（唔縮舊三卡排） —— */
+/* —— v0.02203 單槽 carousel：上下叠、槽位細少少 —— */
 .players-stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 .player-panel {
   width: 100%;
   background: rgba(0,0,0,.35);
   border: 3px solid #4a3a6a;
-  padding: 12px 14px 14px;
+  padding: 8px 10px 10px;
 }
 .panel-label {
-  font-size: 18px; font-weight: 700; color: #fff;
-  margin-bottom: 10px;
+  font-size: 15px; font-weight: 700; color: #fff;
+  margin-bottom: 6px;
 }
 .panel-label .hint { font-size: 12px; font-weight: 400; color: #8878a8; margin-left: 8px; }
 #panel-p1 .panel-label { color: #7ec8ff; }
@@ -72,15 +72,15 @@ html, body {
 }
 .carousel-chev {
   flex: 0 0 auto;
-  width: 52px;
-  min-width: 52px;
-  min-height: 120px;
+  width: 40px;
+  min-width: 40px;
+  min-height: 88px;
   align-self: center;
   border: 3px solid #e8c84a;
-  border-radius: 12px;
+  border-radius: 10px;
   background: rgba(0,0,0,.55);
   color: #ffe566;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
   line-height: 1;
   cursor: pointer;
@@ -95,16 +95,16 @@ html, body {
 .carousel-stage {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 420px;
+  max-width: 320px;
   touch-action: pan-y;
 }
 
 .char-slot {
   width: 100%;
   cursor: pointer;
-  border: 4px solid #3a2a50;
+  border: 3px solid #3a2a50;
   background: #1a1228;
-  padding: 14px 12px 12px;
+  padding: 8px 8px 8px;
   transition: transform .08s, border-color .08s, box-shadow .08s;
   text-align: center;
   touch-action: manipulation;
@@ -112,24 +112,24 @@ html, body {
   border-radius: 8px;
 }
 .char-slot .portrait-lg {
-  width: min(192px, 48vw);
-  height: min(192px, 48vw);
-  max-width: 192px;
-  max-height: 192px;
-  margin: 0 auto 10px;
+  width: min(112px, 28vw);
+  height: min(112px, 28vw);
+  max-width: 112px;
+  max-height: 112px;
+  margin: 0 auto 6px;
   image-rendering: pixelated;
-  border: 3px solid #2a2038;
+  border: 2px solid #2a2038;
   background: #0a0810;
   display: block;
 }
-.char-slot .name { font-size: 26px; font-weight: 800; margin-bottom: 4px; letter-spacing: .04em; }
-.char-slot .role { font-size: 14px; color: #a898c0; margin-bottom: 8px; }
-.char-slot .kit { font-size: 13px; color: #c8b8d8; line-height: 1.4; min-height: 40px; }
+.char-slot .name { font-size: 20px; font-weight: 800; margin-bottom: 2px; letter-spacing: .04em; }
+.char-slot .role { font-size: 12px; color: #a898c0; margin-bottom: 4px; }
+.char-slot .kit { font-size: 11px; color: #c8b8d8; line-height: 1.3; min-height: 0; max-height: 2.6em; overflow: hidden; }
 .char-slot .carousel-dots {
-  display: flex; gap: 8px; justify-content: center; margin-top: 10px;
+  display: flex; gap: 6px; justify-content: center; margin-top: 6px;
 }
 .char-slot .carousel-dots .dot {
-  width: 10px; height: 10px; border-radius: 50%;
+  width: 8px; height: 8px; border-radius: 50%;
   background: #3a2a50; border: 2px solid #5a4a70;
 }
 .char-slot .carousel-dots .dot.on {
@@ -150,24 +150,24 @@ html, body {
 .carousel-meta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 6px;
   flex-wrap: wrap;
   justify-content: center;
 }
 .ready-tag {
-  flex: 1 1 140px;
-  text-align: center; font-size: 14px;
-  padding: 8px; background: rgba(0,0,0,.3); color: #a898c0;
+  flex: 1 1 80px;
+  text-align: center; font-size: 13px;
+  padding: 6px; background: rgba(0,0,0,.3); color: #a898c0;
   border-radius: 6px;
 }
 .ready-tag.on { color: #7dff9a; font-weight: 700; }
 .btn-confirm {
   flex: 0 0 auto;
-  min-height: 44px;
-  min-width: 110px;
-  padding: 10px 18px;
-  font-size: 16px;
+  min-height: 40px;
+  min-width: 64px;
+  padding: 8px 14px;
+  font-size: 15px;
   font-weight: 800;
   border: 3px solid #e8c84a;
   border-radius: 10px;
@@ -187,9 +187,9 @@ html, body {
 /* 選角虛擬搖桿（觸控機顯示） */
 .select-sticks {
   display: none;
-  gap: 16px;
+  gap: 12px;
   justify-content: space-between;
-  margin-top: 14px;
+  margin-top: 8px;
   padding: 0 4px;
 }
 .select-sticks.on { display: flex; }
@@ -200,9 +200,9 @@ html, body {
 }
 .select-stick-pad {
   position: relative;
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 6px;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 4px;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -234,10 +234,10 @@ html, body {
   color: #a898c0;
 }
 
-.select-footer { margin-top: 24px; text-align: center; }
+.select-footer { margin-top: 14px; text-align: center; }
 .btn-arcade {
-  font-size: 22px; font-weight: 800; letter-spacing: .08em;
-  padding: 14px 48px; cursor: pointer;
+  font-size: 20px; font-weight: 800; letter-spacing: .08em;
+  padding: 12px 36px; cursor: pointer;
   color: #1a1008; background: linear-gradient(180deg, #ffe566, #e8a820);
   border: 4px solid #fff3a0; box-shadow: 0 4px 0 #8b5a10, 0 6px 16px rgba(0,0,0,.4);
   touch-action: manipulation;
@@ -446,55 +446,60 @@ html, body {
 .branch-card .b-key { margin-top: 6px; color: #aaa; font-size: 12px; }
 .branch-row { background: rgba(255,229,102,.08); }
 
-/* —— v0.02100 大招觸控掣 —— */
+/* —— v0.02203 細招掣（stick 右邊，JS 定位） —— */
 .ult-btns {
   position: absolute;
-  left: 50%;
-  bottom: max(120px, calc(18% + env(safe-area-inset-bottom)));
-  transform: translateX(-50%);
-  display: flex;
-  gap: 14px;
+  inset: 0;
   z-index: 8;
   pointer-events: none;
+  transform: none;
 }
 .ult-btn {
-  pointer-events: auto;
-  min-width: 88px;
-  min-height: 88px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 4px solid #ffe566;
+  position: absolute;
+  pointer-events: none;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid #ffe566;
   background: radial-gradient(circle at 35% 30%, #5a4a20, #1a1020 70%);
   color: #ffe566;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
-  line-height: 1.25;
-  text-shadow: 0 2px 0 #000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,.55), 0 8px 18px rgba(0,0,0,.45), inset 0 0 18px rgba(255,229,102,.15);
+  line-height: 1;
+  text-shadow: 0 1px 0 #000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.55), 0 4px 10px rgba(0,0,0,.4);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .12s ease, visibility .12s ease;
 }
-.ult-btn:active:not(:disabled) {
-  transform: scale(0.96);
+.ult-btn.press-show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.ult-btn.press-show:active:not(:disabled) {
+  transform: scale(0.94);
   filter: brightness(1.12);
 }
-.ult-btn:disabled,
-.ult-btn.cd {
-  opacity: 0.45;
+.ult-btn.press-show:disabled,
+.ult-btn.press-show.cd {
+  opacity: 0.5;
   border-color: #777;
   color: #ccc;
   cursor: not-allowed;
-  box-shadow: 0 0 0 3px rgba(0,0,0,.4);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.4);
 }
-.ult-btn .ult-cd {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  margin-top: 4px;
-}
+.ult-btn .ult-cd { display: none; }
 #pause-hint { bottom: 8px; z-index: 6; }
 
 
@@ -571,7 +576,7 @@ html, body {
 .ver-hud { bottom: max(8px, env(safe-area-inset-bottom)); }
 
 
-/* —— v0.02201／v0.02202 選角：直機可撳可碌；戰鬥先迫打橫 —— */
+/* —— v0.02201–v0.02203 選角：直機可撳可碌；戰鬥先迫打橫 —— */
 #screen-select .char-slot,
 #screen-select .carousel-chev,
 #screen-select .btn-confirm,
@@ -580,8 +585,66 @@ html, body {
 }
 #screen-select .select-sticks { pointer-events: auto; }
 @media (max-width: 520px) {
-  .arcade-frame { padding: 18px 12px 24px; border-width: 4px; }
-  .carousel-chev { width: 44px; min-width: 44px; min-height: 100px; font-size: 24px; }
-  .char-slot .name { font-size: 22px; }
-  .select-stick-pad { width: 96px; height: 96px; }
+  .arcade-frame { padding: 12px 10px 14px; border-width: 4px; }
+  .carousel-chev { width: 36px; min-width: 36px; min-height: 72px; font-size: 18px; }
+  .char-slot .name { font-size: 16px; }
+  .select-stick-pad { width: 72px; height: 72px; }
+}
+
+
+/* —— v0.02203 超簡戰鬥 HUD —— */
+#hud { padding: 8px 10px; }
+.hud-left #timer { font-size: 28px; }
+.hud-left #kill-count { font-size: 12px; }
+.hud-center { max-width: 220px; margin: 0 10px; }
+#xp-bar-wrap { height: 10px; border-width: 2px; }
+#level-label { font-size: 12px; margin-top: 2px; }
+.hp-chip {
+  min-width: 88px;
+  max-width: 120px;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.hp-name { font-weight: 800; font-size: 13px; }
+.hp-bar-wrap { height: 8px; margin: 3px 0 0; border-width: 1px; }
+.hp-num, .hp-ult, .hp-rules, .hp-auto, .hp-skills { display: none !important; }
+.auto-chip { font-size: 12px; padding: 4px 8px; }
+.fx-chip { font-size: 12px; padding: 3px 8px; margin-top: 4px; }
+#fsBtn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 15px;
+}
+.ver-hud { font-size: 11px; opacity: .55; }
+
+/* 觸控／粗指標：藏介紹、自動掣、戰鬥特效掣 */
+@media (pointer: coarse), (hover: none) {
+  #pause-hint { display: none !important; }
+  #hud .auto-btns { display: none !important; }
+  #hud .fx-chip { display: none !important; }
+  .panel-label .hint { display: none; }
+  .char-slot .kit { display: none; }
+  .footer-note { font-size: 11px; }
+}
+@media (max-height: 520px) {
+  .arcade-frame { padding: 10px 12px 12px; }
+  .title-pixel { font-size: clamp(22px, 4.5vw, 32px); }
+  .subtitle { margin-bottom: 6px; font-size: 12px; }
+  .players-stack { gap: 6px; }
+  .player-panel { padding: 6px 8px; }
+  .char-slot .portrait-lg {
+    width: min(88px, 22vw);
+    height: min(88px, 22vw);
+    max-width: 88px;
+    max-height: 88px;
+  }
+  .char-slot .name { font-size: 16px; }
+  .char-slot .role { display: none; }
+  .carousel-chev { min-height: 72px; width: 36px; min-width: 36px; font-size: 18px; }
+  .select-stick-pad { width: 72px; height: 72px; }
+  .select-footer { margin-top: 8px; }
+  .btn-arcade { font-size: 18px; padding: 10px 28px; }
 }

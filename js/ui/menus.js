@@ -23,9 +23,9 @@ function applyMobileSelectHints() {
   const foot = document.querySelector('#screen-select .footer-note');
   const sticks = document.getElementById('select-sticks');
   if (isTouchUI()) {
-    if (p1Hint) p1Hint.textContent = '左右掣／搖桿換角 · 點大圖或「確認」';
-    if (p2Hint) p2Hint.textContent = '左右掣／搖桿換角 · 點大圖或「加入／確認」（可選）';
-    if (foot) foot.textContent = '1P 必選 · 2P 可選 · 角色唔重複 · 左右換角 · 點「開始戰鬥」開打 · 開打後請打橫';
+    if (p1Hint) p1Hint.textContent = '◀▶／搖';
+    if (p2Hint) p2Hint.textContent = '◀▶／搖（可選）';
+    if (foot) foot.textContent = '1P 必 · 2P 可 · 打橫玩';
     if (sticks) {
       sticks.classList.add('on');
       sticks.setAttribute('aria-hidden', 'false');
@@ -129,8 +129,7 @@ function paintBigSlot(player, cursorIdx) {
   if (role) role.textContent = c.role;
   const kit = slot.querySelector('.kit');
   if (kit) {
-    kit.innerHTML = (c.baseTags || []).map((t) => `<span class="tag-pill">${t}</span>`).join(' ') +
-      '<br><b style="color:#ffe566">大招</b> ' + c.ultName;
+    kit.innerHTML = (c.baseTags || []).map((t) => `<span class="tag-pill">${t}</span>`).join(' ');
   }
 
   const dots = slot.querySelector('.carousel-dots');
@@ -314,13 +313,13 @@ function refreshSelectUI() {
   paintBigSlot(1, cursorP1);
   paintBigSlot(2, cursorP2);
 
-  el.readyP1.textContent = pickP1 ? '已選：' + getChar(pickP1).name : '未選';
+  el.readyP1.textContent = pickP1 ? '定' : '未';
   el.readyP1.classList.toggle('on', !!pickP1);
   if (!p2Joined) {
-    el.readyP2.textContent = isTouchUI() ? '未加入（左右換角或確認加入）' : '未加入（方向鍵移動 · Enter/Num0 確認加入）';
+    el.readyP2.textContent = '未加';
     el.readyP2.classList.remove('on');
   } else {
-    el.readyP2.textContent = pickP2 ? '已選：' + getChar(pickP2).name : '已加入・未確認';
+    el.readyP2.textContent = pickP2 ? '定' : '未';
     el.readyP2.classList.toggle('on', !!pickP2);
   }
   el.btnStart.disabled = !pickP1;
@@ -328,13 +327,13 @@ function refreshSelectUI() {
   const b1 = document.getElementById('btn-confirm-p1');
   const b2 = document.getElementById('btn-confirm-p2');
   if (b1) {
-    b1.textContent = pickP1 === CHARACTERS[cursorP1].id ? '已確認 ✓' : '確認';
+    b1.textContent = pickP1 === CHARACTERS[cursorP1].id ? '定✓' : '定';
     b1.classList.toggle('on', !!pickP1 && pickP1 === CHARACTERS[cursorP1].id);
   }
   if (b2) {
-    if (!p2Joined) b2.textContent = '加入／確認';
-    else if (pickP2 === CHARACTERS[cursorP2].id) b2.textContent = '已確認 ✓';
-    else b2.textContent = '確認';
+    if (!p2Joined) b2.textContent = '加';
+    else if (pickP2 === CHARACTERS[cursorP2].id) b2.textContent = '定✓';
+    else b2.textContent = '定';
     b2.classList.toggle('on', !!pickP2 && pickP2 === CHARACTERS[cursorP2].id);
   }
 }
