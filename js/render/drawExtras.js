@@ -41,13 +41,32 @@ function drawExtras(cam) {
   }
   // boss telegraphs
   for (const e of run.enemies) {
-    if (!e.boss || !(e.windup > 0)) continue;
+    if (!e.boss) continue;
     const sx = e.x - cam.x, sy = e.y - cam.y;
+    // final boss：空中階段地面砸落圓影
+    if (e.boss === 'boss' && (e.bossPhase === 'air' || e.bossPhase === 'fall')) {
+      const R = e.slamR || 280;
+      const k = e.bossPhase === 'fall' ? 1 : (e.teleK || (1 - Math.max(0, e.phaseT || 0) / 1.35));
+      ctx.save();
+      ctx.globalAlpha = 0.25 + 0.45 * k;
+      ctx.fillStyle = '#4a0066';
+      ctx.beginPath(); ctx.ellipse(sx, sy, R * (0.55 + 0.45 * k), R * (0.28 + 0.22 * k), 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.7 + 0.3 * Math.sin((e.phaseT || 0) * 20);
+      ctx.strokeStyle = '#ff44cc'; ctx.lineWidth = 6;
+      ctx.beginPath(); ctx.ellipse(sx, sy, R * k, R * 0.45 * k, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(sx, sy, R * k * 0.7, R * 0.32 * k, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#ff66dd'; ctx.font = 'bold 42px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('▼', sx, sy - R * 0.2 * k);
+      ctx.restore();
+      continue;
+    }
+    if (!(e.windup > 0)) continue;
     const k = 1 - e.windup / 0.9;
     ctx.strokeStyle = '#ff3355'; ctx.lineWidth = 4;
-    if (e.boss === 'boss') {
-      ctx.globalAlpha = 0.8;
-      ctx.beginPath(); arcSafe(sx, sy - 30, 40 + k * 120, 0, Math.PI * 2); ctx.stroke();
+    if (e.boss === 'boss' && e.bossPhase === 'rise') {
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath(); arcSafe(sx, sy - 30 - (e.jumpY || 0), 50 + k * 80, 0, Math.PI * 2); ctx.stroke();
     } else if (e.dashTo) {
       ctx.globalAlpha = 0.35 + 0.3 * k; ctx.fillStyle = '#ff3355';
       ctx.save(); ctx.translate(sx, sy);
@@ -119,7 +138,7 @@ function drawOverlayUI(cam) {
     ctx.fillStyle = b.boss === 'boss' ? '#c040ff' : '#ff9030';
     ctx.fillRect(x, y, w * (b.hp / b.maxHp), 18);
     ctx.fillStyle = '#fff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(b.boss === 'boss' ? '☠ 大魔王' : '中 Boss · 巨熊頭目', STAGE_W / 2, y + 15);
+    ctx.fillText(b.boss === 'boss' ? '☠ 最終大魔王' : '中 Boss', STAGE_W / 2, y + 15);
   });
   if (run.banner) {
     const b = run.banner;

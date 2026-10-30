@@ -35,9 +35,12 @@ function throwCarried(p) {
   if (c.who) { c.who.carriedBy = null; c.who.ball = ball; }
   run.balls.push(ball);
   p.ultCd = 10; p.ultMax = 10;
-  addFx(p.x, p.y - 40, 'ring', 90, '#ffe566', bfx('2.1'));
+  // v0.02205：擲人大招誇張
+  for (let i = 0; i < 8; i++) addFx(p.x, p.y - 40, 'ring', 90 + i * 35, i % 2 ? '#ffe566' : '#fff', bfx('2.1'));
+  addFx(p.x, p.y - 40, 'burst', 160, '#ffe566', bfx('2.1'));
+  addFx(p.x, p.y - 40, 'dust', 120, '#bbaa88', Object.assign({ seed: Math.random() * 6, life: 0.8 }, bfx('2.1')));
   addFloat(p.x, p.y - 90, '擲！', '#ffe566', true);
-  shake(6);
+  shake(40);
 }
 function releaseCarry(p) {
   if (p.carry && p.carry.who) { p.carry.who.carriedBy = null; p.carry.who.invuln = 1; }
@@ -70,9 +73,10 @@ function updateBalls(dt) {
       addFx(b.x, b.y, 'ring', 60, '#ffffff', bfx('2.1'));
       shake(3);
       if (dad && hasB(dad, '2.11')) {
-        damageEnemiesInRadius(b.x, b.y, 150, 45 * L, dad, { knock: 80 });
-        addFx(b.x, b.y, 'slam', 150, '#ff9944', bfx('2.11'));
-        addFx(b.x, b.y, 'fire', 90, '#ffcc44', bfx('2.11'));
+        damageEnemiesInRadius(b.x, b.y, 220, 135 * L, dad, { knock: 120 }); // ×3 dmg
+        for (let i = 0; i < 6; i++) addFx(b.x, b.y, 'slam', 150 + i * 25, '#ff9944', bfx('2.11'));
+        addFx(b.x, b.y, 'fire', 160, '#ffcc44', bfx('2.11'));
+        shake(18);
       }
     }
     if (fxFull() && skillFxOn('br2.1')) run.fx.push({ x: b.x, y: b.y, type: 'burst', r: 22, color: b.who ? b.who.color : '#ffcc99', t: 0, life: 0.25 });
@@ -81,8 +85,9 @@ function updateBalls(dt) {
         if (e.hp <= 0 || (e.ballHit || 0) > run.time) continue;
         if ((e.x - b.x) ** 2 + (e.y - b.y) ** 2 < (e.r + 28) ** 2) {
           e.ballHit = run.time + 0.3;
-          hurtEnemy(e, 40 * L, dad);
-          addFx(e.x, e.y, 'ring', 40, '#ffe566', bfx('2.1'));
+          hurtEnemy(e, 120 * L, dad); // v0.02205：擲人傷害 ×3
+          addFx(e.x, e.y, 'ring', 80, '#ffe566', bfx('2.1'));
+          addFx(e.x, e.y, 'burst', 50, '#ffcc66', bfx('2.1'));
         }
       }
     }
@@ -139,9 +144,16 @@ function placeStructure(p) {
     run.structs.splice(run.structs.indexOf(old), 1);
   }
   run.structs.push({ owner: p.slot, kind: k.kind, icon: k.icon, x: p.x, y: p.y, t: 0, cd: 0.3, hp: 420, maxHp: 420, zap: 0 });
-  addFx(p.x, p.y, 'slam', 90, '#ffcc66', bfx('2.2'));
-  addFx(p.x, p.y, 'dust', 60, '#bbaa88', Object.assign({ seed: Math.random() * 6 }, bfx('2.2')));
+  // v0.02205：起陣地大招誇張 FX
+  for (let i = 0; i < 8; i++) {
+    addFx(p.x, p.y, 'slam', 90 + i * 40, '#ffcc66', bfx('2.2'));
+    addFx(p.x, p.y, 'ring', 70 + i * 30, i % 2 ? '#ffcc66' : '#fff', bfx('2.2'));
+  }
+  addFx(p.x, p.y, 'dust', 140, '#bbaa88', Object.assign({ seed: Math.random() * 6, life: 0.9 }, bfx('2.2')));
+  addFx(p.x, p.y, 'burst', 160, '#ffdd88', bfx('2.2'));
+  damageEnemiesInRadius(p.x, p.y, 220, 90 * brScale(), p, { knock: 120 }); // 落地震擊 ×3 感
   addFloat(p.x, p.y - 70, k.icon + ' ' + k.name, '#ffcc66', true);
+  shake(36);
 }
 function updateStructures(dt) {
   if (!run.structs.length) return;

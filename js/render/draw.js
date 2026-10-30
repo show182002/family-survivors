@@ -51,8 +51,10 @@ function draw() {
 
   for (const e of run.enemies) {
     if (e.hp <= 0) continue;
-    const sx = e.x - cam.x, sy = e.y - cam.y;
-    if (sx < -80 || sy < -80 || sx > STAGE_W + 80 || sy > STAGE_H + 80) continue;
+    if (e.hidden) continue; // final boss 空中消失
+    const jy = e.jumpY || 0;
+    const sx = e.x - cam.x, sy = e.y - cam.y - jy;
+    if (sx < -120 || sy < -200 || sx > STAGE_W + 120 || sy > STAGE_H + 120) continue;
     if (e.critFlash > 0) {
       ctx.fillStyle = 'rgba(255,230,100,0.5)';
       ctx.beginPath();
