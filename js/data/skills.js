@@ -168,28 +168,16 @@ const SKILLS = [
   
 ,
 
-  // ——— 表哥：滑板／塗鴉 ———
-  { id: 'co_board', char: 'cousin', name: '滑板芯', icon: '🛹', tags: ['近戰'], max: 5,
-    desc: '衝撞傷 +16%、冷卻 −5%／級', mods(p) { p.skillMods.meleeDamage *= 1.16; p.skillMods.cooldown *= 0.95; } },
-  { id: 'co_spray', char: 'cousin', name: '噴漆彈', icon: '🎨', tags: ['投射'], max: 5,
-    desc: '噴漆傷 +15%／級', mods(p) { p.skillMods.projDamage *= 1.15; } },
-  { id: 'co_grind', char: 'cousin', name: '磨牙軌', icon: '⚡', tags: ['近戰', '範圍'], max: 5,
-    desc: '滑過震波', act: { type: 'nova', cd: 3.0, dmg: 18, r: 100, color: '#22d3ee', knock: 110, melee: true } },
-  { id: 'co_tag', char: 'cousin', name: '塗鴉標記', icon: '✍️', tags: ['範圍'], max: 5,
-    desc: '噴字緩速區', act: { type: 'zone', at: 'enemy', cd: 4.8, dur: 3, r: 95, dmg: 6, tick: 0.45, color: '#a5f3fc' } },
-  { id: 'co_kick', char: 'cousin', name: '板翻踢', icon: '🦶', tags: ['近戰', '爆炸'], max: 5,
-    desc: '板翻爆擊', act: { type: 'target_nova', cd: 3.5, dmg: 28, r: 90, color: '#22d3ee' } },
-  { id: 'co_crit', char: 'cousin', name: '街頭直覺', icon: '🕶️', tags: ['暴擊'], max: 5,
-    desc: '暴擊 +6%、暴擊傷 +14%／級', mods(p) { p.skillMods.critChance += 0.06; p.skillMods.critMul += 0.14; } },
-  { id: 'co_orbit', char: 'cousin', name: '旋轉板', icon: '🌀', tags: ['投射', '範圍'], max: 5,
-    desc: '滑板圍身轉', act: { type: 'orbit', count: 1, perLv: 1, dmg: 12, r: 95, size: 18, spin: 3.3, icon: '🛹' } },
-  { id: 'co_energy', char: 'cousin', name: '能量飲', icon: '🥤', tags: [], max: 5,
-    desc: '移速 +9%、生命 +16／級', mods(p) { p.skillMods.moveSpeed *= 1.09; p.skillMods.maxHpBonus += 16; } },
-  { id: 'co_crew', char: 'cousin', name: '滑板隊', icon: '👥', tags: ['召喚', '投射'], max: 5,
-    desc: '召喚滑板仔幫手', act: { type: 'summon', cd: 9, dur: 6, dmg: 10, rate: 0.5, icon: '🛹', color: '#22d3ee' } },
-  { id: 'co_shield', char: 'cousin', name: '護膝護肘', icon: '🛡️', tags: ['護甲', '護盾'], max: 5,
-    desc: '受傷 −6%；週期小盾', mods(p) { p.skillMods.damageTaken *= 0.94; },
-    act: { type: 'shield_all', cd: 11, amt: 14, color: '#a5f3fc' } },
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
   // ——— 金魚：泡泡／水花 ———
