@@ -75,7 +75,7 @@ const CHARACTERS = [
     id: 'daughter',
     name: '女兒',
     role: '高速 · 穿透彈',
-    kit: '跑得快 · 強化穿透彈 · 坐騎轉職',
+    kit: '跑得快 · 自動射穿透彈',
     ultName: '連射風暴',
     ultDesc: '朝四周噴射大量穿透彈',
     color: '#6dff9a',
@@ -83,20 +83,19 @@ const CHARACTERS = [
     body: '#3cb870',
     head: '#f5d0b0',
     sprite: 'daughter',
-    maxHp: 100,
-    speed: 200,
-    pickupRadius: 95,
+    maxHp: 95,
+    speed: 195,
+    pickupRadius: 90,
     baseTags: ['投射', '穿透', '暴擊'],
-    startSkills: ['dau_pierce', 'dau_sparkle'],
+    startSkills: ['dau_pierce'],
     weapon: {
       type: 'pierce_shot',
-      baseDamage: 10,
-      cooldown: 0.5,
+      baseDamage: 9,
+      cooldown: 0.55,
       speed: 420,
       pierce: 2,
       range: 520,
       size: 7,
-      color: '#9dffb0',
     },
     ult: {
       cooldown: 16,
@@ -254,6 +253,7 @@ const CHARACTERS = [
       radius: 90,
     },
   }
+
 ];
 
 function getChar(id) {

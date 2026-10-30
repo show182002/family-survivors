@@ -172,6 +172,8 @@ const SKILLS = [
     desc: '燃燒＋連鎖感；火焰傷 +12%／級', mods(p) { p.skillMods.burnChance += 0.25; p.skillMods.fireDamage *= 1.12; p.skillMods.chain += 1; } },
 { id: 'un_shield', char: 'uncle', name: '啤酒肚盾', icon: '🛡️', tags: ['護盾'], max: 5,
     desc: '週期護盾', act: { type: 'shield_all', cd: 10, amt: 18, color: '#fecaca' } },
+
+
 ];
 
 /** 舊 ID → 新 ID（相容舊存檔／startSkills） */
