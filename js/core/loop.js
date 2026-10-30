@@ -24,6 +24,8 @@ function frameStep(dt) {
   if (screenShake > 0) screenShake = Math.max(0, screenShake - dt * 30);
 
   updatePlayers(dt);
+  if (typeof updateCageAlly === 'function') updateCageAlly(dt);
+  if (typeof updateAiUlt === 'function') updateAiUlt(dt);
   updateWeapons(dt);
   updateSkillActs(dt);
   updateBranches(dt);
@@ -42,8 +44,7 @@ function frameStep(dt) {
 }
 
 
-/** v0.02210：雙人軸對齊限距 = STAGE 一屏（唔跟 zoom）。alive < 2 跳過。
- * 有 mover+anchor → 只夾 mover；否則對稱對分超距。 */
+/** v0.02211：隊友限距 = STAGE 一屏。2 人軸對齊；3 人（含 AI）夾住 centroid 半屏。 */
 function enforcePartySeparation(mover, anchor) {
   if (!run || !run.players) return;
   const maxX = typeof partySepMaxX === 'function' ? partySepMaxX() : Math.max(80, STAGE_W - 72);
@@ -57,24 +58,21 @@ function enforcePartySeparation(mover, anchor) {
     mover.y = clamp(mover.y, 30, MAP_H - 30);
     return;
   }
-  const alive = run.players.filter((p) => !p.dead);
+  const alive = run.players.filter((p) => !p.dead && !p.caged);
   if (alive.length < 2) return;
-  const a = alive[0], b = alive[1];
-  // 擲緊／被托：位置由球／爸爸控，呢度唔對稱拉
-  if (a.ball || b.ball || a.carriedBy || b.carriedBy) return;
-  const dx = b.x - a.x, dy = b.y - a.y;
-  if (Math.abs(dx) > maxX) {
-    const over = (Math.abs(dx) - maxX) / 2;
-    const s = Math.sign(dx) || 1;
-    a.x += s * over; b.x -= s * over;
+  // 有球／托：唔做群體對稱拉（擲人由 dad 模組夾）
+  if (alive.some((p) => p.ball || p.carriedBy)) return;
+  let cx = 0, cy = 0;
+  for (const p of alive) { cx += p.x; cy += p.y; }
+  cx /= alive.length; cy /= alive.length;
+  const halfX = maxX / 2, halfY = maxY / 2;
+  for (const p of alive) {
+    const dx = p.x - cx, dy = p.y - cy;
+    if (Math.abs(dx) > halfX) p.x = cx + Math.sign(dx) * halfX;
+    if (Math.abs(dy) > halfY) p.y = cy + Math.sign(dy) * halfY;
+    p.x = clamp(p.x, 30, MAP_W - 30);
+    p.y = clamp(p.y, 30, MAP_H - 30);
   }
-  if (Math.abs(dy) > maxY) {
-    const over = (Math.abs(dy) - maxY) / 2;
-    const s = Math.sign(dy) || 1;
-    a.y += s * over; b.y -= s * over;
-  }
-  a.x = clamp(a.x, 30, MAP_W - 30); a.y = clamp(a.y, 30, MAP_H - 30);
-  b.x = clamp(b.x, 30, MAP_W - 30); b.y = clamp(b.y, 30, MAP_H - 30);
 }
 
 function updatePlayers(dt) {
@@ -102,7 +100,11 @@ function updatePlayers(dt) {
 
     if (p.atkBuff > 0) p.atkBuff -= dt;
     if (p.carriedBy || p.ball) continue; // 位置由爸爸／波控制
-    const axis = playerMoveAxis(p.slot);
+    if (p.caged) {
+      if (p.art) p.art.moving = false;
+      continue; // 困籠唔郁
+    }
+    const axis = (p.ai && typeof aiMoveAxis === 'function') ? aiMoveAxis(p) : playerMoveAxis(p.slot);
     let mx = axis.dx || 0, my = axis.dy || 0;
     if (mx || my) {
       const len = Math.hypot(mx, my) || 1;
@@ -116,7 +118,7 @@ function updatePlayers(dt) {
       p.art.moving = false;
       p.art.walkT = 0;
     }
-    const spd = p.speed * mods.moveSpeed * (p.bSpeed || 1) * (p.carry && hasB(p, '2.21') ? 0.7 : 1);
+    const spd = p.speed * mods.moveSpeed * (p.bSpeed || 1) * (p.carry && hasB(p, '2.21') ? 0.7 : 1) * (p._momSpeed > 0 ? 1.2 : 1);
     const rad = (p.charId === 'dad') ? 12 : 10;
     let nx = p.x + mx * spd * dt;
     let ny = p.y + my * spd * dt;

@@ -42,6 +42,12 @@ function openNextPick() {
     if (q.branch != null) {
       q.tier = firstOpenTier(ap, q.branch);
       if (q.tier < 0 || !branchOptions(ap, q.tier).length) { pickQueue.shift(); continue; }
+      if (ap.ai) {
+        const opts = branchOptions(ap, q.tier);
+        if (opts.length) applyBranch(ap, opts[Math.floor(Math.random() * opts.length)]);
+        pickQueue.shift();
+        continue;
+      }
       break;
     }
     if (!ap.auto) break;
@@ -85,7 +91,7 @@ function openNextPick() {
   mode = 'levelup';
   if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
-  const who = (p.slot === 0 ? '1P' : '2P');
+  const who = p.ai ? ('AI·' + p.name) : (p.slot === 0 ? '1P' : (p.slot === 1 ? '2P' : 'P' + (p.slot + 1)));
   if (el.levelupTitle) el.levelupTitle.textContent = '選 · ' + who;
   if (el.levelupSub) {
     el.levelupSub.textContent = '點' + currentPick.pointsLeft;

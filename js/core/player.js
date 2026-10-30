@@ -104,6 +104,9 @@ function startRun() {
     balls: [],
     trailTick: 0,
     branchQueue: [],
+    cages: [],
+    cageAllySpawned: false,
+    momTonics: [],
   };
 
   el.select.classList.add('hidden');
@@ -112,6 +115,7 @@ function startRun() {
   el.pause.classList.add('hidden');
   el.levelup.classList.add('hidden');
   el.hpP2.classList.toggle('hidden', players.length < 2);
+  if (el.hpP3) el.hpP3.classList.add('hidden');
   el.hpP1._main = null; el.hpP2._main = null;
   if (typeof rebuildTrees === 'function') rebuildTrees();
   buildAutoButtons();
