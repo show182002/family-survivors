@@ -1,4 +1,4 @@
-# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02209**
+# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02210**
 
 Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairwise）。
 
@@ -7,8 +7,11 @@ Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairw
 ## 今版主打
 **爸爸＋女兒**（媽媽仍可選，但今版唔擴充媽媽轉職設計）。
 
-## v0.02209 更新（今次）
-- **雙人限距＝而家畫面**：軸對齊夾 `|dx|≤viewW−2m`、`|dy|≤viewH−2m`（margin≈36），跟 zoom 重算；唔再用固定 280。目的：唔好有人出畫。行路同爸爸擲人都夾。
+## v0.02210 更新（今次）
+- **雙人限距＝設計畫布一屏**：`STAGE_W×STAGE_H`（≈1848×745），**唔跟 zoom**；×3 手機都唔會再縮到 maxY≈200。
+
+## v0.02209 更新
+- **雙人限距＝而家畫面**：曾用 `viewW/viewH`（zoom×3 太短）；已由 v0.02210 改為 STAGE。
 
 ## v0.02208 更新
 - **雙人最遠距離**：`MAX_PARTY_SEPARATION = 280`（已由 v0.02209 改為視野限距）。
