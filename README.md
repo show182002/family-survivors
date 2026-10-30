@@ -1,32 +1,21 @@
-# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02210**
+# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02211**
 
 Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairwise）。
 
 舞台 **1920×817（2.35:1 ultrawide）**。用瀏覽器打開 `index.html` 即玩。
 
 ## 今版主打
-**爸爸＋女兒**（媽媽仍可選，但今版唔擴充媽媽轉職設計）。
+爸爸／媽媽／女兒齊可選；媽媽轉職樹齊；1 分鐘籠隊友 AI。
 
-## v0.02210 更新（今次）
-- **雙人限距＝設計畫布一屏**：`STAGE_W×STAGE_H`（≈1848×745），**唔跟 zoom**；×3 手機都唔會再縮到 maxY≈200。
+## v0.02211 更新（今次）
+- **女兒**：縮小（draw scale ≈2.2）＋重畫可愛女仔（圓臉大眼雙馬尾）
+- **媽媽**：加大（scale ≈3.4）＋新建 `mom.js` 圍裙主婦 chibi；選角卡同戰鬥一致
+- **1 分鐘籠隊友**：未選角色（例如已選爸＋女 → 出媽媽）困籠；打爆籠後 AI 隊友（血 1/10、追怪＋簡單走位／大招）
+- **媽媽轉職**：3.1 暖湯局／3.2 紅龍怒 → 3.11–3.14 → 3.21 神仙湯／3.22 廚房結界／3.23 巨龍化／3.24 雙龍陣
+- **選技 highlight**：粗金邊＋光暈＋放大，預設第一張 focused（手機都清楚）
 
-## v0.02209 更新
-- **雙人限距＝而家畫面**：曾用 `viewW/viewH`（zoom×3 太短）；已由 v0.02210 改為 STAGE。
-
-## v0.02208 更新
-- **雙人最遠距離**：`MAX_PARTY_SEPARATION = 280`（已由 v0.02209 改為視野限距）。
-
-## v0.02207 更新
-- **畫面 2.35:1**：舞台 1920×817＋CSS contain，左右睇多啲（唔再跟 Safari 網址列硬鬥）。
-- **小怪再 ×2**（相對 v0.02205）：預算／間隔／花樣數量再倍；上限約 1000；移速混 ⅓×0.5／⅓×0.75／⅓×1 照舊。
-- **自製音**：Web Audio 程序 BGM＋SE（hit／kill／xp／level／ult）；首次觸控解鎖；HUD「音／靜」＋本機記住。
-
-## v0.02206 更新
-- 「全」掣：Fullscreen API（`navigationUI: 'hide'`）＋ webkit；同步發起以保住 iOS Safari user gesture
-- 失敗 fallback；桌面 **F** 切換全螢幕
-
-## v0.02205 更新
-- 大招割草 ×3 傷／誇張 FX；小怪 ×3；多中 Boss＋最終大魔王；畫面倍率 touch→×3／鍵鼠→×1
+## v0.02210 更新
+- **雙人限距＝設計畫布一屏**：`STAGE_W×STAGE_H`（≈1848×745），**唔跟 zoom**
 
 ## 操作
 - 1P：WASD／搖桿移動，H／招掣大招
@@ -35,12 +24,11 @@ Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairw
 
 ## 結構
 ```
-js/core/     config · audio · dom · input · mobile · player · loop · …
-js/enemies/  enemyTiers · enemies · spawnPatterns · enemyAI
+js/core/     config · audio · cageAlly · player · loop · …
+js/characters/  dad · mom · daughter · spriteUtil
+js/branches/    branchCore · dad · mom · daughter
+js/enemies/  …
 js/combat/   combat · weapons
-js/branches/ branchCore · dad · daughter
-js/render/   draw · drawExtras · branchDraw
-js/ui/       menus · hud · pause
 ```
 
-正式連結：https://show182002.github.io/family-survivors/
+玩：https://show182002.github.io/family-survivors/
