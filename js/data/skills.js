@@ -176,6 +176,8 @@ const SKILLS = [
   { id: 'nb_split', char: 'neighbor', name: '左右拖鞋', icon: '👟', tags: ['投射'], max: 4,
     desc: '每級多 1 隻拖鞋', mods(p) { p.skillMods.extraProjectiles += 1; } },
 
+
+
 ];
 
 /** 舊 ID → 新 ID（相容舊存檔／startSkills） */
