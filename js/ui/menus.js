@@ -9,6 +9,21 @@ let pickP2 = null;
 let p2Joined = false;
 let mode = 'select';
 
+function isTouchUI() {
+  return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+}
+
+function applyMobileSelectHints() {
+  const p1Hint = document.querySelector('#panel-p1 .hint');
+  const p2Hint = document.querySelector('#panel-p2 .hint');
+  const foot = document.querySelector('#screen-select .footer-note');
+  if (isTouchUI()) {
+    if (p1Hint) p1Hint.textContent = '點角色選角';
+    if (p2Hint) p2Hint.textContent = '點角色加入／選角（可選）';
+    if (foot) foot.textContent = '1P 必選 · 2P 可選 · 角色唔重複 · 點「開始戰鬥」開打 · 開打後請打橫 · 左／右搖桿 · 大招掣';
+  }
+}
+
 function buildSelectCards() {
   el.cardsP1.innerHTML = '';
   el.cardsP2.innerHTML = '';
@@ -16,6 +31,7 @@ function buildSelectCards() {
     el.cardsP1.appendChild(makeCard(c, i, 1));
     el.cardsP2.appendChild(makeCard(c, i, 2));
   });
+  applyMobileSelectHints();
   refreshSelectUI();
 }
 
@@ -54,11 +70,33 @@ function makeCard(c, i, player) {
   tags.innerHTML = (c.baseTags || []).map((t) => `<span class="tag-pill">${t}</span>`).join(' ') +
     '<br><b style="color:#ffe566">大招</b> ' + c.ultName;
   div.appendChild(tags);
-  div.addEventListener('click', () => {
+  const pick = () => {
     if (player === 1) { cursorP1 = i; confirmP1(); }
     else { cursorP2 = i; p2Joined = true; confirmP2(); }
-  });
+  };
+  bindSelectTap(div, pick);
   return div;
+}
+
+/** iOS 有時 click 唔穩：touchend／pointerup 一齊綁，preventDefault 避免雙觸發 */
+function bindSelectTap(node, fn) {
+  if (!node || typeof fn !== 'function') return;
+  let locked = false;
+  const fire = (e) => {
+    if (locked) return;
+    locked = true;
+    try { if (e && e.preventDefault) e.preventDefault(); } catch (_) {}
+    try { if (e && e.stopPropagation) e.stopPropagation(); } catch (_) {}
+    try { fn(e); } finally {
+      setTimeout(() => { locked = false; }, 320);
+    }
+  };
+  node.addEventListener('click', fire);
+  node.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'mouse') return;
+    fire(e);
+  });
+  node.addEventListener('touchend', fire, { passive: false });
 }
 
 function refreshSelectUI() {
@@ -77,7 +115,7 @@ function refreshSelectUI() {
   el.readyP1.textContent = pickP1 ? '已選：' + getChar(pickP1).name : '未選';
   el.readyP1.classList.toggle('on', !!pickP1);
   if (!p2Joined) {
-    el.readyP2.textContent = '未加入（方向鍵移動 · Enter/Num0 確認加入）';
+    el.readyP2.textContent = isTouchUI() ? '未加入（點角色加入）' : '未加入（方向鍵移動 · Enter/Num0 確認加入）';
     el.readyP2.classList.remove('on');
   } else {
     el.readyP2.textContent = pickP2 ? '已選：' + getChar(pickP2).name : '已加入・未確認';

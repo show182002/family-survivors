@@ -25,10 +25,13 @@
   window.isPortraitGated = isPortraitGated;
 
   function updateRotateGate() {
-    var show = isPortraitGated();
+    // 只喺戰鬥（play）先迫打橫；選角／選單直機可撳可碌
+    var inBattle = (typeof mode !== 'undefined' && mode === 'play');
+    var show = !!(inBattle && isPortraitGated());
     if (rotateModal) rotateModal.style.display = show ? 'flex' : 'none';
     if (typeof fitCanvas === 'function') fitCanvas();
   }
+  window.updateRotateGate = updateRotateGate;
 
   if (rotateModal) {
     rotateModal.addEventListener('touchstart', function (e) {

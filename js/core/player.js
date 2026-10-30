@@ -114,6 +114,7 @@ function startRun() {
   if (typeof rebuildTrees === 'function') rebuildTrees();
   buildAutoButtons();
   mode = 'play';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   levelupQueue = 0;
   pickQueue = [];
   currentPick = null;
@@ -127,6 +128,7 @@ function startRun() {
 
 function backToSelect() {
   mode = 'select';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   cancelAnimationFrame(animId);
   el.game.classList.add('hidden');
   el.select.classList.remove('hidden');
@@ -139,6 +141,7 @@ function backToSelect() {
 function pauseGame() {
   if (mode !== 'play') return;
   mode = 'pause';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   el.pause.classList.remove('hidden');
   refreshFxButtons();
   renderPausePlayers();
@@ -146,6 +149,7 @@ function pauseGame() {
 function resumeGame() {
   if (mode !== 'pause') return;
   mode = 'play';
+  if (typeof updateRotateGate === 'function') updateRotateGate();
   el.pause.classList.add('hidden');
   lastTs = 0;
   cancelAnimationFrame(animId);

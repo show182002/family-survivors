@@ -1,7 +1,26 @@
 /** 一家倖存 · 啟動（最後載入） */
 'use strict';
 
-el.btnStart.addEventListener('click', startRun);
+(function bindStartButton() {
+  const btn = el.btnStart;
+  if (!btn) return;
+  let locked = false;
+  const fire = (e) => {
+    if (btn.disabled || locked) return;
+    locked = true;
+    try { if (e && e.preventDefault) e.preventDefault(); } catch (_) {}
+    try { if (e && e.stopPropagation) e.stopPropagation(); } catch (_) {}
+    try { startRun(); } finally {
+      setTimeout(() => { locked = false; }, 320);
+    }
+  };
+  btn.addEventListener('click', fire);
+  btn.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'mouse') return;
+    fire(e);
+  });
+  btn.addEventListener('touchend', fire, { passive: false });
+})();
 el.btnResume.addEventListener('click', resumeGame);
 el.btnQuit.addEventListener('click', backToSelect);
 el.btnAgain.addEventListener('click', () => { backToSelect(); startRun(); });
