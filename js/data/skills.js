@@ -150,7 +150,150 @@ const SKILLS = [
     desc: '積木圍身轉', act: { type: 'orbit', count: 2, perLv: 1, dmg: 9, r: 85, size: 16, spin: 3.2, icon: '🧱' } },
   { id: 'baby_stroller', char: 'baby', name: '嬰兒車衝', icon: '🛒', tags: ['近戰', '範圍'], max: 5,
     desc: '衝撞擊退', act: { type: 'nova', cd: 3.5, dmg: 20, r: 105, color: '#7ec8ff', knock: 220, melee: true } },
+,
 
+
+
+  // ——— 鄰居：流言／拖鞋／八卦 ———
+  { id: 'nb_slipper', char: 'neighbor', name: '飛拖鞋', icon: '🩴', tags: ['投射', '爆炸'], max: 5,
+    desc: '拖鞋傷 +16%、爆炸感／級', mods(p) { p.skillMods.projDamage *= 1.16; p.skillMods.explodeDamage *= 1.08; } },
+  { id: 'nb_gossip', char: 'neighbor', name: '八卦流言', icon: '🗣️', tags: ['範圍'], max: 5,
+    desc: '標記範圍 +12%／級', mods(p) { p.skillMods.area *= 1.12; } },
+  { id: 'nb_alarm', char: 'neighbor', name: '對講機', icon: '📢', tags: ['範圍', '冰凍'], max: 5,
+    desc: '廣播緩速＋小傷', act: { type: 'nova', cd: 4.5, dmg: 12, r: 180, color: '#fb923c', chill: true } },
+  { id: 'nb_pot', char: 'neighbor', name: '煲湯贈送', icon: '🥘', tags: ['治療'], max: 5,
+    desc: '送湯回血', act: { type: 'heal_all', cd: 9, amt: 11, color: '#fed7aa' } },
+  { id: 'nb_peek', char: 'neighbor', name: '門罅偷望', icon: '👁️', tags: ['暴擊', '投射'], max: 5,
+    desc: '暴擊 +7%、彈傷 +8%／級', mods(p) { p.skillMods.critChance += 0.07; p.skillMods.projDamage *= 1.08; } },
+  { id: 'nb_fence', char: 'neighbor', name: '鐵閘撞', icon: '🚪', tags: ['近戰', '範圍'], max: 5,
+    desc: '鐵閘震退', act: { type: 'nova', cd: 3.5, dmg: 20, r: 110, color: '#fdba74', knock: 200, melee: true } },
+  { id: 'nb_mail', char: 'neighbor', name: '錯郵炸彈', icon: '📦', tags: ['爆炸', '範圍'], max: 5,
+    desc: '郵包砸敵', act: { type: 'target_nova', cd: 3.3, dmg: 28, r: 100, color: '#fb923c' } },
+  { id: 'nb_cam', char: 'neighbor', name: '閉路電視', icon: '📷', tags: ['召喚', '投射'], max: 5,
+    desc: '召喚監視器射擊', act: { type: 'summon', cd: 8, dur: 7, dmg: 9, rate: 0.5, icon: '📷', color: '#fb923c' } },
+  { id: 'nb_chain', char: 'neighbor', name: '傳話遊戲', icon: '🔁', tags: ['連鎖', '投射'], max: 5,
+    desc: '連鎖 +1、彈傷 +8%／級', mods(p) { p.skillMods.chain += 1; p.skillMods.projDamage *= 1.08; } },
+  { id: 'nb_split', char: 'neighbor', name: '左右拖鞋', icon: '👟', tags: ['投射'], max: 4,
+    desc: '每級多 1 隻拖鞋', mods(p) { p.skillMods.extraProjectiles += 1; } },
+
+];
+
+/** 舊 ID → 新 ID（相容舊存檔／startSkills） */
+const SKILL_ALIAS = { slam_core: 'dad_slam', rage_flame: 'mom_rage', calm_pulse: 'mom_calm', pierce_bolt: 'dau_pierce' };
+
+function getCharSkillPool(charId) { return SKILLS.filter((s) => s.char === charId); }
+function skillLevel(player, id) { return (player.skills || []).filter((s) => s === id).length; }
+
+/**
+ * Tag 規則引擎（5–15 條）
+ * 當玩家同時擁有 required tags，啟用 effect key
+ */
+const TAG_RULES = [
+  {
+    id: 'burn_blast',
+    name: '燃爆',
+    need: ['燃燒', '爆炸'],
+    desc: '燃燒目標被爆炸／擊殺時額外火焰範圍傷',
+    effect: { burnExplode: true, burnExplodeMul: 1.6 },
+  },
+  {
+    id: 'poison_blast',
+    name: '毒爆',
+    need: ['毒', '爆炸'],
+    desc: '毒目標爆炸時額外毒範圍傷',
+    effect: { poisonExplode: true, poisonExplodeMul: 1.5 },
+  },
+  {
+    id: 'pierce_shot',
+    name: '貫穿射線',
+    need: ['投射', '穿透'],
+    desc: '投射物額外 +1 穿透、稍增彈速',
+    effect: { bonusPierce: 1, projSpeedMul: 1.15 },
+  },
+  {
+    id: 'frost_shot',
+    name: '霜寒彈',
+    need: ['投射', '冰凍'],
+    desc: '投射命中必緩速',
+    effect: { alwaysChill: true, chillFactor: 0.5 },
+  },
+  {
+    id: 'holy_ward',
+    name: '聖盾療',
+    need: ['治療', '護盾'],
+    desc: '治療同時給予短暫護盾',
+    effect: { healGivesShield: true, shieldFromHeal: 0.5 },
+  },
+  {
+    id: 'wide_slam',
+    name: '開山砸',
+    need: ['近戰', '範圍'],
+    desc: '砸地／光環範圍大幅增加',
+    effect: { slamAreaMul: 1.35, auraAreaMul: 1.25 },
+  },
+  {
+    id: 'fire_aura',
+    name: '炎環',
+    need: ['火焰', '範圍'],
+    desc: '持續火焰光環 tick（只傷敵）',
+    effect: { fireAura: true, fireAuraDps: 8 },
+  },
+  {
+    id: 'ignite',
+    name: '點燃',
+    need: ['火焰', '燃燒'],
+    desc: '火焰技能更高機率上燃燒',
+    effect: { burnChanceBonus: 0.35, burnDpsMul: 1.3 },
+  },
+  {
+    id: 'chain_bolt',
+    name: '電弧連鎖',
+    need: ['投射', '連鎖'],
+    desc: '投射物額外連鎖 1 次',
+    effect: { bonusChain: 1 },
+  },
+  {
+    id: 'shatter',
+    name: '碎冰',
+    need: ['冰凍', '爆炸'],
+    desc: '對緩速中敵人爆炸傷害 +50%',
+    effect: { shatterMul: 1.5 },
+  },
+  {
+    id: 'thorn_melee',
+    name: '棘甲反擊',
+    need: ['護甲', '近戰'],
+    desc: '被打反震＋近戰傷害提升',
+    effect: { thornsMul: 2, meleeDamageMul: 1.15 },
+  },
+  {
+    id: 'toxic_spread',
+    name: '毒蔓延',
+    need: ['毒', '範圍'],
+    desc: '毒爆炸／範圍更大',
+    effect: { poisonRadiusMul: 1.4 },
+  },
+  {
+    id: 'pet_volley',
+    name: '萌寵齊射',
+    need: ['召喚', '投射'],
+    desc: '召喚物射速 +40%、轉速 +30%',
+    effect: { summonRateMul: 0.6, orbitSpinMul: 1.3 },
+  },
+  {
+    id: 'fortress',
+    name: '鐵桶陣',
+    need: ['護盾', '護甲'],
+    desc: '護盾量 +50%',
+    effect: { shieldMul: 1.5 },
+  },
+  {
+    id: 'crit_burst',
+    name: '暴擊連爆',
+    need: ['暴擊', '爆炸'],
+    desc: '爆炸範圍 +25%',
+    effect: { explodeAreaMul: 1.25 },
+  },
 ];
 
 function emptySkillMods() {

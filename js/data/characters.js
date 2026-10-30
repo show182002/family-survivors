@@ -1,6 +1,6 @@
 /** 角色資料 — 之後加角色主要改呢度；baseTags 會參與 PoE tag 規則 */
 const CHARACTERS = [
-  {
+{
     id: 'dad',
     name: '爸爸',
     role: '坦克 · 近戰光環',
@@ -34,7 +34,7 @@ const CHARACTERS = [
       invuln: 1.2,
     },
   },
-  {
+{
     id: 'mom',
     name: '媽媽',
     role: '治療 · 怒火 AOE',
@@ -71,7 +71,7 @@ const CHARACTERS = [
       alliesSafe: true,
     },
   },
-  {
+{
     id: 'daughter',
     name: '女兒',
     role: '高速 · 穿透彈',
@@ -107,7 +107,7 @@ const CHARACTERS = [
       speed: 480,
     },
   },
-  {
+{
     id: 'grandpa',
     name: '爺爺',
     role: '召喚 · 柺杖光環',
@@ -145,7 +145,7 @@ const CHARACTERS = [
       spiritRate: 0.45,
     },
   },
-  {
+{
     id: 'dog',
     name: '家狗',
     role: '突進 · 近戰',
@@ -177,7 +177,7 @@ const CHARACTERS = [
       knock: 280,
     },
   },
-  {
+{
     id: 'baby',
     name: '寶寶',
     role: '控場 · 玩具炸彈',
@@ -212,7 +212,45 @@ const CHARACTERS = [
       poison: true,
     },
   },
-
+{
+    id: 'neighbor',
+    name: '鄰居',
+    role: '標記 · 控場',
+    kit: '流言標記（敵人受傷↑）· 甩拖鞋',
+    ultName: '全棟警報',
+    ultDesc: '大範圍標記＋爆炸拖鞋雨',
+    color: '#fb923c',
+    accent: '#fed7aa',
+    body: '#c2410c',
+    head: '#f5d0b0',
+    sprite: 'neighbor',
+    maxHp: 115,
+    speed: 165,
+    pickupRadius: 85,
+    baseTags: ['投射', '爆炸', '範圍'],
+    startSkills: ['nb_slipper'],
+    weapon: {
+      type: 'gossip_slipper',
+      baseDamage: 10,
+      markTick: 1.2,
+      markRadius: 160,
+      markDur: 4,
+      cooldown: 0.75,
+      speed: 390,
+      pierce: 1,
+      range: 500,
+      size: 8,
+      color: '#fb923c',
+    },
+    ult: {
+      cooldown: 17,
+      type: 'neighbor_alarm',
+      damage: 60,
+      radius: 220,
+      markDur: 5,
+      count: 14,
+    },
+  }
 ];
 
 function getChar(id) {
