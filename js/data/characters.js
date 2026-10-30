@@ -4,7 +4,7 @@ const CHARACTERS = [
     id: 'dad',
     name: '爸爸',
     role: '坦克 · 近戰光環',
-    kit: '厚血 · 週期砸地 · 近身光環傷',
+    kit: '厚血 · 週期砸地 · 近身光環傷 · 陣地轉職',
     ultName: '家法天降',
     ultDesc: '巨大砸地，範圍高傷＋短暫無敵',
     color: '#4a8cff',
