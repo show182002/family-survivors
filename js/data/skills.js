@@ -85,7 +85,7 @@ const SKILLS = [
 { id: 'dau_cat', char: 'daughter', name: '貓貓光球', icon: '🐱', tags: ['召喚', '範圍'], max: 5,
     desc: '貓貓光球圍住你轉，撞敵人', act: { type: 'orbit', count: 1, perLv: 1, dmg: 10, r: 90, size: 18, spin: 3.4, icon: '🐱' } },
 
-  // ——— 爺爺：召喚／柺杖／控場 ———
+  // ——— 阿公：召喚／柺杖／控場 ———
 { id: 'gp_cane', char: 'grandpa', name: '柺杖芯', icon: '🦯', tags: ['近戰', '範圍'], max: 5,
     desc: '柺杖傷 +15%、光環範圍 +8%／級', mods(p) { p.skillMods.meleeDamage *= 1.15; p.skillMods.area *= 1.08; } },
 { id: 'gp_spirit', char: 'grandpa', name: '祖先魂', icon: '👻', tags: ['召喚'], max: 5,

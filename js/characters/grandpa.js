@@ -1,4 +1,4 @@
-/** 爺爺 — cane elder chibi (stable frames, cane bob only) */
+/** 阿公 — cane elder chibi (stable frames, cane bob only) */
 (function (global) {
   'use strict';
   const PAL = {
