@@ -5,7 +5,7 @@ function spawnEnemies(dt) {
   const alive = run.enemies.filter((e) => e.hp > 0).length;
   const budget = enemyBudget(run.time);
   run.spawnAcc += dt;
-  const interval = Math.max(0.055, (1.0 - run.time / 340) / 3); // v0.02205：出怪 ×3
+  const interval = Math.max(0.028, (1.0 - run.time / 340) / 6); // v0.02207：相對 02205 再 ×2
   updateEvents(dt);
   while (run.spawnAcc >= interval && alive + 1 <= budget + 5) {
     run.spawnAcc -= interval;

@@ -116,6 +116,8 @@ function startRun() {
   if (typeof rebuildTrees === 'function') rebuildTrees();
   buildAutoButtons();
   mode = 'play';
+  if (typeof unlockAudio === 'function') unlockAudio();
+  if (typeof startBgm === 'function') startBgm();
   if (typeof updateRotateGate === 'function') updateRotateGate();
   levelupQueue = 0;
   pickQueue = [];

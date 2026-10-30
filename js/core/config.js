@@ -2,13 +2,13 @@
 'use strict';
 
 const STAGE_W = 1920;
-const STAGE_H = 1080;
+const STAGE_H = 817; // v0.02207：2.35:1 ultrawide（1920×817）
 const MAP_W = 4200;
 const MAP_H = 4200;
 const WIN_TIME = 300;
 const SPRITE_SCALE = 4;
 const POINTS_PER_LEVEL = 2;
-const MAX_ENEMIES = 500;
+const MAX_ENEMIES = 1000; // v0.02207：相對 02205 再 ×2
 const XP_BASE = 9.5;
 const XP_GROW = 1.325;
 const FX_KEY = 'family-survivors-fx';

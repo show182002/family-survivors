@@ -15,7 +15,7 @@ function startPattern(kind) {
     const R = 640;
     banner('⚠ 包圍！', '#ff6a6a', 1.6);
     addWarn('ring', 1.8, { x: f.x, y: f.y, r: R }, (d) => {
-      const n = Math.floor(48 * tierMul(run.time)); // ×3
+      const n = Math.floor(96 * tierMul(run.time)); // v0.02207 ×2 vs 02205
       for (let i = 0; i < n; i++) {
         const a = (Math.PI * 2 * i) / n;
         spawnOneEnemy(false, { x: d.x + Math.cos(a) * d.r, y: d.y + Math.sin(a) * d.r, speedMul: 1.15 });
@@ -30,7 +30,7 @@ function startPattern(kind) {
       ? { horiz, dir, c: f.y + (Math.random() - 0.5) * 200, w: 300, cam: { x: cam.x, y: cam.y } }
       : { horiz, dir, c: f.x + (Math.random() - 0.5) * 300, w: 320, cam: { x: cam.x, y: cam.y } };
     addWarn('line', 2.0, d, (d) => {
-      const n = Math.floor(30 * tierMul(run.time)); // ×3
+      const n = Math.floor(60 * tierMul(run.time)); // v0.02207 ×2 vs 02205
       const spd = 460 + min * 30;
       for (let i = 0; i < n; i++) {
         const off = (i / (n - 1) - 0.5) * d.w;
@@ -50,7 +50,7 @@ function startPattern(kind) {
     addWarn('corner', 1.8, { cx, cy }, (d) => {
       const x = run.cams.x + (d.cx ? STAGE_W + 40 : -40);
       const y = run.cams.y + (d.cy ? STAGE_H + 40 : -40);
-      const n = Math.floor(60 * tierMul(run.time)); // ×3
+      const n = Math.floor(120 * tierMul(run.time)); // v0.02207 ×2 vs 02205
       for (let i = 0; i < n; i++) {
         spawnOneEnemy(false, { kind: i % 3 ? 'bat' : 'ghost', x: x + (Math.random() - 0.5) * 140, y: y + (Math.random() - 0.5) * 140, speedMul: 1.35 });
       }
@@ -58,14 +58,14 @@ function startPattern(kind) {
   } else if (kind === 'spiral') {
     banner('⚠ 螺旋陣！', '#cc88ff', 1.6);
     addWarn('spiral', 1.5, { x: f.x, y: f.y }, (d) => {
-      run.spiral = { x: d.x, y: d.y, n: 0, total: Math.floor(78 * tierMul(run.time)), acc: 0 }; // ×3
+      run.spiral = { x: d.x, y: d.y, n: 0, total: Math.floor(156 * tierMul(run.time)), acc: 0 }; // v0.02207 ×2 vs 02205
     });
   } else if (kind === 'ambush') {
     banner('⚠ 伏兵！避開紅圈', '#ff4444', 1.4);
     const spots = [];
     for (const p of run.players) {
       if (p.dead) continue;
-      const k = Math.floor(9 * Math.sqrt(tierMul(run.time))); // ×3 spots
+      const k = Math.floor(18 * Math.sqrt(tierMul(run.time))); // v0.02207 ×2 vs 02205 spots
       for (let i = 0; i < k; i++) {
         const a = Math.random() * Math.PI * 2, r = 150 + Math.random() * 120;
         spots.push({ x: p.x + Math.cos(a) * r, y: p.y + Math.sin(a) * r });
@@ -73,7 +73,7 @@ function startPattern(kind) {
     }
     addWarn('ambush', 1.4, { spots }, (d) => {
       for (const s of d.spots) {
-        for (let j = 0; j < 6; j++) spawnOneEnemy(false, { kind: 'ghost', x: s.x + (Math.random() - 0.5) * 30, y: s.y + (Math.random() - 0.5) * 30 }); // ×3
+        for (let j = 0; j < 12; j++) spawnOneEnemy(false, { kind: 'ghost', x: s.x + (Math.random() - 0.5) * 30, y: s.y + (Math.random() - 0.5) * 30 }); // v0.02207 ×2 vs 02205
         addFx(s.x, s.y, 'burst', 50, '#aa44ff');
       }
     });

@@ -73,6 +73,7 @@ function hurtEnemy(e, dmg, source, opts) {
   }
   e.hp -= final;
   e.hitFlash = 0.12;
+  if (typeof sfxHit === 'function') sfxHit();
   if (crit) e.critFlash = 0.15;
 
   addFloat(e.x, e.y, String(Math.round(final)), crit ? '#ffe566' : '#fff', crit);
@@ -109,6 +110,7 @@ function killEnemy(e, source) {
   e._dead = true;
   e.hp = 0;
   run.kills++;
+  if (typeof sfxKill === 'function') sfxKill();
   const luck = 0;
   let value = e.xp || 1;
   if (Math.random() < 0.08 + luck) value = Math.ceil(value * 3);
@@ -170,6 +172,7 @@ function tryUlt(slot) {
   const eff = te(p);
   p.ultCd = u.cooldown;
   p.flash = 0.55;
+  if (typeof sfxUlt === 'function') sfxUlt();
   // v0.02205：大招傷害 ×3、FX／體感誇張（割草）
   const ULT_DMG = 3;
   const ULT_FX = 10;

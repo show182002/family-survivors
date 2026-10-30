@@ -33,6 +33,7 @@ const el = {
   fxBtns: document.querySelectorAll('[data-fx]'),
   hudFx: document.getElementById('hud-fx'),
   hudZoom: document.getElementById('hud-zoom'),
+  hudMute: document.getElementById('hud-mute'),
   btnUltP1: document.getElementById('btn-ult-p1'),
   btnUltP2: document.getElementById('btn-ult-p2'),
 };
@@ -42,7 +43,7 @@ el.canvas.width = STAGE_W;
 el.canvas.height = STAGE_H;
 
 function fitCanvas() {
-  // Keep bitmap 1920×1080; CSS dvw/dvh owns display size (art-demo).
+  // Keep bitmap STAGE_W×STAGE_H (1920×817 @ v0.02207); CSS dvw/dvh owns display size.
   if (el.canvas.width !== STAGE_W) el.canvas.width = STAGE_W;
   if (el.canvas.height !== STAGE_H) el.canvas.height = STAGE_H;
   try {
@@ -108,3 +109,18 @@ if (el.hudZoom) {
   });
 }
 refreshZoomButton();
+
+function refreshMuteButton() {
+  if (!el.hudMute) return;
+  const muted = typeof isMuted === 'function' ? isMuted() : false;
+  el.hudMute.textContent = muted ? '靜' : '音';
+  el.hudMute.title = muted ? '開聲' : '靜音';
+}
+if (el.hudMute) {
+  el.hudMute.addEventListener('click', () => {
+    if (typeof toggleMute === 'function') toggleMute();
+    else refreshMuteButton();
+    el.hudMute.blur();
+  });
+  refreshMuteButton();
+}

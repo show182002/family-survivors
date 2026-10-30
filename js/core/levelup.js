@@ -8,6 +8,7 @@ function addXp(amount, fromPlayer) {
   while (run.xp >= run.xpToNext) {
     run.xp -= run.xpToNext;
     run.level++;
+    if (typeof sfxLevel === 'function') sfxLevel();
     run.xpToNext = xpNeed(run.level);
     levelupQueue++;
     if (BRANCH_LEVELS.includes(run.level)) run.branchQueue.push(BRANCH_LEVELS.indexOf(run.level));

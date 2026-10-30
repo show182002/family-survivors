@@ -25,6 +25,7 @@ function updateGems(dt) {
     }
     if (d < 22 || (g.magnet && d < 28)) {
       g._got = true;
+      if (typeof sfxXp === 'function') sfxXp();
       addXp(g.v, nearest);
     }
   }

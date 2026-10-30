@@ -16,12 +16,14 @@ function dadUlt(p) {
       p.carry = { doll: true };
     }
     p.flash = 0.3;
+    if (typeof sfxUlt === 'function') sfxUlt();
     addFx(p.x, p.y, 'ring', 80, '#ffe566', bfx('2.1'));
     addFloat(p.x, p.y - 90, '托起！', '#ffe566', true);
   } else {
     if (p.ultCd > 0) return;
     placeStructure(p);
     p.ultCd = 4; p.ultMax = 4;
+    if (typeof sfxUlt === 'function') sfxUlt();
   }
 }
 function throwCarried(p) {
@@ -35,6 +37,7 @@ function throwCarried(p) {
   if (c.who) { c.who.carriedBy = null; c.who.ball = ball; }
   run.balls.push(ball);
   p.ultCd = 10; p.ultMax = 10;
+  if (typeof sfxUlt === 'function') sfxUlt();
   // v0.02205：擲人大招誇張
   for (let i = 0; i < 8; i++) addFx(p.x, p.y - 40, 'ring', 90 + i * 35, i % 2 ? '#ffe566' : '#fff', bfx('2.1'));
   addFx(p.x, p.y - 40, 'burst', 160, '#ffe566', bfx('2.1'));
