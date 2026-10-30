@@ -1,14 +1,24 @@
-/** v0.02211 · 1 分鐘籠隊友（未選角色隨機出籠，打爆先 AI） */
+/** v0.02212 · 籠隊友＝塔防（×10 血、微回血、籠內可射） */
 'use strict';
 
 const CAGE_SPAWN_TIME = 60;
-const CAGE_HP = 520;
+const CAGE_HP = 620;
 const AI_HP_FRAC = 0.1;
+const CAGE_TOWER_HP_MUL = 10;
+const CAGE_REGEN_FRAC = 0.015; // ~1.5% maxHp / 秒（好少）
 
 function missingRosterChars() {
   const roster = ['dad', 'mom', 'daughter'];
   const have = new Set((run.players || []).map((p) => p.charId));
   return roster.filter((id) => !have.has(id));
+}
+
+function livingCages() {
+  return (run && run.cages) ? run.cages.filter((c) => c.hp > 0) : [];
+}
+
+function cagedAllies() {
+  return (run && run.players) ? run.players.filter((p) => p.caged && !p.dead) : [];
 }
 
 function spawnCageAlly() {
@@ -22,10 +32,10 @@ function spawnCageAlly() {
   p.ai = true;
   p.caged = true;
   p.auto = true;
-  p.maxHp = Math.max(1, Math.floor(p.maxHp * AI_HP_FRAC));
+  p.baseMaxHp = p.maxHp;
+  p.maxHp = Math.max(1, Math.floor(p.baseMaxHp * CAGE_TOWER_HP_MUL));
   p.hp = p.maxHp;
   const f = typeof cameraFocus === 'function' ? cameraFocus() : { x: MAP_W / 2, y: MAP_H / 2 };
-  // 畫面內附近
   const ang = Math.random() * Math.PI * 2;
   p.x = clamp(f.x + Math.cos(ang) * 160, 80, MAP_W - 80);
   p.y = clamp(f.y + Math.sin(ang) * 100, 80, MAP_H - 80);
@@ -34,10 +44,10 @@ function spawnCageAlly() {
   run.cages.push({
     x: p.x, y: p.y, hp: CAGE_HP, maxHp: CAGE_HP, r: 58, allySlot: slot, t: 0,
   });
-  if (typeof banner === 'function') banner('籠裡有家人！打爆籠救佢！', '#ffe566', 3.2);
+  if (typeof banner === 'function') banner('家人變咗塔！守住／打爆籠', '#ffe566', 3.4);
   addFx(p.x, p.y, 'ring', 120, '#ffe566');
   addFx(p.x, p.y, 'burst', 90, '#88aaff');
-  addFloat(p.x, p.y - 70, getChar(id).name + '困住！', '#ffe566', true);
+  addFloat(p.x, p.y - 70, getChar(id).name + '＝塔！', '#ffe566', true);
   if (typeof buildAutoButtons === 'function') buildAutoButtons();
   if (el && el.hpP3) el.hpP3.classList.remove('hidden');
 }
@@ -46,6 +56,12 @@ function freeCageAlly(cage) {
   const p = run.players[cage.allySlot];
   if (!p) return;
   p.caged = false;
+  p._towerFire = 1;
+  // 出籠後脆弱 AI：血量變正常 1/10（滿血嗰池）
+  const base = p.baseMaxHp || (typeof getChar === 'function' ? getChar(p.charId).maxHp : p.maxHp);
+  p.baseMaxHp = base;
+  p.maxHp = Math.max(1, Math.floor(base * AI_HP_FRAC));
+  p.hp = p.maxHp;
   p.invuln = Math.max(p.invuln || 0, 1.2);
   addFx(cage.x, cage.y, 'burst', 140, '#ffe566');
   addFx(cage.x, cage.y, 'slam', 160, '#88ccff');
@@ -84,8 +100,33 @@ function updateCageAlly(dt) {
     c.t = (c.t || 0) + dt;
     if (c.hitFlash > 0) c.hitFlash -= dt;
     const p = run.players[c.allySlot];
-    if (p && p.caged) { p.x = c.x; p.y = c.y; }
+    if (!p) continue;
+    if (p.caged) {
+      p.x = c.x; p.y = c.y;
+      // 塔微回血
+      if (!p.dead) {
+        p.hp = Math.min(p.maxHp, p.hp + p.maxHp * CAGE_REGEN_FRAC * dt);
+        // BBQ／帳篷近 → 射速 buff
+        p._towerFire = 1;
+        if (run.structs && run.structs.length) {
+          for (const s of run.structs) {
+            if ((s.kind !== 'bbq' && s.kind !== 'tent') || s.hp <= 0) continue;
+            if ((s.x - p.x) ** 2 + (s.y - p.y) ** 2 < 180 * 180) {
+              p._towerFire = 0.82;
+              break;
+            }
+          }
+        }
+        // 面向近怪（射擊用）
+        const foe = typeof nearestEnemyTo === 'function' ? nearestEnemyTo(p.x, p.y, 520) : null;
+        if (foe) p.facing = foe.x >= p.x ? 1 : -1;
+      } else {
+        // 塔死咗：拆籠
+        c.hp = 0;
+      }
+    }
   }
+  run.cages = run.cages.filter((c) => c.hp > 0);
 }
 
 function aiMoveAxis(p) {
@@ -96,20 +137,18 @@ function aiMoveAxis(p) {
   if (foe) { tx = foe.x; ty = foe.y; }
   let mx = tx - p.x, my = ty - p.y;
   const d = Math.hypot(mx, my) || 1;
-  // 太近就略退／橫移
   let near = 0;
   for (const e of run.enemies) {
     if (e.hp <= 0) continue;
     if ((e.x - p.x) ** 2 + (e.y - p.y) ** 2 < 90 * 90) near++;
   }
   if (near >= 3 && foe) {
-    // strafe + step back
     const bx = -(foe.x - p.x) / d, by = -(foe.y - p.y) / d;
     const sx = -by, sy = bx;
     mx = bx * 0.55 + sx * 0.85;
     my = by * 0.55 + sy * 0.85;
   } else if (foe && d < 70) {
-    mx = -mx; my = -my; // kite
+    mx = -mx; my = -my;
   } else if (!foe && d < 40) {
     return { dx: 0, dy: 0 };
   }
@@ -142,7 +181,6 @@ function drawCages(cam) {
     ctx.lineWidth = 5;
     ctx.strokeRect(sx - c.r, sy - c.r - 20, c.r * 2, c.r * 2 + 10);
     ctx.globalAlpha = 0.9;
-    // bars
     ctx.strokeStyle = '#c8e0ff';
     ctx.lineWidth = 3;
     for (let i = -2; i <= 2; i++) {
@@ -163,13 +201,23 @@ function drawCages(cam) {
       ctx.fillRect(sx - c.r, sy - c.r - 20, c.r * 2, c.r * 2 + 10);
     }
     ctx.globalAlpha = 1;
+    // 籠條（鎖）
     ctx.fillStyle = '#000';
     ctx.fillRect(sx - 28, sy + c.r - 4, 56, 7);
     ctx.fillStyle = '#88ccff';
     ctx.fillRect(sx - 28, sy + c.r - 4, 56 * Math.max(0, c.hp / c.maxHp), 7);
+    // 塔血（家人）
+    const p = run.players[c.allySlot];
+    if (p && !p.dead) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(sx - 32, sy - c.r - 36, 64, 8);
+      ctx.fillStyle = p.color || '#ffe566';
+      ctx.fillRect(sx - 32, sy - c.r - 36, 64 * Math.max(0, p.hp / p.maxHp), 8);
+    }
     ctx.font = '22px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🔓打爆', sx, sy - c.r - 28);
+    ctx.fillStyle = '#ffe566';
+    ctx.fillText('🗼塔·打爆', sx, sy - c.r - 48);
     ctx.restore();
   }
 }

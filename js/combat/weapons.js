@@ -13,12 +13,13 @@ function nearestEnemy(p) {
 
 function updateWeapons(dt) {
   for (const p of run.players) {
-    if (p.dead || p.caged) continue;
+    if (p.dead) continue;
+    // 籠內＝塔：仍然自動射，唔郁／唔大招
     const c = getChar(p.charId);
     const w = c.weapon;
     const mods = sm(p);
     const eff = te(p);
-    const cdMul = mods.cooldown;
+    const cdMul = mods.cooldown * (p.caged && p._towerFire ? p._towerFire : 1);
     const area = mods.area * (eff.auraAreaMul || 1);
 
     if (w.type === 'aura_slam') {
