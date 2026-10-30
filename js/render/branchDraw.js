@@ -30,6 +30,7 @@ function drawEnemyMark(e, sx, sy) {
 function charArtScale(p) {
   if (p.charId === 'daughter') return (window.ArtChars && ArtChars.DAUGHTER_SCALE) || 2.2;
   if (p.charId === 'mom') return (window.ArtChars && ArtChars.MOM_SCALE) || 3.4;
+  if (window.ArtChars && ArtChars._simple && ArtChars._simple[p.charId]) return ArtChars._simple[p.charId].scale || 3;
   return 3;
 }
 function drawArtPlayer(p, sx, sy, scaleMul) {
@@ -47,6 +48,10 @@ function drawArtPlayer(p, sx, sy, scaleMul) {
     }
     if (p.charId === 'mom' && ArtChars.drawMom) {
       ArtChars.drawMom(ctx, sx, sy, p.art, scale);
+      return true;
+    }
+    if (ArtChars._simple && ArtChars._simple[p.charId]) {
+      ArtChars._simple[p.charId].draw(ctx, sx, sy, p.art, scale);
       return true;
     }
   }

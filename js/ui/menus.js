@@ -126,6 +126,10 @@ function paintBigSlot(player, cursorIdx) {
       if (c.id === 'daughter' && ArtChars.drawDaughter) { ArtChars.drawDaughter(cctx, 96, 170, st, 4.2); painted = true; }
       else if (c.id === 'mom' && ArtChars.drawMom) { ArtChars.drawMom(cctx, 96, 170, st, 5.2); painted = true; }
       else if (c.id === 'dad' && ArtChars.drawDad) { ArtChars.drawDad(cctx, 96, 170, st, 5); painted = true; }
+      else if (ArtChars._simple && ArtChars._simple[c.id]) {
+        const sc = (ArtChars._simple[c.id].scale || 3) * 1.55;
+        ArtChars._simple[c.id].draw(cctx, 96, 170, st, sc); painted = true;
+      }
     }
     if (!painted) drawSprite(cctx, c.sprite, 96, 168, ps, false);
   }
