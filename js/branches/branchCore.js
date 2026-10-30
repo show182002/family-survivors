@@ -26,9 +26,10 @@ function openBranchPick(p) {
   mode = 'levelup';
   if (typeof updateRotateGate === 'function') updateRotateGate();
   el.levelup.classList.remove('hidden');
-  const who = (p.slot === 0 ? '1P' : '2P') + ' ' + p.name;
-  if (el.levelupTitle) el.levelupTitle.textContent = '⭐ ' + who + '　Lv' + BRANCH_LEVELS[currentPick.tier] + ' 轉職！';
-  if (el.levelupSub) el.levelupSub.textContent = pendingChoices.length > 1 ? '二揀一' : '轉職';
+  const who = (p.slot === 0 ? '1P' : '2P');
+  const lv = BRANCH_LEVELS[currentPick.tier];
+  if (el.levelupTitle) el.levelupTitle.textContent = '職 · ' + who + ' Lv' + lv;
+  if (el.levelupSub) el.levelupSub.textContent = pendingChoices.length > 1 ? '揀' : '職';
   renderBranchCards(p);
 }
 function renderBranchCards(p) {
@@ -37,8 +38,11 @@ function renderBranchCards(p) {
     const div = document.createElement('div');
     div.className = 'upgrade-card branch-card' + (i === upgradeFocus ? ' focused' : '');
     div.title = b.desc;
-    div.innerHTML = `<div class="b-icon">${b.icon}</div><div class="u-name">${b.name}</div>` +
-      `<div class="b-move">新招：${b.move}</div><div class="u-desc b-desc">${b.desc}</div><div class="b-key">按 ${i + 1}</div>`;
+    // 短名：去開頭編號；說明卡面一行（唔靠 hover）
+    const shortName = String(b.name || '').replace(/^[\d.]+\s*/, '');
+    const oneLine = String(b.desc || '').replace(/\s+/g, ' ').trim();
+    div.innerHTML = `<div class="b-icon">${b.icon}</div><div class="u-name">${shortName}</div>` +
+      `<div class="b-move">${b.move}</div><div class="u-desc b-desc">${oneLine}</div><div class="b-key">${i + 1}</div>`;
     div.addEventListener('click', () => chooseUpgrade(i));
     el.upgrades.appendChild(div);
   });
