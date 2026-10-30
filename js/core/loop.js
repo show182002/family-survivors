@@ -66,26 +66,31 @@ function updatePlayers(dt) {
 
     if (p.atkBuff > 0) p.atkBuff -= dt;
     if (p.carriedBy || p.ball) continue; // 位置由爸爸／波控制
-    let mx = 0, my = 0;
-    if (p.slot === 0) {
-      if (keys['KeyA']) mx -= 1;
-      if (keys['KeyD']) mx += 1;
-      if (keys['KeyW']) my -= 1;
-      if (keys['KeyS']) my += 1;
-    } else {
-      if (keys['ArrowLeft']) mx -= 1;
-      if (keys['ArrowRight']) mx += 1;
-      if (keys['ArrowUp']) my -= 1;
-      if (keys['ArrowDown']) my += 1;
-    }
+    const axis = playerMoveAxis(p.slot);
+    let mx = axis.dx || 0, my = axis.dy || 0;
     if (mx || my) {
-      const len = Math.hypot(mx, my);
+      const len = Math.hypot(mx, my) || 1;
       mx /= len; my /= len;
       if (mx) p.facing = mx > 0 ? 1 : -1;
+      if (!p.art) p.art = { dir: 'down', flipX: false, walkT: 0, moving: false };
+      p.art.moving = true;
+      p.art.walkT += dt;
+      if (window.ArtSprite && ArtSprite.pickFacing) ArtSprite.pickFacing(mx, my, p.art);
+    } else if (p.art) {
+      p.art.moving = false;
+      p.art.walkT = 0;
     }
     const spd = p.speed * mods.moveSpeed * (p.bSpeed || 1) * (p.carry && hasB(p, '2.21') ? 0.7 : 1);
-    p.x = clamp(p.x + mx * spd * dt, 30, MAP_W - 30);
-    p.y = clamp(p.y + my * spd * dt, 30, MAP_H - 30);
+    const rad = (p.charId === 'dad') ? 12 : 10;
+    let nx = p.x + mx * spd * dt;
+    let ny = p.y + my * spd * dt;
+    if (!collidesTree(nx, ny, rad)) { p.x = nx; p.y = ny; }
+    else {
+      if (!collidesTree(nx, p.y, rad)) p.x = nx;
+      if (!collidesTree(p.x, ny, rad)) p.y = ny;
+    }
+    p.x = clamp(p.x, 30, MAP_W - 30);
+    p.y = clamp(p.y, 30, MAP_H - 30);
     if (hasB(p, '1.22')) { p.hist.unshift({ x: p.x, y: p.y }); if (p.hist.length > 60) p.hist.length = 60; }
   }
 }

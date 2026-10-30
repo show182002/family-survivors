@@ -55,6 +55,7 @@ function makePlayer(charId, slot) {
     bDmg: 1,
     atkBuff: 0,
     hist: [],
+    art: { dir: 'down', flipX: false, walkT: 0, moving: false },
   };
   const cp = charPref(charId);
   p.order = cp.order; // 共用同一 array → 暫停畫面改次序即生效
@@ -110,6 +111,7 @@ function startRun() {
   el.levelup.classList.add('hidden');
   el.hpP2.classList.toggle('hidden', players.length < 2);
   el.hpP1._main = null; el.hpP2._main = null;
+  if (typeof rebuildTrees === 'function') rebuildTrees();
   buildAutoButtons();
   mode = 'play';
   levelupQueue = 0;

@@ -2,16 +2,19 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>一家倖存 · Family Survivors</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <title>一家倖存 · Family Survivors v0.02200</title>
+  <link rel="stylesheet" href="css/style.css?v=02200" />
 </head>
 <body>
   <!-- 街機選角 -->
   <div id="screen-select" class="screen">
     <div class="arcade-frame">
       <h1 class="title-pixel">一家倖存</h1>
-      <div class="ver-title">v0.02100</div>
+      <div class="ver-title">v0.02200</div>
       <p class="subtitle">生存 5:00 · 自動攻擊 · PoE 風格 TAG 升級 · 小招自動升級 · Lv5／10／15 轉職</p>
 
       <div class="players-row">
@@ -29,7 +32,7 @@
 
       <div class="select-footer">
         <button id="btn-start" class="btn-arcade" disabled>開始戰鬥</button>
-        <p class="footer-note">1P 必選 · 2P 可選 · 角色唔重複 · 大招：1P＝H　2P＝Num0（普攻全自動）</p>
+        <p class="footer-note">1P 必選 · 2P 可選 · 角色唔重複 · 大招：1P＝H／掣　2P＝Num0／掣 · 手機請打橫 · 左／右搖桿</p>
       </div>
     </div>
   </div>
@@ -57,9 +60,19 @@
       <button type="button" id="btn-ult-p1" class="ult-btn">大招</button>
       <button type="button" id="btn-ult-p2" class="ult-btn hidden">大招</button>
     </div>
-    <div id="ver-hud" class="ver-hud">v0.02100</div>
-    <div id="pause-hint">Esc 暫停／特效設定 · 1P WASD／H／大招掣 · 2P 方向鍵／Num0／大招掣 · 經驗共享 · 左上掣切換小招自動／手動</div>
+    <div id="ver-hud" class="ver-hud">v0.02200</div>
+    <div id="pause-hint">Esc 暫停 · 1P WASD／左搖桿／H · 2P 方向鍵／右搖桿／Num0 · 大招掣 · 請打橫玩</div>
   </div>
+
+  <div id="rotateModal" role="dialog" aria-modal="true" aria-labelledby="rotateTitle">
+    <div class="card">
+      <div class="icon" aria-hidden="true">📱↔️</div>
+      <h2 id="rotateTitle">請打橫玩</h2>
+      <p>請將手機打橫先可以玩。<br>轉到橫向之後會自動開始。</p>
+    </div>
+  </div>
+  <button type="button" id="fsBtn" aria-label="全螢幕">全螢幕</button>
+  <div id="fsFailTip">呢個瀏覽器唔支援全螢幕。請用 Safari 右下「⋯」→用 Safari 開啟，再打橫。</div>
 
   <!-- 升級選技／轉職 -->
   <div id="overlay-levelup" class="overlay hidden">
@@ -102,14 +115,19 @@
     </div>
   </div>
 
-  <script src="js/data/sprites.js"></script>
-  <script src="js/data/characters.js"></script>
-  <script src="js/data/skills.js"></script>
-  <script src="js/data/upgrades.js"></script>
-  <script src="js/data/branches.js"></script>
-  <script src="js/core/config.js"></script>
-  <script src="js/core/dom.js"></script>
-  <script src="js/core/input.js"></script>
+  <script src="js/characters/spriteUtil.js?v=02200"></script>
+  <script src="js/characters/daughter.js?v=02200"></script>
+  <script src="js/characters/dad.js?v=02200"></script>
+  <script src="js/data/sprites.js?v=02200"></script>
+  <script src="js/data/characters.js?v=02200"></script>
+  <script src="js/data/skills.js?v=02200"></script>
+  <script src="js/data/upgrades.js?v=02200"></script>
+  <script src="js/data/branches.js?v=02200"></script>
+  <script src="js/core/config.js?v=02200"></script>
+  <script src="js/core/dom.js?v=02200"></script>
+  <script src="js/core/trees.js?v=02200"></script>
+  <script src="js/core/input.js?v=02200"></script>
+  <script src="js/core/mobile.js?v=02200"></script>
   <script src="js/ui/menus.js"></script>
   <script src="js/core/player.js"></script>
   <script src="js/core/fx.js"></script>

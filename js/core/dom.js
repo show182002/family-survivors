@@ -41,20 +41,38 @@ el.canvas.width = STAGE_W;
 el.canvas.height = STAGE_H;
 
 function fitCanvas() {
-  const wrap = el.game;
-  const aw = window.innerWidth;
-  const ah = window.innerHeight;
-  const scale = Math.min(aw / STAGE_W, ah / STAGE_H);
-  el.canvas.style.width = Math.floor(STAGE_W * scale) + 'px';
-  el.canvas.style.height = Math.floor(STAGE_H * scale) + 'px';
-  el.canvas.style.margin = '0 auto';
+  // Keep bitmap 1920×1080; CSS dvw/dvh owns display size (art-demo).
+  if (el.canvas.width !== STAGE_W) el.canvas.width = STAGE_W;
+  if (el.canvas.height !== STAGE_H) el.canvas.height = STAGE_H;
+  try {
+    const cs = window.getComputedStyle(el.canvas);
+    const cw = parseFloat(cs.width) || 0;
+    const ch = parseFloat(cs.height) || 0;
+    if (cw < 2 || ch < 2) {
+      const aw = window.innerWidth || 320;
+      const ah = window.innerHeight || 180;
+      const scale = Math.min(aw / STAGE_W, ah / STAGE_H);
+      el.canvas.style.width = Math.max(1, Math.floor(STAGE_W * scale)) + 'px';
+      el.canvas.style.height = Math.max(1, Math.floor(STAGE_H * scale)) + 'px';
+    } else {
+      el.canvas.style.width = '';
+      el.canvas.style.height = '';
+    }
+  } catch (_) {
+    el.canvas.style.width = '';
+    el.canvas.style.height = '';
+  }
   el.canvas.style.display = 'block';
-  wrap.style.display = 'flex';
-  wrap.style.alignItems = 'center';
-  wrap.style.justifyContent = 'center';
-  wrap.style.background = '#000';
+  if (el.game && !el.game.classList.contains('hidden')) {
+    el.game.style.display = 'flex';
+    el.game.style.alignItems = 'center';
+    el.game.style.justifyContent = 'center';
+  }
+  ctx.imageSmoothingEnabled = false;
 }
 window.addEventListener('resize', fitCanvas);
+window.addEventListener('orientationchange', fitCanvas);
+if (window.visualViewport) visualViewport.addEventListener('resize', fitCanvas);
 
 function refreshFxButtons() {
   el.fxBtns.forEach((b) => {

@@ -96,53 +96,66 @@ function draw() {
 
   drawExtras(cam);
 
+  // trees + players Y-sorted (art-demo depth)
+  const playerDrawList = [];
   for (const p of run.players) {
     if (p.dead) continue;
-    const sx = p.x - cam.x, sy = p.y - cam.y - (p.carriedBy ? 64 : 0);
-    if (p.invuln > 0 && Math.floor(p.invuln * 20) % 2 === 0) ctx.globalAlpha = 0.45;
-    if (p.flash > 0) {
-      ctx.fillStyle = 'rgba(255,255,200,0.3)';
-      ctx.beginPath();
-      arcSafe(sx, sy - 20, 48, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    if (p.shield > 0) {
-      ctx.strokeStyle = 'rgba(136,170,255,0.7)';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      arcSafe(sx, sy - 18, 36, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-    drawPlayerBody(p, sx, sy);
-    ctx.globalAlpha = 1;
+    const py = p.y;
+    playerDrawList.push({
+      y: py,
+      kind: 'player',
+      draw: () => {
+        const sx = p.x - cam.x, sy = p.y - cam.y - (p.carriedBy ? 64 : 0);
+        if (p.invuln > 0 && Math.floor(p.invuln * 20) % 2 === 0) ctx.globalAlpha = 0.45;
+        if (p.flash > 0) {
+          ctx.fillStyle = 'rgba(255,255,200,0.3)';
+          ctx.beginPath();
+          arcSafe(sx, sy - 20, 48, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        if (p.shield > 0) {
+          ctx.strokeStyle = 'rgba(136,170,255,0.7)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          arcSafe(sx, sy - 18, 36, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        drawPlayerBody(p, sx, sy);
+        ctx.globalAlpha = 1;
 
-    // big HP bar over head
-    const bw = 64, bh = 8;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(sx - bw / 2 - 1, sy - 70, bw + 2, bh + 2);
-    ctx.fillStyle = '#3a1010';
-    ctx.fillRect(sx - bw / 2, sy - 69, bw, bh);
-    ctx.fillStyle = p.color;
-    ctx.fillRect(sx - bw / 2, sy - 69, bw * Math.max(0, p.hp / p.maxHp), bh);
-    if (p.shield > 0) {
-      ctx.fillStyle = 'rgba(136,170,255,0.8)';
-      ctx.fillRect(sx - bw / 2, sy - 69, bw * Math.min(1, p.shield / p.maxHp), 3);
-    }
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(Math.ceil(p.hp) + '/' + p.maxHp, sx, sy - 72);
+        const bw = 64, bh = 8;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(sx - bw / 2 - 1, sy - 70, bw + 2, bh + 2);
+        ctx.fillStyle = '#3a1010';
+        ctx.fillRect(sx - bw / 2, sy - 69, bw, bh);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(sx - bw / 2, sy - 69, bw * Math.max(0, p.hp / p.maxHp), bh);
+        if (p.shield > 0) {
+          ctx.fillStyle = 'rgba(136,170,255,0.8)';
+          ctx.fillRect(sx - bw / 2, sy - 69, bw * Math.min(1, p.shield / p.maxHp), 3);
+        }
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(Math.ceil(p.hp) + '/' + p.maxHp, sx, sy - 72);
 
-    ctx.fillStyle = p.color;
-    ctx.font = 'bold 14px sans-serif';
-    ctx.fillText(p.name + (p.slot === 0 ? ' 1P' : ' 2P'), sx, sy - 84);
+        ctx.fillStyle = p.color;
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText(p.name + (p.slot === 0 ? ' 1P' : ' 2P'), sx, sy - 84);
 
-    ctx.strokeStyle = p.ultCd <= 0 ? '#ffe566' : '#555';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    const ratio = p.ultCd <= 0 ? 1 : 1 - p.ultCd / p.ultMax;
-    arcSafe(sx, sy + 8, 14, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2);
-    ctx.stroke();
+        ctx.strokeStyle = p.ultCd <= 0 ? '#ffe566' : '#555';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        const ratio = p.ultCd <= 0 ? 1 : 1 - p.ultCd / p.ultMax;
+        arcSafe(sx, sy + 8, 14, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2);
+        ctx.stroke();
+      },
+    });
+  }
+  if (typeof drawTreesAndPlayers === 'function') drawTreesAndPlayers(cam, playerDrawList);
+  else {
+    if (typeof drawAllTrees === 'function') drawAllTrees(cam);
+    for (const it of playerDrawList) it.draw();
   }
 
   // FX layers
@@ -237,4 +250,5 @@ function draw() {
 
   drawOverlayUI(cam);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  if (typeof drawVirtualSticks === 'function') drawVirtualSticks(ctx);
 }

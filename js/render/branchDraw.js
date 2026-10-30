@@ -27,6 +27,22 @@ function drawEnemyMark(e, sx, sy) {
   if (e.stun > 0) { ctx.font = '20px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('💫', sx, sy - 52); }
   if (e.mark > 0) { ctx.font = '18px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('🎯', sx + 18, sy - 48); }
 }
+function drawArtPlayer(p, sx, sy, scaleMul) {
+  if (!p.art) p.art = { dir: 'down', flipX: false, walkT: 0, moving: false };
+  // sync flip from facing when idle side view missing
+  const scale = 3 * (scaleMul || 1);
+  if (window.ArtChars) {
+    if (p.charId === 'daughter' && ArtChars.drawDaughter) {
+      ArtChars.drawDaughter(ctx, sx, sy, p.art, scale);
+      return true;
+    }
+    if (p.charId === 'dad' && ArtChars.drawDad) {
+      ArtChars.drawDad(ctx, sx, sy, p.art, scale);
+      return true;
+    }
+  }
+  return false;
+}
 function drawPlayerBody(p, sx, sy) {
   const giant = hasB(p, '1.21');
   if (p.mount) {
@@ -34,18 +50,26 @@ function drawPlayerBody(p, sx, sy) {
     ctx.font = sz + 'px sans-serif'; ctx.textAlign = 'center';
     ctx.save(); ctx.translate(sx, sy + sz * 0.15); if (p.facing > 0) ctx.scale(-1, 1);
     ctx.fillText(p.mount === 'horse' ? '🐎' : '🐉', 0, 0); ctx.restore();
-    drawSprite(ctx, p.sprite, sx, sy - sz * 0.45, SPRITE_SCALE * (giant ? 1.4 : 1), p.facing < 0);
+    if (!drawArtPlayer(p, sx, sy - sz * 0.45, giant ? 1.25 : 0.9)) {
+      drawSprite(ctx, p.sprite, sx, sy - sz * 0.45, SPRITE_SCALE * (giant ? 1.4 : 1), p.facing < 0);
+    }
     return;
   }
   if (p.ball) {
     const t = run.time * 20;
     ctx.fillStyle = p.color; ctx.globalAlpha = 0.5;
     ctx.beginPath(); arcSafe(sx, sy - 20, 34, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
-    ctx.save(); ctx.translate(sx, sy - 20); ctx.rotate(t); drawSprite(ctx, p.sprite, 0, 24, SPRITE_SCALE * 0.8, false); ctx.restore();
+    ctx.save(); ctx.translate(sx, sy - 20); ctx.rotate(t);
+    if (!drawArtPlayer(p, 0, 24, 0.75)) {
+      drawSprite(ctx, p.sprite, 0, 24, SPRITE_SCALE * 0.8, false);
+    }
+    ctx.restore();
     return;
   }
   const tower = p.carry && hasB(p, '2.21');
-  drawSprite(ctx, p.sprite, sx, sy, SPRITE_SCALE * (tower ? 1.6 : 1), p.facing < 0);
+  if (!drawArtPlayer(p, sx, sy, tower ? 1.35 : 1)) {
+    drawSprite(ctx, p.sprite, sx, sy, SPRITE_SCALE * (tower ? 1.6 : 1), p.facing < 0);
+  }
   if (p.carry && p.carry.doll) { ctx.font = '40px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('🧸', sx, sy - (tower ? 110 : 66)); }
 }
 function drawBranchWorld(cam) {
