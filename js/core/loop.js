@@ -41,6 +41,39 @@ function frameStep(dt) {
   draw();
 }
 
+
+/** v0.02208：雙人最遠距離。alive < 2 跳過。有 mover+anchor → 只拉 mover；否則對稱對分超距。 */
+function enforcePartySeparation(mover, anchor) {
+  if (!run || !run.players) return;
+  const max = (typeof MAX_PARTY_SEPARATION === 'number') ? MAX_PARTY_SEPARATION : 280;
+  if (mover && anchor) {
+    if (mover.dead || anchor.dead) return;
+    const dx = mover.x - anchor.x, dy = mover.y - anchor.y;
+    const d = Math.hypot(dx, dy);
+    if (!(d > max) || d < 1e-6) return;
+    const s = max / d;
+    mover.x = anchor.x + dx * s;
+    mover.y = anchor.y + dy * s;
+    mover.x = clamp(mover.x, 30, MAP_W - 30);
+    mover.y = clamp(mover.y, 30, MAP_H - 30);
+    return;
+  }
+  const alive = run.players.filter((p) => !p.dead);
+  if (alive.length < 2) return;
+  const a = alive[0], b = alive[1];
+  // 擲緊／被托：位置由球／爸爸控，呢度唔對稱拉
+  if (a.ball || b.ball || a.carriedBy || b.carriedBy) return;
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const d = Math.hypot(dx, dy);
+  if (!(d > max) || d < 1e-6) return;
+  const over = (d - max) / 2;
+  const nx = dx / d, ny = dy / d;
+  a.x += nx * over; a.y += ny * over;
+  b.x -= nx * over; b.y -= ny * over;
+  a.x = clamp(a.x, 30, MAP_W - 30); a.y = clamp(a.y, 30, MAP_H - 30);
+  b.x = clamp(b.x, 30, MAP_W - 30); b.y = clamp(b.y, 30, MAP_H - 30);
+}
+
 function updatePlayers(dt) {
   for (const p of run.players) {
     if (p.dead) continue;
@@ -93,4 +126,5 @@ function updatePlayers(dt) {
     p.y = clamp(p.y, 30, MAP_H - 30);
     if (hasB(p, '1.22')) { p.hist.unshift({ x: p.x, y: p.y }); if (p.hist.length > 60) p.hist.length = 60; }
   }
+  enforcePartySeparation();
 }

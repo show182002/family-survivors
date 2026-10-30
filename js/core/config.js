@@ -9,6 +9,9 @@ const WIN_TIME = 300;
 const SPRITE_SCALE = 4;
 const POINTS_PER_LEVEL = 2;
 const MAX_ENEMIES = 1000; // v0.02207：相對 02205 再 ×2
+// v0.02208：雙人最遠距離（世界單位）。×3 鏡頭視野高 ≈ STAGE_H/3 ≈ 272，
+// 280 ≈ 一屏高／約 STAGE_H 嘅 34%；鏡頭跟中點時兩人大致都睇到。單人局唔生效。
+const MAX_PARTY_SEPARATION = 280;
 const XP_BASE = 9.5;
 const XP_GROW = 1.325;
 const FX_KEY = 'family-survivors-fx';

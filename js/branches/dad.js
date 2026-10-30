@@ -72,6 +72,19 @@ function updateBalls(dt) {
     if (b.y < R.y0) { b.y = R.y0; b.vy = Math.abs(b.vy); bounced = true; }
     if (b.y > R.y1) { b.y = R.y1; b.vy = -Math.abs(b.vy); bounced = true; }
     b.x = clamp(b.x, 30, MAP_W - 30); b.y = clamp(b.y, 30, MAP_H - 30);
+    // v0.02208：擲人唔可以飛過雙人最遠距離；爸爸做錨，削去向外徑向速度
+    if (b.who && dad && !dad.dead) {
+      const max = (typeof MAX_PARTY_SEPARATION === 'number') ? MAX_PARTY_SEPARATION : 280;
+      const rdx = b.x - dad.x, rdy = b.y - dad.y;
+      const rd = Math.hypot(rdx, rdy) || 1;
+      if (rd > max) {
+        const ux = rdx / rd, uy = rdy / rd;
+        b.x = dad.x + ux * max;
+        b.y = dad.y + uy * max;
+        const radial = b.vx * ux + b.vy * uy;
+        if (radial > 0) { b.vx -= ux * radial; b.vy -= uy * radial; }
+      }
+    }
     if (bounced) {
       addFx(b.x, b.y, 'ring', 60, '#ffffff', bfx('2.1'));
       shake(3);

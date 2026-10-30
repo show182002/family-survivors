@@ -1,4 +1,4 @@
-# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02207**
+# 一家倖存 · Family Survivors（PoE TAG 版）　**v0.02208**
 
 Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairwise）。
 
@@ -7,7 +7,10 @@ Vampire Survivors 風格割草 + **PoE 風格 TAG 互動**（唔做 45 對 pairw
 ## 今版主打
 **爸爸＋女兒**（媽媽仍可選，但今版唔擴充媽媽轉職設計）。
 
-## v0.02207 更新（今次）
+## v0.02208 更新（今次）
+- **雙人最遠距離**：`MAX_PARTY_SEPARATION = 280`；反方向行唔散；爸爸擲人飛到邊就停（削向外速度）。
+
+## v0.02207 更新
 - **畫面 2.35:1**：舞台 1920×817＋CSS contain，左右睇多啲（唔再跟 Safari 網址列硬鬥）。
 - **小怪再 ×2**（相對 v0.02205）：預算／間隔／花樣數量再倍；上限約 1000；移速混 ⅓×0.5／⅓×0.75／⅓×1 照舊。
 - **自製音**：Web Audio 程序 BGM＋SE（hit／kill／xp／level／ult）；首次觸控解鎖；HUD「音／靜」＋本機記住。
