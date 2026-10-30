@@ -625,9 +625,16 @@ html, body {
   #pause-hint { display: none !important; }
   #hud .auto-btns { display: none !important; }
   #hud .fx-chip { display: none !important; }
+  #hud .zoom-chip { display: inline-block !important; } /* 倍率掣要留低 */
   .panel-label .hint { display: none; }
   .char-slot .kit { display: none; }
   .footer-note { font-size: 11px; }
+}
+.zoom-chip {
+  min-width: 36px;
+  text-align: center;
+  color: #7ec8ff;
+  border-color: #7ec8ff;
 }
 @media (max-height: 520px) {
   .arcade-frame { padding: 10px 12px 12px; }
