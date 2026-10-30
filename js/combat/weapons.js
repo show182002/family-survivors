@@ -262,6 +262,32 @@ function updateWeapons(dt) {
         });
       }
 
+    } else if (w.type === 'firecracker') {
+      p.tShot = (p.tShot == null ? 0 : p.tShot) - dt;
+      if (p.tShot <= 0) {
+        p.tShot = w.cooldown * cdMul;
+        const target = nearestEnemy(p);
+        const tx = target ? target.x : p.x + p.facing * 100;
+        const ty = target ? target.y : p.y;
+        const dmg = w.baseDamage * mods.fireDamage * (mods.explodeDamage || 1);
+        const tr = w.tossRadius * area * (mods.explodeRadius || 1);
+        damageEnemiesInRadius(tx, ty, tr, dmg, p, { forceBurn: true, shatter: true });
+        if (typeof damageCagesInRadius === 'function') damageCagesInRadius(tx, ty, tr, dmg, p);
+        addFx(tx, ty, 'burst', tr, '#ef4444');
+        addFx(tx, ty, 'fire', tr * 0.6, '#fbbf24');
+        addFloat(tx, ty - 24, '砰！', '#ef4444', false);
+        shake(4);
+      }
+      p.tAura = (p.tAura == null ? 0 : p.tAura) - dt;
+      if (p.tAura <= 0) {
+        p.tAura = w.smokeTick * cdMul;
+        run.zones.push({
+          x: p.x, y: p.y, r: w.smokeRadius * area, dmg: w.smokeDamage * mods.fireDamage,
+          tick: 0.45, tt: 0, t: 0, life: w.smokeDur, owner: p.slot, burn: true, color: '#94a3b8',
+        });
+        addFx(p.x, p.y, 'ring', w.smokeRadius * 0.4, '#94a3b8');
+      }
+
     }
   }
 }

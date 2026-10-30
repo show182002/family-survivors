@@ -347,6 +347,21 @@ function tryUlt(slot) {
     }
     addFloat(p.x, p.y - 80, '九命！！', '#fbbf24', true);
     shake(12);
+  } else if (u.type === 'uncle_fireworks') {
+    const n = u.count || 10;
+    const base = u.damage * mods.fireDamage * (mods.explodeDamage || 1) * ULT_DMG;
+    const rr = (u.radius || 90) * (mods.area || 1) * (mods.explodeRadius || 1);
+    for (let i = 0; i < n * 2; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 200;
+      const tx = p.x + Math.cos(ang) * dist;
+      const ty = p.y + Math.sin(ang) * dist;
+      damageEnemiesInRadius(tx, ty, rr, base, p, { forceBurn: true, knock: 80 });
+      addFx(tx, ty, 'burst', rr, i % 2 ? '#ef4444' : '#fbbf24');
+      addFx(tx, ty, 'fire', rr * 0.5, '#ff6622');
+    }
+    addFloat(p.x, p.y - 80, '煙花！！', '#ef4444', true);
+    shake(16);
   }
 }
 
