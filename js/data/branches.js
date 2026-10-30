@@ -1,5 +1,5 @@
-/** v0.02211 轉職分支樹（Lv5／10／15）— 含媽媽 */
-const GAME_VERSION = 'v0.02211';
+/** v0.02227 轉職分支樹（Lv5／10／15）— 含媽媽／阿公 */
+const GAME_VERSION = 'v0.02227';
 const BRANCH_LEVELS = [5, 10, 15];
 
 /**
@@ -60,6 +60,28 @@ const BRANCHES = [
     desc: '變身巨龍感：體型＋火環常駐，怒火傷再 +50%，受傷 −15%' },
   { id: '3.24', char: 'mom', tier: 2, req: '3.2', icon: '🐉', name: '3.24 雙龍陣', move: '雙龍',
     desc: '龍焰變雙向噴射；大招改雙龍息大範圍（唔傷隊友）' },
+
+  // ——— 阿公：象棋局／太極氣 ———
+  { id: '4.1', char: 'grandpa', tier: 0, icon: '♟️', name: '4.1 象棋局', move: '砲擊',
+    desc: '走象棋線：週期向近敵開砲，減速敵軍。新招「砲擊」：每 2.2 秒射一枚象棋砲' },
+  { id: '4.2', char: 'grandpa', tier: 0, icon: '☯️', name: '4.2 太極氣', move: '氣波',
+    desc: '走太極線：受傷 −25%。新招「氣波」：每 2.5 秒放出柔化氣波推開＋輕傷' },
+  { id: '4.11', char: 'grandpa', tier: 1, req: '4.1', icon: '💣', name: '4.11 連環砲', move: '連砲',
+    desc: '砲擊變三連砲，傷害＋範圍加大' },
+  { id: '4.12', char: 'grandpa', tier: 1, req: '4.1', icon: '♟', name: '4.12 過河卒', move: '卒仔',
+    desc: '每 6 秒派出 3 隻過河卒自動衝鋒攻擊 8 秒' },
+  { id: '4.13', char: 'grandpa', tier: 1, req: '4.2', icon: '🛡️', name: '4.13 氣場罩', move: '氣罩',
+    desc: '身邊常駐氣場：隊友入面微回血＋護盾，敵人減速' },
+  { id: '4.14', char: 'grandpa', tier: 1, req: '4.2', icon: '👐', name: '4.14 推手震', move: '推手',
+    desc: '每 2.8 秒大推手：強擊退＋暈眩短時' },
+  { id: '4.21', char: 'grandpa', tier: 2, req: '4.1', icon: '♔', name: '4.21 殘局殺', move: '殘局',
+    desc: '近敵血低於 30% 直接收割；大招改殘局殺：超大範圍斬殺＋壓制' },
+  { id: '4.22', char: 'grandpa', tier: 2, req: '4.1', icon: '♜', name: '4.22 雙車錯', move: '雙車',
+    desc: '週期放出左右雙車橫掃；大招改雙車錯亂撞全場' },
+  { id: '4.23', char: 'grandpa', tier: 2, req: '4.2', icon: '🌀', name: '4.23 太極化境', move: '化境',
+    desc: '受傷再 −20%（累計更硬）、氣波更快更大；大招改太極化境護體＋爆發' },
+  { id: '4.24', char: 'grandpa', tier: 2, req: '4.2', icon: '🪞', name: '4.24 以柔克剛', move: '反震',
+    desc: '受傷時反震敵人；大招改以柔克剛：全隊護盾＋大範圍反震波' },
 ];
 
 function getBranch(id) { return BRANCHES.find((b) => b.id === id); }

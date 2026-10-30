@@ -89,7 +89,7 @@ const CHARACTERS = [
   },
   {
     id: 'grandpa',
-    name: '爺爺',
+    name: '阿公',
     role: '召喚 · 柺杖光環',
     kit: '柺杖脈衝 · 召喚祖先魂自動射',
     ultName: '祖先大軍',
