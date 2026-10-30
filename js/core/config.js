@@ -9,7 +9,7 @@ const WIN_TIME = 300;
 const SPRITE_SCALE = 4;
 const POINTS_PER_LEVEL = 2;
 const MAX_ENEMIES = 1000; // v0.02207：相對 02205 再 ×2
-// v0.02210：雙人限距 = 設計畫布一屏 STAGE_W×STAGE_H（1920×817），唔跟 zoom。
+// v0.02211：雙人限距 = 設計畫布一屏 STAGE_W×STAGE_H（1920×817），唔跟 zoom。
 // 「成個畫面」= 設計舞台，唔係 zoom×3 裁切後嘅 viewW/viewH（否則 maxY≈200 好似短 leash）。
 // 軸對齊：|dx|≤STAGE_W−2m、|dy|≤STAGE_H−2m；目的係唔好好似舊 280 咁近先拉住。
 const PARTY_ONSCREEN_MARGIN = 36; // ~chibi／半身 padding
