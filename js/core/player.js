@@ -116,6 +116,9 @@ function startRun() {
     gameMode: selectedGameMode === 'chaos' ? 'chaos' : 'survive',
   };
   if (run.gameMode === 'chaos' && typeof initChaos === 'function') initChaos(run);
+  if (run.gameMode !== 'chaos' && typeof banner === 'function') {
+    banner('AI 同伴攻擊減半', '#ffcc88', 3.2);
+  }
 
   el.select.classList.add('hidden');
   el.game.classList.remove('hidden');

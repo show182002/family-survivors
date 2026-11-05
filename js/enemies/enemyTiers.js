@@ -14,7 +14,7 @@ function enemyStats(t) {
   return {
     hp: 14 * Math.pow(1.75, tier) * (1 + 0.3 * frac),
     speed: 60 + tier * 9,
-    damage: 6 * Math.pow(1.35, tier) * (1 + 0.1 * frac),
+    damage: 6 * Math.pow(1.35, tier) * (1 + 0.1 * frac) * 1.25, // v0.02301：敵人攻擊 ×1.25
     xp: [1, 1, 2, 2, 3][tier],
   };
 }

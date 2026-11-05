@@ -55,6 +55,7 @@ function hurtEnemy(e, dmg, source, opts) {
     if (p.bDmg) final *= p.bDmg;
     if (p.carriedBy) final *= 2;           // 膊頭馬：膊頭上攻擊 ×2
     if (p.atkBuff > 0) final *= 1.3;       // 點心 buff
+    if (p.ai) final *= 0.5;               // v0.02301：AI 同伴攻擊 ×0.5
   }
   if (e.mark > 0) final *= 1.5;            // 戒尺點名
   // 盾怪：正面（±60°）擋 90%
