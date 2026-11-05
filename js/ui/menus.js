@@ -24,7 +24,7 @@ function refreshModeUI() {
   const sub = document.querySelector('#screen-select .subtitle');
   if (sub) {
     sub.textContent = selectedGameMode === 'chaos'
-      ? '家庭大暴走 · 約 30 秒轉玩法'
+      ? '家庭大暴走（Beta）· 約 30 秒轉玩法'
       : '生存 · 30 秒新籠 · 倒地可救';
   }
 }

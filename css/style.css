@@ -81,6 +81,21 @@ html, body {
 }
 
 
+
+.mode-btn .beta-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  color: #1a0a14;
+  background: linear-gradient(180deg, #ffb0d0, #ff6aad);
+  border: 1px solid #ff9ac4;
+}
+
 /* —— v0.02203 單槽 carousel：上下叠、槽位細少少 —— */
 .players-stack {
   display: flex;
