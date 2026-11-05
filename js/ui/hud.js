@@ -28,7 +28,7 @@ function updateHud() {
     }
     const label = p.ai ? ('AI·' + c.name) : (i === 0 ? '1P' : (i === 1 ? '2P' : '3P'));
     chip._main.innerHTML =
-      `<div class="hp-name" style="color:${c.color}">${label}${p.dead ? '💀' : (p.caged ? '🔒' : '')}</div>` +
+      `<div class="hp-name" style="color:${c.color}">${label}${p.dead ? '💀' : (p.downed ? '💤' : (p.caged ? '🔒' : ''))}</div>` +
       `<div class="hp-bar-wrap"><div class="hp-bar" style="width:${pct}%;background:${c.color}"></div></div>`;
     chip._skills.innerHTML = '';
     chip._sig = '';
@@ -42,8 +42,9 @@ function endRun(win) {
   el.end.classList.remove('hidden');
   el.endTitle.textContent = win ? '勝' : '敗';
   el.endTitle.style.color = win ? '#7dff9a' : '#ff6a6a';
+  const modeTag = run.gameMode === 'chaos' ? '大暴走' : '生存';
   el.endStats.textContent =
-    `${formatTime(run.time)} · 殺 ${run.kills} · Lv${run.level}`;
+    `${modeTag} · ${formatTime(run.time)} · 殺 ${run.kills} · Lv${run.level}`;
   draw();
 }
 function formatTime(t) {
@@ -103,7 +104,7 @@ function refreshUltButtons() {
     if (!b) return;
     if (p.ai) { b.classList.add('hidden'); return; }
     b.classList.remove('hidden'); // player slot exists; visibility = .press-show
-    const ready = p.ultCd <= 0 && !p.dead && !p.carriedBy && !p.ball;
+    const ready = p.ultCd <= 0 && !p.dead && !p.downed && !p.carriedBy && !p.ball;
     if (ready) {
       b.disabled = false;
       b.classList.remove('cd');
@@ -111,7 +112,7 @@ function refreshUltButtons() {
     } else {
       b.disabled = true;
       b.classList.add('cd');
-      b.textContent = p.dead ? '—' : (p.ultCd > 0 ? String(Math.ceil(p.ultCd)) : '…');
+      b.textContent = (p.dead || p.downed) ? '—' : (p.ultCd > 0 ? String(Math.ceil(p.ultCd)) : '…');
     }
   });
   if (run.players.length < 2 && el.btnUltP2) {

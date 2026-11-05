@@ -13,7 +13,7 @@ function nearestEnemy(p) {
 
 function updateWeapons(dt) {
   for (const p of run.players) {
-    if (p.dead) continue;
+    if (p.dead || p.downed) continue;
     // 籠內＝塔：仍然自動射，唔郁／唔大招
     const c = getChar(p.charId);
     const w = c.weapon;

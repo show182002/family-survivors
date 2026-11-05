@@ -164,7 +164,7 @@ function triggerExplode(e, source) {
 function tryUlt(slot) {
   if (!run || mode !== 'play') return;
   const p = run.players[slot];
-  if (!p || p.dead || p.carriedBy || p.ball) return;
+  if (!p || p.dead || p.downed || p.carriedBy || p.ball) return;
   if (p.charId === 'dad' && p.branch && p.branch[0]) { dadUlt(p); return; }
   if (p.charId === 'mom' && p.branch && p.branch[0] && typeof momUlt === 'function') { momUlt(p); return; }
   if (p.charId === 'grandpa' && p.branch && p.branch[0] && typeof grandpaUlt === 'function') { grandpaUlt(p); return; }
@@ -205,7 +205,7 @@ function tryUlt(slot) {
     const R = u.radius * area;
     damageEnemiesInRadius(p.x, p.y, R, dmg, p, { forceBurn: true, knock: 100 });
     for (const ally of run.players) {
-      if (ally.dead) continue;
+      if (ally.dead || ally.downed) continue;
       const heal = u.heal * mods.healPower;
       applyHeal(p, ally, heal);
     }

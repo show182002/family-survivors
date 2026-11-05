@@ -79,6 +79,7 @@ function spawnOneEnemy(elite, o) {
 }
 
 function cameraFocus() {
+  // Include downed so camera stays with the fallen teammate
   const alive = run.players.filter((p) => !p.dead);
   if (!alive.length) return { x: run.cams.x + STAGE_W / 2, y: run.cams.y + STAGE_H / 2 };
   let x = 0, y = 0;
@@ -88,7 +89,7 @@ function cameraFocus() {
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
 function updateEnemies(dt) {
-  const alivePlayers = run.players.filter((p) => !p.dead);
+  const alivePlayers = run.players.filter((p) => !p.dead && !p.downed);
   for (const e of run.enemies) {
     if (e.hp <= 0) continue;
     if (e.hitFlash > 0) e.hitFlash -= dt;
@@ -158,6 +159,7 @@ function hurtPlayer(target, rawDmg, e) {
     {
       {
         if (target.carriedBy || target.ball) return; // 膊頭上／擲緊唔受傷
+        if (target.downed) return; // already downed — channel revive
         if (target.invuln <= 0 && !target.dead) {
           let dmg = rawDmg * sm(target).damageTaken;
           if (target.carry && hasB(target, '2.12')) dmg *= 0.5;
@@ -183,8 +185,8 @@ function hurtPlayer(target, rawDmg, e) {
           if (th > 0 && e && e.hp > 0) hurtEnemy(e, th, target);
           if (target.hp <= 0) {
             target.hp = 0;
-            target.dead = true;
-            releaseCarry(target);
+            if (typeof enterDowned === 'function') enterDowned(target);
+            else { target.dead = true; releaseCarry(target); }
           }
         }
       }
