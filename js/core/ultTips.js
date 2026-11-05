@@ -29,7 +29,7 @@ function dadThrowTipText(p) {
 
 /** 大招由 CD→就緒：彈一次 */
 function noteUltReady(p) {
-  if (!p || p.dead || p.ai || p.caged || p.carriedBy || p.ball) return;
+  if (!p || p.dead || p.downed || p.ai || p.caged || p.carriedBy || p.ball) return;
   // 爸爸膊頭馬托住人時： throw tip 處理，唔重複大招提示
   if (p.charId === 'dad' && p.branch && p.branch[0] === '2.1' && p.carry) return;
   const who = slotLabel(p);

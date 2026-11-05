@@ -24,6 +24,8 @@ function frameStep(dt) {
   if (screenShake > 0) screenShake = Math.max(0, screenShake - dt * 30);
 
   updatePlayers(dt);
+  if (typeof updateDowned === 'function') updateDowned(dt);
+  if (typeof updateChaos === 'function') updateChaos(dt);
   if (typeof updateUltTips === 'function') updateUltTips(dt);
   if (typeof updateCageAlly === 'function') updateCageAlly(dt);
   if (typeof updateAiUlt === 'function') updateAiUlt(dt);
@@ -39,7 +41,10 @@ function frameStep(dt) {
   updateHud();
 
   if (run.time >= WIN_TIME) { endRun(true); return; }
-  if (run.players.every((p) => p.dead)) { endRun(false); return; }
+  // Defeat when all human players are permanently out (downed ≠ out)
+  if (typeof humansAllOut === 'function' ? humansAllOut() : run.players.filter((p) => !p.ai).every((p) => p.dead)) {
+    endRun(false); return;
+  }
 
   draw();
 }
@@ -59,7 +64,7 @@ function enforcePartySeparation(mover, anchor) {
     mover.y = clamp(mover.y, 30, MAP_H - 30);
     return;
   }
-  const alive = run.players.filter((p) => !p.dead && !p.caged);
+  const alive = run.players.filter((p) => !p.dead && !p.downed && !p.caged);
   if (alive.length < 2) return;
   // 有球／托：唔做群體對稱拉（擲人由 dad 模組夾）
   if (alive.some((p) => p.ball || p.carriedBy)) return;
@@ -78,7 +83,7 @@ function enforcePartySeparation(mover, anchor) {
 
 function updatePlayers(dt) {
   for (const p of run.players) {
-    if (p.dead) continue;
+    if (p.dead || p.downed) continue;
     if (p.invuln > 0) p.invuln -= dt;
     if (p.ultCd > 0) p.ultCd -= dt;
     if (p.ultCd < 0) p.ultCd = 0;

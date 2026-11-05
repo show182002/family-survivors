@@ -2,7 +2,7 @@
 'use strict';
 
 function updateGems(dt) {
-  const alive = run.players.filter((p) => !p.dead);
+  const alive = run.players.filter((p) => !p.dead && !p.downed);
   if (!alive.length) return;
   for (const g of run.gems) {
     g.life -= dt;

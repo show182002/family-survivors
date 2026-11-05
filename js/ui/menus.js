@@ -8,6 +8,40 @@ let pickP1 = null;
 let pickP2 = null;
 let p2Joined = false;
 let mode = 'select';
+var selectedGameMode = 'survive'; // 'survive' | 'chaos'
+
+// ——— Mode pick (survive | chaos) ———
+function setGameMode(m) {
+  selectedGameMode = (m === 'chaos') ? 'chaos' : 'survive';
+  refreshModeUI();
+}
+function refreshModeUI() {
+  document.querySelectorAll('.mode-btn').forEach((btn) => {
+    const on = btn.dataset.mode === selectedGameMode;
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  const sub = document.querySelector('#screen-select .subtitle');
+  if (sub) {
+    sub.textContent = selectedGameMode === 'chaos'
+      ? '家庭大暴走 · 約 30 秒轉玩法'
+      : '生存 · 30 秒新籠 · 倒地可救';
+  }
+}
+function bindModeButtons() {
+  document.querySelectorAll('.mode-btn').forEach((btn) => {
+    if (btn.dataset.bound === '1') return;
+    btn.dataset.bound = '1';
+    const fire = (e) => {
+      try { if (e && e.preventDefault) e.preventDefault(); } catch (_) {}
+      setGameMode(btn.dataset.mode);
+    };
+    btn.addEventListener('click', fire);
+    btn.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') fire(e); });
+    btn.addEventListener('touchend', fire, { passive: false });
+  });
+  refreshModeUI();
+}
 
 function isTouchUI() {
   return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
@@ -59,6 +93,7 @@ function buildSelectCards() {
   bindCarouselSwipes();
   bindSelectSticks();
   bindSelectZoomModality();
+  bindModeButtons();
   applyMobileSelectHints();
   refreshSelectUI();
 }
