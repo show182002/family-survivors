@@ -44,6 +44,43 @@ html, body {
 }
 .subtitle { text-align: center; color: #a898c0; margin-bottom: 12px; font-size: 13px; }
 
+/* —— v0.02300 mode pick —— */
+.mode-pick {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+.mode-btn {
+  flex: 1 1 140px;
+  max-width: 220px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 3px solid #4a3a6a;
+  border-radius: 10px;
+  background: rgba(0,0,0,.45);
+  color: #c8b8e0;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.mode-btn.on {
+  border-color: #e8c84a;
+  color: #ffe566;
+  background: rgba(80,50,10,.55);
+  box-shadow: 0 0 16px rgba(232,200,74,.35);
+}
+.mode-btn[data-mode="chaos"].on {
+  border-color: #ff6aad;
+  color: #ffb0d0;
+  background: rgba(80,20,50,.55);
+  box-shadow: 0 0 16px rgba(255,100,170,.3);
+}
+
+
 /* —— v0.02203 單槽 carousel：上下叠、槽位細少少 —— */
 .players-stack {
   display: flex;

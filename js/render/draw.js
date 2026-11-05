@@ -103,6 +103,8 @@ function draw() {
 
   drawExtras(cam);
   if (typeof drawCages === 'function') drawCages(cam);
+  if (typeof drawChaos === 'function') drawChaos(cam);
+  if (typeof drawDownedOverlays === 'function') drawDownedOverlays(cam);
 
   // trees + players Y-sorted (art-demo depth)
   const playerDrawList = [];
@@ -114,6 +116,16 @@ function draw() {
       kind: 'player',
       draw: () => {
         const sx = p.x - cam.x, sy = p.y - cam.y - (p.carriedBy ? 64 : 0);
+        if (p.downed) {
+          ctx.save();
+          ctx.globalAlpha = 0.7;
+          ctx.translate(sx, sy);
+          ctx.rotate(-Math.PI / 2);
+          drawPlayerBody(p, 0, 0);
+          ctx.restore();
+          ctx.globalAlpha = 1;
+          return;
+        }
         if (p.invuln > 0 && Math.floor(p.invuln * 20) % 2 === 0) ctx.globalAlpha = 0.45;
         if (p.flash > 0) {
           ctx.fillStyle = 'rgba(255,255,200,0.3)';
