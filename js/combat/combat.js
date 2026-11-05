@@ -403,6 +403,7 @@ function tryUlt(slot) {
 }
 
 function applyHeal(source, ally, amount) {
+  if (!ally || ally.dead || ally.downed) return; // downed only via proximity revive
   ally.hp = Math.min(ally.maxHp, ally.hp + amount);
   addFx(ally.x, ally.y, 'heal', 50, '#88ffcc');
   addFloat(ally.x, ally.y - 10, '+' + Math.round(amount), '#88ffaa', false);
