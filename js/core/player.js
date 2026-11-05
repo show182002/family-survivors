@@ -30,6 +30,9 @@ function makePlayer(charId, slot) {
     speed: c.speed,
     pickupRadius: c.pickupRadius,
     dead: false,
+    downed: false,
+    downedT: 0,
+    reviveProg: 0,
     invuln: 0,
     shield: 0,
     tAura: 0,
@@ -106,8 +109,13 @@ function startRun() {
     branchQueue: [],
     cages: [],
     cageAllySpawned: false,
+    nextCageAt: 30,
+    cageSpawnCount: 0,
+    cageRosterDone: false,
     momTonics: [],
+    gameMode: selectedGameMode === 'chaos' ? 'chaos' : 'survive',
   };
+  if (run.gameMode === 'chaos' && typeof initChaos === 'function') initChaos(run);
 
   el.select.classList.add('hidden');
   el.game.classList.remove('hidden');
